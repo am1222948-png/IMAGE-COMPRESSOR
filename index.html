@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Easy Image Compressor</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 15px;
+    }
+
+    .box {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #666;
+    }
+
+    input[type="file"] {
+      width: 100%;
+      padding: 15px;
+      margin: 20px 0;
+      border: 2px dashed #aaa;
+      border-radius: 10px;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      margin: 15px 0;
+    }
+
+    button,
+    a {
+      display: inline-block;
+      padding: 13px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    #openBtn {
+      display: none;
+      background: #28a745;
+    }
+
+    #preview {
+      max-width: 100%;
+      margin-top: 20px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="box">
+
+      <h1>🖼️ Image Compressor</h1>
+
+      <p>Compress your image quickly and easily.</p>
+
+      <input
+        type="file"
+        id="imageInput"
+        accept="image/*"
+      >
+
+      <label>
+        Compression Quality:
+        <span id="qualityValue">70</span>%
+      </label>
+
+      <input
+        type="range"
+        id="quality"
+        min="10"
+        max="100"
+        value="70"
+      >
+
+      <button onclick="compressImage()">
+        Compress Image
+      </button>
+
+      <img
+        id="preview"
+        alt="Compressed Image"
+      >
+
+      <div id="result"></div>
+
+      <a
+        id="openBtn"
+        href="#"
+        target="_blank"
+        rel="noopener"
+      >
+        Open Compressed Image
+      </a>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    const qualitySlider =
+      document.getElementById("quality");
+
+    const qualityValue =
+      document.getElementById("qualityValue");
+
+    qualitySlider.addEventListener("input", function() {
+
+      qualityValue.textContent = this.value;
+
+    });
+
+
+    function compressImage() {
+
+      const input =
+        document.getElementById("imageInput");
+
+      if (!input.files || input.files.length === 0) {
+
+        alert("Please select an image first.");
+
+        return;
+      }
+
+      const file = input.files[0];
+
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+
+        const img = new Image();
+
+        img.onload = function() {
+
+          const canvas =
+            document.createElement("canvas");
+
+          const ctx =
+            canvas.getContext("2d");
+
+          canvas.width = img.width;
+          canvas.height = img.height;
+
+          ctx.drawImage(
+            img,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+          );
+
+          const quality =
+            parseInt(qualitySlider.value) / 100;
+
+          canvas.toBlob(function(blob) {
+
+            const url =
+              URL.createObjectURL(blob);
+
+            const preview =
+              document.getElementById("preview");
+
+            preview.src = url;
+            preview.style.display = "block";
+
+
+            const openBtn =
+              document.getElementById("openBtn");
+
+            openBtn.href = url;
+            openBtn.style.display = "inline-block";
+
+
+            const originalSize =
+              (file.size / 1024).toFixed(2);
+
+            const compressedSize =
+              (blob.size / 1024).toFixed(2);
+
+
+            document.getElementById("result").innerHTML =
+              "Original: " +
+              originalSize +
+              " KB<br>" +
+
+              "Compressed: " +
+              compressedSize +
+              " KB<br>" +
+
+              "Saved: " +
+              (
+                100 -
+                (blob.size / file.size * 100)
+              ).toFixed(1) +
+              "%";
+
+          }, "image/jpeg", quality);
+
+        };
+
+        img.src = event.target.result;
+
+      };
+
+      reader.readAsDataURL(file);
+
+    }
+
+  </script>
+
+</body>
+</html>
