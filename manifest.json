@@ -10,7 +10,7 @@
   "theme_color": "#1769aa",
   "icons": [
     {
-      "src": "/IMAGE-COMPRESSOR/compresspro-logo%20(1).png"
+      "src": "/IMAGE-COMPRESSOR/compresspro-logo%20(1).png",
       "sizes": "any",
       "type": "image/png"
     }
