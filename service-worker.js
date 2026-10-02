@@ -4,7 +4,7 @@ const FILES_TO_CACHE = [
   "/IMAGE-COMPRESSOR/",
   "/IMAGE-COMPRESSOR/index.html",
   "/IMAGE-COMPRESSOR/manifest.json",
-  "/IMAGE-COMPRESSOR/compresspro-logo.png"
+  "/IMAGE-COMPRESSOR/compresspro-logo%20(1).png"
 ];
 
 self.addEventListener("install", (event) => {
