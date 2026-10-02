@@ -1,4 +1,4 @@
-const CACHE_NAME = "compresspro-v1";
+const CACHE_NAME = "compresspro-v2";
 
 const FILES_TO_CACHE = [
   "/IMAGE-COMPRESSOR/",
@@ -13,7 +13,6 @@ self.addEventListener("install", (event) => {
       return cache.addAll(FILES_TO_CACHE);
     })
   );
-
   self.skipWaiting();
 });
 
@@ -27,7 +26,6 @@ self.addEventListener("activate", (event) => {
       )
     )
   );
-
   self.clients.claim();
 });
 
