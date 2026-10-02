@@ -1,0 +1,18 @@
+{
+  "id": "/IMAGE-COMPRESSOR/",
+  "name": "CompressPro Image Compressor",
+  "short_name": "CompressPro",
+  "description": "Compress images quickly and easily.",
+  "start_url": "/IMAGE-COMPRESSOR/",
+  "scope": "/IMAGE-COMPRESSOR/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1769aa",
+  "icons": [
+    {
+      "src": "compresspro-logo.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ]
+}
