@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -91,8 +91,26 @@ button {
     font-weight: bold;
 }
 </style>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1769aa">
+<link rel="apple-touch-icon" href="compresspro-logo (1).png">
 </head>
 
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("service-worker.js")
+      .then(function () {
+        console.log("CompressPro app is ready");
+      })
+      .catch(function (error) {
+        console.log("Service worker error:", error);
+      });
+  });
+}
+</script>
 <body>
 
 <div class="container">
