@@ -308,5 +308,29 @@ function downloadAll() {
   Contact Us
 </a>
   <p>© 2026 CompressPro. All rights reserved.</p>
-</footer></body>
+</footer>
+<script>
+let deferredPrompt;
+const installBtn = document.getElementById("installApp");
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = "inline-block";
+});
+
+installBtn.addEventListener("click", async () => {
+  if (!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  installBtn.style.display = "none";
+});
+
+window.addEventListener("appinstalled", () => {
+  installBtn.style.display = "none";
+});
+</script>
+</body>
 </html>
