@@ -310,26 +310,43 @@ function downloadAll() {
   <p>© 2026 CompressPro. All rights reserved.</p>
 </footer>
 <script>
-let deferredPrompt;
+let deferredPrompt = null;
+
 const installBtn = document.getElementById("installApp");
+
+window.addEventListener("beforeinstallprompt", function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    if (installBtn) {
+        installBtn.style.display = "inline-block";
+    }
+});
+
 if (installBtn) {
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.style.display = "inline-block";
-});
+    installBtn.addEventListener("click", async function() {
 
-installBtn.addEventListener("click", async () => {
-  if (!deferredPrompt) return;
+        if (!deferredPrompt) {
+            alert("Install option is not available yet. Please open this website in Chrome and try again.");
+            return;
+        }
 
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt = null;
-  installBtn.style.display = "none";
-});
+        deferredPrompt.prompt();
 
-window.addEventListener("appinstalled", () => {
-  installBtn.style.display = "none";
+        const choice = await deferredPrompt.userChoice;
+
+        if (choice.outcome === "accepted") {
+            installBtn.style.display = "none";
+        }
+
+        deferredPrompt = null;
+    });
+}
+
+window.addEventListener("appinstalled", function() {
+    if (installBtn) {
+        installBtn.style.display = "none";
+    }
 });
 </script>
 </body>
