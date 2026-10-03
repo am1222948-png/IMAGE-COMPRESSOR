@@ -312,7 +312,7 @@ function downloadAll() {
 <script>
 let deferredPrompt;
 const installBtn = document.getElementById("installApp");
-
+if (installBtn) {
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
