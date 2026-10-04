@@ -440,10 +440,10 @@ Convert to PDF
 
     <div class="upload-icon">📷</div>
 
-    <h2>Document Scanner</h2>
+    <h2>Smart Document Scanner</h2>
 
     <p>
-        Scan a document using your camera or select an image from your device.
+        Paper ko camera ke saamne rakhein aur document scan karein.
     </p>
 
     <input
@@ -453,57 +453,15 @@ Convert to PDF
         capture="environment"
     >
 
-    <br>
-
-    <button
-class="compress-btn"
-onclick="addScanPage()">
-📷 Add Page
-</button>
-
-    <div id="scannerResult"></div>
-
-</div>
-    <!-- RESULTS -->
-
-<div id="results"></div>
-
-<!-- PDF TO IMAGE CONVERTER -->
-
-<div class="upload-box">
-
-    <div class="upload-icon">📑</div>
-
-    <h2>Convert PDF to JPG/PNG</h2>
-
-    <p>
-        Convert PDF pages into JPG or PNG images.
-    </p>
-
-    <input
-        type="file"
-        id="pdfFileInput"
-        accept="application/pdf"
-    >
-
-    <label for="pdfFormat">Choose image format:</label>
-
-    <select id="pdfFormat"
-        style="width:100%; padding:12px; margin:12px 0;
-        border:1px solid #ddd; border-radius:8px;">
-
-        <option value="jpeg">JPG</option>
-        <option value="png">PNG</option>
-
-    </select>
+    <br><br>
 
     <button
         class="compress-btn"
-        onclick="convertPDFtoImages()">
-        Convert PDF
+        onclick="addScanPage()">
+        📷 Scan Document
     </button>
 
-    <div id="pdfResults"></div>
+    <div id="scannerResult"></div>
 
 </div>
 <!-- FEATURES -->
