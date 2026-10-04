@@ -465,7 +465,55 @@ Convert to PDF
     <div id="scannerResult"></div>
 
 </div>
-<!-- FEATURES -->
+<!-- PDF TO IMAGE CONVERTER -->
+
+<div class="upload-box">
+
+    <div class="upload-icon">📑</div>
+
+    <h2>Convert PDF to JPG/PNG</h2>
+
+    <p>
+        Convert PDF pages into JPG or PNG images.
+    </p>
+
+    <input
+        type="file"
+        id="pdfFileInput"
+        accept="application/pdf"
+    >
+
+    <label for="pdfFormat">
+        Choose image format:
+    </label>
+
+    <select
+        id="pdfFormat"
+        style="
+        width:100%;
+        padding:12px;
+        margin:12px 0;
+        border:1px solid #ddd;
+        border-radius:8px;
+        "
+    >
+
+        <option value="jpeg">JPG</option>
+        <option value="png">PNG</option>
+
+    </select>
+
+    <button
+        class="compress-btn"
+        onclick="convertPDFtoImages()"
+    >
+        Convert PDF
+    </button>
+
+    <div id="pdfResults"></div>
+
+</div>
+    <!-- FEATURES -->
 
 <section class="features">
 
