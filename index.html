@@ -317,7 +317,7 @@ footer a {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://docs.opencv.org/4.x/opencv.js"></script>
+
 </head>
 
 
@@ -1241,12 +1241,13 @@ async function convertPDFtoImages() {
 
 let scannedPages = [];
 
+
 function addScanPage() {
 
     const input = document.getElementById("scannerInput");
     const result = document.getElementById("scannerResult");
 
-    if (!input.files.length) {
+    if (!input.files || input.files.length === 0) {
 
         alert("Please take a photo or select a document image.");
 
@@ -1267,56 +1268,105 @@ function addScanPage() {
 
     };
 
+    reader.onerror = function() {
+
+        alert("Image could not be read. Please try again.");
+
+    };
+
     reader.readAsDataURL(file);
+
 }
 
 
 function showScannedPages() {
 
-    const result = document.getElementById("scannerResult");
+    const result =
+        document.getElementById("scannerResult");
 
     result.innerHTML = "";
 
-    scannedPages.forEach((image, index) => {
 
-        const card = document.createElement("div");
+    scannedPages.forEach(function(image, index) {
+
+        const card =
+            document.createElement("div");
 
         card.className = "card";
 
-        card.innerHTML = `
-            <p>
-                <strong>Page ${index + 1}</strong>
-            </p>
 
-            <img
-                src="${image}"
-                style="max-width:100%; border-radius:8px;"
-            >
+        const title =
+            document.createElement("p");
 
-            <br><br>
+        title.innerHTML =
+            "<strong>Page " +
+            (index + 1) +
+            "</strong>";
 
-            <button
-                class="download"
-                onclick="removeScanPage(${index})">
-                🗑️ Remove Page
-            </button>
-        `;
+
+        const preview =
+            document.createElement("img");
+
+        preview.src = image;
+
+        preview.style.maxWidth = "100%";
+
+        preview.style.borderRadius = "8px";
+
+
+        const removeButton =
+            document.createElement("button");
+
+        removeButton.className = "download";
+
+        removeButton.innerText =
+            "🗑️ Remove Page";
+
+
+        removeButton.onclick = function() {
+
+            removeScanPage(index);
+
+        };
+
+
+        card.appendChild(title);
+
+        card.appendChild(preview);
+
+        card.appendChild(
+            document.createElement("br")
+        );
+
+        card.appendChild(
+            document.createElement("br")
+        );
+
+        card.appendChild(removeButton);
+
 
         result.appendChild(card);
 
     });
 
+
     if (scannedPages.length > 0) {
 
-        const button = document.createElement("button");
+        const pdfButton =
+            document.createElement("button");
 
-        button.className = "compress-btn";
+        pdfButton.className =
+            "compress-btn";
 
-        button.innerText = "📄 Create PDF";
+        pdfButton.innerText =
+            "📄 Create PDF";
 
-        button.onclick = createMultiPagePDF;
 
-        result.appendChild(button);
+        pdfButton.onclick =
+            createMultiPagePDF;
+
+
+        result.appendChild(pdfButton);
 
     }
 
@@ -1338,368 +1388,25 @@ async function createMultiPagePDF() {
 
         alert("Please scan at least one page.");
 
-<script>
-
-let scannedPages = [];
-
-
-function addScanPage() {
-
-    const input = document.getElementById("scannerInput");
-
-    if (!input.files.length) {
-
-        alert("Please take a photo or select a document image.");
-
         return;
     }
 
-    const file = input.files[0];
 
-    const reader = new FileReader();
+    if (
+        typeof window.jspdf === "undefined"
+    ) {
 
-    reader.onload = async function(e) {
-
-        try {
-
-            const processedImage = await autoCropDocument(e.target.result);
-
-            scannedPages.push(processedImage);
-
-            input.value = "";
-
-            showScannedPages();
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert("Auto scan failed. The original image will be used.");
-
-            scannedPages.push(e.target.result);
-
-            input.value = "";
-
-            showScannedPages();
-
-        }
-
-    };
-
-    reader.readAsDataURL(file);
-}
-
-
-async function autoCropDocument(imageData) {
-
-    if (typeof cv === "undefined") {
-
-        return imageData;
-
-    }
-
-    const img = new Image();
-
-    img.src = imageData;
-
-    await new Promise((resolve) => {
-
-        img.onload = resolve;
-
-    });
-
-
-    const canvas = document.createElement("canvas");
-
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    const ctx = canvas.getContext("2d");
-
-    ctx.drawImage(img, 0, 0);
-
-
-    let src = cv.imread(canvas);
-
-    let gray = new cv.Mat();
-
-    let blurred = new cv.Mat();
-
-    let edges = new cv.Mat();
-
-    cv.cvtColor(
-        src,
-        gray,
-        cv.COLOR_RGBA2GRAY
-    );
-
-    cv.GaussianBlur(
-        gray,
-        blurred,
-        new cv.Size(5, 5),
-        0
-    );
-
-    cv.Canny(
-        blurred,
-        edges,
-        50,
-        150
-    );
-
-
-    let contours = new cv.MatVector();
-
-    let hierarchy = new cv.Mat();
-
-    cv.findContours(
-        edges,
-        contours,
-        hierarchy,
-        cv.RETR_EXTERNAL,
-        cv.CHAIN_APPROX_SIMPLE
-    );
-
-
-    let bestRect = null;
-
-    let bestArea = 0;
-
-    const imageArea = src.rows * src.cols;
-
-
-    for (let i = 0; i < contours.size(); i++) {
-
-        const contour = contours.get(i);
-
-        const area = cv.contourArea(contour);
-
-        if (area < imageArea * 0.15) {
-
-            contour.delete();
-
-            continue;
-
-        }
-
-
-        const perimeter = cv.arcLength(
-            contour,
-            true
+        alert(
+            "PDF library could not load. Please refresh the page and try again."
         );
-
-        const approx = new cv.Mat();
-
-        cv.approxPolyDP(
-            contour,
-            approx,
-            0.02 * perimeter,
-            true
-        );
-
-
-        if (
-            approx.rows >= 4 &&
-            area > bestArea
-        ) {
-
-            const rect = cv.boundingRect(contour);
-
-            if (
-                rect.width > src.cols * 0.5 &&
-                rect.height > src.rows * 0.5
-            ) {
-
-                bestRect = rect;
-
-                bestArea = area;
-
-            }
-
-        }
-
-
-        contour.delete();
-        approx.delete();
-
-    }
-
-
-    let outputCanvas = document.createElement("canvas");
-
-    if (bestRect) {
-
-        const padding = 5;
-
-        const x = Math.max(
-            0,
-            bestRect.x - padding
-        );
-
-        const y = Math.max(
-            0,
-            bestRect.y - padding
-        );
-
-        const width = Math.min(
-            src.cols - x,
-            bestRect.width + padding * 2
-        );
-
-        const height = Math.min(
-            src.rows - y,
-            bestRect.height + padding * 2
-        );
-
-
-        outputCanvas.width = width;
-        outputCanvas.height = height;
-
-
-        const cropped = src.roi(
-            new cv.Rect(
-                x,
-                y,
-                width,
-                height
-            )
-        );
-
-
-        cv.imshow(
-            outputCanvas,
-            cropped
-        );
-
-
-        cropped.delete();
-
-    } else {
-
-        outputCanvas.width = src.cols;
-        outputCanvas.height = src.rows;
-
-        cv.imshow(
-            outputCanvas,
-            src
-        );
-
-    }
-
-
-    const result = outputCanvas.toDataURL(
-        "image/jpeg",
-        0.92
-    );
-
-
-    src.delete();
-    gray.delete();
-    blurred.delete();
-    edges.delete();
-    contours.delete();
-    hierarchy.delete();
-
-
-    return result;
-
-}
-
-
-function showScannedPages() {
-
-    const result =
-        document.getElementById("scannerResult");
-
-    result.innerHTML = "";
-
-
-    scannedPages.forEach((image, index) => {
-
-        const card =
-            document.createElement("div");
-
-        card.className = "card";
-
-
-        card.innerHTML = `
-
-            <p>
-                <strong>
-                    Page ${index + 1}
-                </strong>
-            </p>
-
-            <img
-                src="${image}"
-                style="
-                max-width:100%;
-                border-radius:8px;
-                "
-            >
-
-            <br><br>
-
-            <button
-                class="download"
-                onclick="removeScanPage(${index})">
-
-                🗑️ Remove Page
-
-            </button>
-
-        `;
-
-
-        result.appendChild(card);
-
-    });
-
-
-    if (scannedPages.length > 0) {
-
-        const button =
-            document.createElement("button");
-
-        button.className =
-            "compress-btn";
-
-        button.innerText =
-            "📄 Create PDF";
-
-        button.onclick =
-            createMultiPagePDF;
-
-        result.appendChild(button);
-
-    }
-
-}
-
-
-function removeScanPage(index) {
-
-    scannedPages.splice(
-        index,
-        1
-    );
-
-    showScannedPages();
-
-}
-
-
-async function createMultiPagePDF() {
-
-    if (scannedPages.length === 0) {
-
-        alert("Please scan at least one page.");
 
         return;
     }
 
 
-    const { jsPDF } = window.jspdf;
+    const { jsPDF } =
+        window.jspdf;
+
 
     const pdf =
         new jsPDF(
@@ -1738,7 +1445,7 @@ async function createMultiPagePDF() {
 
 
         await new Promise(
-            (resolve) => {
+            function(resolve) {
 
                 img.onload =
                     resolve;
@@ -1761,8 +1468,11 @@ async function createMultiPagePDF() {
             );
 
 
-        width *= ratio;
-        height *= ratio;
+        width =
+            width * ratio;
+
+        height =
+            height * ratio;
 
 
         const x =
@@ -1792,12 +1502,13 @@ async function createMultiPagePDF() {
 
 
     pdf.save(
-        "CompressPro-Smart-Scanned-Document.pdf"
+        "CompressPro-Scanned-Document.pdf"
     );
 
 }
 
-</script>
+</script>         
+
 </body>
 
 </html>
