@@ -456,10 +456,10 @@ Convert to PDF
     <br>
 
     <button
-        class="compress-btn"
-        onclick="scanToPDF()">
-        📄 Create PDF
-    </button>
+class="compress-btn"
+onclick="addScanPage()">
+📷 Add Page
+</button>
 
     <div id="scannerResult"></div>
 
@@ -1280,12 +1280,12 @@ async function convertPDFtoImages() {
 </script>
 <script>
 
-async function scanToPDF() {
+let scannedPages = [];
+
+function addScanPage() {
 
     const input = document.getElementById("scannerInput");
     const result = document.getElementById("scannerResult");
-
-    result.innerHTML = "";
 
     if (!input.files.length) {
 
@@ -1294,31 +1294,119 @@ async function scanToPDF() {
         return;
     }
 
-    try {
+    const file = input.files[0];
 
-        const file = input.files[0];
+    const reader = new FileReader();
 
-        const imageData = await readImage(file);
+    reader.onload = function(e) {
 
-        const { jsPDF } = window.jspdf;
+        scannedPages.push(e.target.result);
 
-        const pdf = new jsPDF("p", "mm", "a4");
+        input.value = "";
+
+        showScannedPages();
+
+    };
+
+    reader.readAsDataURL(file);
+}
+
+
+function showScannedPages() {
+
+    const result = document.getElementById("scannerResult");
+
+    result.innerHTML = "";
+
+    scannedPages.forEach((image, index) => {
+
+        const card = document.createElement("div");
+
+        card.className = "card";
+
+        card.innerHTML = `
+            <p>
+                <strong>Page ${index + 1}</strong>
+            </p>
+
+            <img
+                src="${image}"
+                style="max-width:100%; border-radius:8px;"
+            >
+
+            <br><br>
+
+            <button
+                class="download"
+                onclick="removeScanPage(${index})">
+                🗑️ Remove Page
+            </button>
+        `;
+
+        result.appendChild(card);
+
+    });
+
+    if (scannedPages.length > 0) {
+
+        const button = document.createElement("button");
+
+        button.className = "compress-btn";
+
+        button.innerText = "📄 Create PDF";
+
+        button.onclick = createMultiPagePDF;
+
+        result.appendChild(button);
+
+    }
+
+}
+
+
+function removeScanPage(index) {
+
+    scannedPages.splice(index, 1);
+
+    showScannedPages();
+
+}
+
+
+async function createMultiPagePDF() {
+
+    if (scannedPages.length === 0) {
+
+        alert("Please scan at least one page.");
+
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    const pageWidth = 210;
+    const pageHeight = 297;
+
+    const margin = 10;
+
+    const maxWidth = pageWidth - margin * 2;
+    const maxHeight = pageHeight - margin * 2;
+
+    for (let i = 0; i < scannedPages.length; i++) {
+
+        const imageData = scannedPages[i];
 
         const img = new Image();
 
         img.src = imageData;
 
         await new Promise((resolve) => {
+
             img.onload = resolve;
+
         });
-
-        const pageWidth = 210;
-        const pageHeight = 297;
-
-        const margin = 10;
-
-        const maxWidth = pageWidth - margin * 2;
-        const maxHeight = pageHeight - margin * 2;
 
         let width = img.width;
         let height = img.height;
@@ -1334,6 +1422,12 @@ async function scanToPDF() {
         const x = (pageWidth - width) / 2;
         const y = (pageHeight - height) / 2;
 
+        if (i > 0) {
+
+            pdf.addPage();
+
+        }
+
         pdf.addImage(
             imageData,
             "JPEG",
@@ -1343,23 +1437,12 @@ async function scanToPDF() {
             height
         );
 
-        pdf.save("CompressPro-Scanned-Document.pdf");
-
-        result.innerHTML = `
-            <p class="success">
-            ✅ Document converted to PDF successfully.
-            </p>
-        `;
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Scanner conversion failed. Please try again.");
-
     }
 
+    pdf.save("CompressPro-Multi-Page-Scanned-Document.pdf");
+
 }
+
 
 </script>
 </body>
