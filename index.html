@@ -1240,7 +1240,13 @@ async function convertPDFtoImages() {
 <script>
 
 let scannedPages = [];
-
+function checkOpenCV() {
+    if (typeof cv !== "undefined" && cv.Mat) {
+        alert("OpenCV loaded successfully!");
+    } else {
+        alert("OpenCV is still loading. Please wait and refresh.");
+    }
+    }
 
 function addScanPage() {
 
