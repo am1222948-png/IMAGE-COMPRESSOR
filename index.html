@@ -1251,7 +1251,199 @@ function checkOpenCV() {
         alert("OpenCV is still loading. Please wait and refresh.");
     }
     }
+async function autoCropDocument(imageData) {
 
+    if (typeof cv === "undefined" || !cv.Mat) {
+        return imageData;
+    }
+
+    const img = new Image();
+
+    img.src = imageData;
+
+    await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+    });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    canvas.getContext("2d").drawImage(img, 0, 0);
+
+    let src = cv.imread(canvas);
+    let gray = new cv.Mat();
+    let blurred = new cv.Mat();
+    let edges = new cv.Mat();
+    let contours = new cv.MatVector();
+    let hierarchy = new cv.Mat();
+
+    let cropped = null;
+    let approx = null;
+
+    try {
+
+        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+
+        cv.GaussianBlur(
+            gray,
+            blurred,
+            new cv.Size(5, 5),
+            0
+        );
+
+        cv.Canny(blurred, edges, 50, 150);
+
+        cv.findContours(
+            edges,
+            contours,
+            hierarchy,
+            cv.RETR_LIST,
+            cv.CHAIN_APPROX_SIMPLE
+        );
+
+        let best = null;
+        let bestArea = 0;
+        const totalArea = src.rows * src.cols;
+
+        for (let i = 0; i < contours.size(); i++) {
+
+            const contour = contours.get(i);
+
+            try {
+
+                const area = cv.contourArea(contour);
+
+                if (area < totalArea * 0.15) continue;
+
+                const perimeter = cv.arcLength(contour, true);
+                approx = new cv.Mat();
+
+                cv.approxPolyDP(
+                    contour,
+                    approx,
+                    0.02 * perimeter,
+                    true
+                );
+
+                if (approx.rows === 4 && area > bestArea) {
+
+                    best = [];
+
+                    for (let j = 0; j < 4; j++) {
+                        best.push({
+                            x: approx.data32S[j * 2],
+                            y: approx.data32S[j * 2 + 1]
+                        });
+                    }
+
+                    bestArea = area;
+                }
+
+                approx.delete();
+                approx = null;
+
+            } finally {
+                contour.delete();
+            }
+        }
+
+        // Agar paper ke 4 corners na milen,
+        // original photo use hogi.
+        if (!best) {
+            return imageData;
+        }
+
+        // Corners ko order mein set karein.
+        const sum = p => p.x + p.y;
+        const diff = p => p.x - p.y;
+
+        const tl = best.reduce((a, b) =>
+            sum(a) < sum(b) ? a : b
+        );
+
+        const br = best.reduce((a, b) =>
+            sum(a) > sum(b) ? a : b
+        );
+
+        const tr = best.reduce((a, b) =>
+            diff(a) > diff(b) ? a : b
+        );
+
+        const bl = best.reduce((a, b) =>
+            diff(a) < diff(b) ? a : b
+        );
+
+        const distance = (a, b) =>
+            Math.hypot(a.x - b.x, a.y - b.y);
+
+        const width = Math.round(Math.max(
+            distance(tl, tr),
+            distance(bl, br)
+        ));
+
+        const height = Math.round(Math.max(
+            distance(tl, bl),
+            distance(tr, br)
+        ));
+
+        if (width < 100 || height < 100) {
+            return imageData;
+        }
+
+        const srcPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [
+            tl.x, tl.y,
+            tr.x, tr.y,
+            br.x, br.y,
+            bl.x, bl.y
+        ]);
+
+        const dstPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [
+            0, 0,
+            width - 1, 0,
+            width - 1, height - 1,
+            0, height - 1
+        ]);
+
+        const transform = cv.getPerspectiveTransform(
+            srcPoints,
+            dstPoints
+        );
+
+        cropped = new cv.Mat();
+
+        cv.warpPerspective(
+            src,
+            cropped,
+            transform,
+            new cv.Size(width, height)
+        );
+
+        const outCanvas = document.createElement("canvas");
+
+        cv.imshow(outCanvas, cropped);
+
+        srcPoints.delete();
+        dstPoints.delete();
+        transform.delete();
+
+        return outCanvas.toDataURL("image/jpeg", 0.92);
+
+    } finally {
+
+        if (approx) approx.delete();
+        if (cropped) cropped.delete();
+
+        src.delete();
+        gray.delete();
+        blurred.delete();
+        edges.delete();
+        contours.delete();
+        hierarchy.delete();
+
+    }
+    }
 function addScanPage() {
 
     const input = document.getElementById("scannerInput");
