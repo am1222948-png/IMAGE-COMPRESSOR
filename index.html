@@ -1,58 +1,155 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Free Image Compressor Online | CompressPro</title>
+
 <meta name="description" content="Compress JPG and PNG images online for free with CompressPro. Reduce image file size, compare results, and download compressed images easily.">
+
 <meta name="robots" content="index, follow">
 
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#1769aa">
+
+<link rel="apple-touch-icon" href="/IMAGE-COMPRESSOR/compresspro-logo%20(1).png">
+
+
 <style>
+
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
-    background: #f4f7fb;
     margin: 0;
-    padding: 20px;
-    text-align: center;
+    padding: 15px;
+    background: linear-gradient(135deg, #eef6ff, #f8fbff);
+    color: #222;
 }
 
 .container {
-    max-width: 700px;
-    margin: auto;
+    max-width: 760px;
+    margin: 20px auto;
     background: white;
     padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border-radius: 22px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.10);
 }
 
-h1 {
-    margin-bottom: 8px;
+/* LOGO */
+
+.logo {
+    width: 180px;
+    max-width: 75%;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
+    object-fit: contain;
+}
+
+/* HERO */
+
+.hero {
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 32px;
+    margin: 5px 0;
+    color: #1769aa;
 }
 
 .subtitle {
     color: #666;
+    font-size: 17px;
     margin-bottom: 25px;
 }
 
+/* INSTALL BUTTON */
+
+.install-area {
+    text-align: center;
+    margin: 10px 0 20px;
+}
+
+#installApp {
+    display: inline-block;
+    background: #1769aa;
+    color: white;
+    padding: 13px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(23,105,170,0.25);
+}
+
+#installApp:hover {
+    opacity: 0.9;
+}
+
+/* UPLOAD BOX */
+
+.upload-box {
+    border: 2px dashed #8bbce5;
+    background: #f7fbff;
+    border-radius: 16px;
+    padding: 25px 15px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.upload-icon {
+    font-size: 40px;
+    margin-bottom: 8px;
+}
+
+.upload-box h2 {
+    margin: 5px 0;
+    color: #1769aa;
+}
+
+.upload-box p {
+    color: #666;
+    margin-bottom: 18px;
+}
+
+/* FILE INPUT */
+
 input[type="file"] {
     width: 100%;
-    padding: 15px 0;
-    margin-bottom: 20px;
+    padding: 12px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
 }
+
+/* BUTTONS */
 
 button {
     border: none;
-    padding: 12px 18px;
-    border-radius: 8px;
+    padding: 12px 20px;
+    border-radius: 9px;
     cursor: pointer;
     font-size: 15px;
+    font-weight: bold;
     margin: 5px;
 }
 
 .compress-btn {
-    background: #222;
+    background: #1769aa;
     color: white;
+}
+
+.compress-btn:hover {
+    background: #12598f;
 }
 
 .download-all {
@@ -61,24 +158,32 @@ button {
     display: none;
 }
 
+.download-all:hover {
+    background: #11652f;
+}
+
+/* RESULTS */
+
 .card {
     margin-top: 20px;
-    padding: 15px;
+    padding: 18px;
     border: 1px solid #ddd;
-    border-radius: 10px;
+    border-radius: 14px;
     text-align: left;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
 }
 
 .card img {
     max-width: 100%;
-    max-height: 220px;
+    max-height: 230px;
     display: block;
-    margin: 10px auto;
-    border-radius: 8px;
+    margin: 12px auto;
+    border-radius: 10px;
 }
 
 .info {
-    line-height: 1.7;
+    line-height: 1.8;
 }
 
 .download {
@@ -90,277 +195,670 @@ button {
     color: #16803c;
     font-weight: bold;
 }
+
+/* FEATURES */
+
+.features {
+    margin-top: 40px;
+}
+
+.features h2 {
+    text-align: center;
+    color: #1769aa;
+    margin-bottom: 20px;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.feature-card {
+    background: #f7fbff;
+    border: 1px solid #e0edf8;
+    border-radius: 14px;
+    padding: 18px 10px;
+    text-align: center;
+}
+
+.feature-card .icon {
+    font-size: 30px;
+}
+
+.feature-card h3 {
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+.feature-card p {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* SEO CONTENT */
+
+.content-section {
+    margin-top: 40px;
+    line-height: 1.8;
+}
+
+.content-section h2 {
+    color: #1769aa;
+    margin-top: 30px;
+}
+
+.content-section h3 {
+    color: #333;
+    margin-top: 20px;
+}
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    padding: 25px 10px;
+    margin-top: 40px;
+    border-top: 1px solid #ddd;
+    color: #666;
+    line-height: 2;
+}
+
+footer a {
+    color: #1769aa;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 8px;
+    }
+
+    .container {
+        padding: 18px 14px;
+        margin-top: 10px;
+    }
+
+    .hero h1 {
+        font-size: 27px;
+    }
+
+    .subtitle {
+        font-size: 15px;
+    }
+
+    .logo {
+        width: 160px;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-card {
+        padding: 15px;
+    }
+
+    button {
+        width: 90%;
+        margin: 6px auto;
+    }
+
+    #installApp {
+        width: auto;
+    }
+}
+
 </style>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1769aa">
-<link rel="apple-touch-icon" href="/IMAGE-COMPRESSOR/compresspro-logo%20(1).png">
 </head>
 
 
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker.register("service-worker.js")
-      .then(function () {
-        console.log("CompressPro app is ready");
-      })
-      .catch(function (error) {
-        console.log("Service worker error:", error);
-      });
-  });
-}
-</script>
 <body>
 
-<div style="text-align:center; margin:15px;">
-  <button id="installApp" style="display:none; background:#1769aa; color:white; padding:12px 24px; border:none; border-radius:8px; font-size:16px; font-weight:bold;">
-    📲 Install App
-  </button>
+
+<!-- INSTALL APP -->
+
+<div class="install-area">
+
+<button id="installApp">
+📲 Install CompressPro App
+</button>
+
 </div>
+
+
 <div class="container">
 
-<img src="compresspro-logo (1).png"
-     alt="CompressPro Logo"
-     style="width:220px; max-width:100%; height:auto;">
+
+<!-- HERO -->
+
+<div class="hero">
+
+<img
+src="compresspro-logo (1).png"
+alt="CompressPro Logo"
+class="logo"
+>
 
 <h1>CompressPro</h1>
-<p class="subtitle">Fast & Free Image Compressor</p>
+
+<p class="subtitle">
+Fast, Free & Easy Image Compressor
+</p>
+
+</div>
 
 
-<input type="file" id="imageInput" accept="image/jpeg,image/png" multiple>
+<!-- UPLOAD AREA -->
+
+<div class="upload-box">
+
+<div class="upload-icon">
+🖼️
+</div>
+
+<h2>Compress Your Images</h2>
+
+<p>
+Reduce image file size quickly while keeping your images looking great.
+</p>
+
+<input
+type="file"
+id="imageInput"
+accept="image/jpeg,image/png"
+multiple
+>
 
 <br>
 
-<button class="compress-btn" onclick="compressImages()">
+<button
+class="compress-btn"
+onclick="compressImages()"
+>
 Compress Images
 </button>
 
-<button class="download-all" id="downloadAll" onclick="downloadAll()">
+<button
+class="download-all"
+id="downloadAll"
+onclick="downloadAll()"
+>
 Download All
 </button>
+
+</div>
+
+
+<!-- RESULTS -->
+
 <div id="results"></div>
 
-<section style="text-align:left; margin-top:35px; line-height:1.7;">
-  <h2>Free Online Image Compressor</h2>
 
-  <p>
-    CompressPro is a free online image compressor that helps
-    you reduce image file size quickly and easily. Compress JPG
-    and PNG images online without installing any software.
-    Select multiple images, compress them, compare the results,
-    and download your compressed images in seconds.
-  </p>
+<!-- FEATURES -->
 
-  <h2>Compress JPG and PNG Images Online</h2>
+<section class="features">
 
-  <p>
-    Need to reduce image size for your website, email, or online
-    forms? CompressPro makes it easy to compress JPG and PNG
-    images directly in your browser. Upload multiple images at
-    once and download your compressed files for free.
-  </p>
+<h2>Why Choose CompressPro?</h2>
+
+<div class="feature-grid">
+
+<div class="feature-card">
+
+<div class="icon">⚡</div>
+
+<h3>Fast Compression</h3>
+
+<p>
+Compress your images quickly and easily.
+</p>
+
+</div>
+
+
+<div class="feature-card">
+
+<div class="icon">🆓</div>
+
+<h3>100% Free</h3>
+
+<p>
+Use CompressPro without paying anything.
+</p>
+
+</div>
+
+
+<div class="feature-card">
+
+<div class="icon">📱</div>
+
+<h3>Mobile Friendly</h3>
+
+<p>
+Works smoothly on phones, tablets and computers.
+</p>
+
+</div>
+
+</div>
+
 </section>
 
-  <h2>How to Compress Images</h2>
-  <ol>
-    <li>Select one or more images from your device.</li>
-    <li>Click the Compress Images button.</li>
-    <li>Check the original and compressed file sizes.</li>
-    <li>Download each compressed image or use Download All.</li>
-  </ol>
 
-  <h2>Frequently Asked Questions</h2>
+<!-- SEO CONTENT -->
 
-  <h3>Is CompressPro free?</h3>
-  <p>Yes, you can use the image compressor for free.</p>
+<section class="content-section">
 
-  <h3>Can I compress multiple images?</h3>
-  <p>Yes, you can select multiple JPG and PNG images at once.</p>
+<h2>Free Online Image Compressor</h2>
 
-  <h3>Do I need to install an app?</h3>
-  <p>Yes! You can install CompressPro on your phone using a supported browser. You can also use it directly in your web browser without installing it.</p>
-
-  <h3>Will the compressed image look exactly the same?</h3>
-  <p>
-    Image quality may change after compression. Check the
-    preview before downloading your image.
-  </p>
-</section></div>
+<p>
+CompressPro is a free online image compressor that helps you
+reduce image file size quickly and easily. Compress JPG and PNG
+images online without installing any software. Select multiple
+images, compress them, compare the results, and download your
+compressed images in seconds.
+</p>
 
 
+<h2>Compress JPG and PNG Images Online</h2>
+
+<p>
+Need to reduce image size for your website, email, social media,
+or online forms? CompressPro makes it easy to compress images
+directly in your browser. Upload multiple JPG or PNG images at
+once and download your compressed files for free.
+</p>
+
+
+<h2>How to Compress Images</h2>
+
+<ol>
+
+<li>Select one or more images from your device.</li>
+
+<li>Click the Compress Images button.</li>
+
+<li>Check the original and compressed file sizes.</li>
+
+<li>Download each compressed image or use Download All.</li>
+
+</ol>
+
+
+<h2>Frequently Asked Questions</h2>
+
+
+<h3>Is CompressPro free?</h3>
+
+<p>
+Yes. CompressPro is a free online image compressor that you can
+use to reduce the size of your images.
+</p>
+
+
+<h3>Can I compress multiple images?</h3>
+
+<p>
+Yes. You can select multiple JPG and PNG images at the same time
+and compress them together.
+</p>
+
+
+<h3>Can I use CompressPro without installing the app?</h3>
+
+<p>
+Yes. You can use CompressPro directly in your web browser without
+installing anything. If your browser supports it, you can also
+install CompressPro for quicker access.
+</p>
+
+
+<h3>Will the compressed image look exactly the same?</h3>
+
+<p>
+Image quality may change after compression. You can check the
+preview and compare the original and compressed file sizes before
+downloading.
+</p>
+
+
+<h3>Does CompressPro work on mobile phones?</h3>
+
+<p>
+Yes. CompressPro is designed to work on mobile phones, tablets,
+and computers.
+</p>
+
+</section>
+
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+<a href="privacy.html">
+Privacy Policy
+</a>
+
+<br>
+
+<a href="about.html">
+About Us
+</a>
+
+<br>
+
+<a href="contact.html">
+Contact Us
+</a>
+
+<p>
+© 2026 CompressPro. All rights reserved.
+</p>
+
+</footer>
+
+
+
+<!-- SERVICE WORKER -->
+
+<script>
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", function () {
+
+        navigator.serviceWorker.register("service-worker.js")
+
+        .then(function () {
+
+            console.log("CompressPro app is ready");
+
+        })
+
+        .catch(function (error) {
+
+            console.log("Service worker error:", error);
+
+        });
+
+    });
+
+}
+
+</script>
+
+
+
+<!-- IMAGE COMPRESSION -->
 
 <script>
 
 let compressedImages = [];
 
+
 function compressImages() {
 
     const input = document.getElementById("imageInput");
+
     const results = document.getElementById("results");
 
     results.innerHTML = "";
+
     compressedImages = [];
 
+
     if (input.files.length === 0) {
+
         alert("Please select at least one image.");
+
         return;
+
     }
+
 
     Array.from(input.files).forEach((file, index) => {
 
         const reader = new FileReader();
 
+
         reader.onload = function(e) {
 
             const img = new Image();
 
+
             img.onload = function() {
 
                 const canvas = document.createElement("canvas");
+
                 const ctx = canvas.getContext("2d");
 
+
                 canvas.width = img.width;
+
                 canvas.height = img.height;
 
+
                 ctx.drawImage(img, 0, 0);
+
 
                 canvas.toBlob(function(blob) {
 
                     const originalSize = file.size;
+
                     const compressedSize = blob.size;
 
+
                     const saved = Math.max(
+
                         0,
-                        Math.round((1 - compressedSize / originalSize) * 100)
+
+                        Math.round(
+                            (1 - compressedSize / originalSize) * 100
+                        )
+
                     );
+
 
                     const url = URL.createObjectURL(blob);
 
+
                     compressedImages.push({
+
                         blob: blob,
+
                         name: "compressed_" + file.name
+
                     });
 
+
                     const card = document.createElement("div");
+
                     card.className = "card";
 
+
                     card.innerHTML = `
+
                         <strong>${file.name}</strong>
 
                         <img src="${url}">
 
                         <div class="info">
-                        Original: ${(originalSize / 1024).toFixed(2)} KB<br>
-                        Compressed: ${(compressedSize / 1024).toFixed(2)} KB<br>
-                        <span class="success">Saved: ${saved}%</span>
+
+                        Original:
+                        ${(originalSize / 1024).toFixed(2)} KB
+
+                        <br>
+
+                        Compressed:
+                        ${(compressedSize / 1024).toFixed(2)} KB
+
+                        <br>
+
+                        <span class="success">
+                        Saved: ${saved}%
+                        </span>
+
                         </div>
 
-                        <button class="download"
-                        onclick="downloadOne(${compressedImages.length - 1})">
+                        <button
+                        class="download"
+                        onclick="downloadOne(${compressedImages.length - 1})"
+                        >
+
                         Download Image
+
                         </button>
+
                     `;
+
 
                     results.appendChild(card);
 
+
                     document.getElementById("downloadAll").style.display =
-                        compressedImages.length > 1 ? "inline-block" : "none";
+
+                        compressedImages.length > 1
+                        ? "inline-block"
+                        : "none";
+
 
                 }, "image/jpeg", 0.7);
 
             };
 
+
             img.src = e.target.result;
 
         };
 
+
         reader.readAsDataURL(file);
 
     });
+
 }
+
+
 
 function downloadOne(index) {
 
     const item = compressedImages[index];
 
+
     const link = document.createElement("a");
 
+
     link.href = URL.createObjectURL(item.blob);
+
     link.download = item.name;
 
+
     document.body.appendChild(link);
+
     link.click();
+
     document.body.removeChild(link);
+
 }
+
+
 
 function downloadAll() {
 
     compressedImages.forEach((item, index) => {
 
         setTimeout(() => {
+
             downloadOne(index);
+
         }, index * 500);
 
     });
+
 }
 
 </script>
 
 
-<footer style="text-align:center; padding:20px; margin-top:30px; border-top:1px solid #ddd;">
-  <a href="privacy.html" style="color:#1769aa; text-decoration:none;">
-    Privacy Policy
-  </a>
-<br>
-<a href="about.html" style="color:#1769aa; text-decoration:none;">
-  About Us
-</a>
-<br>
-<a href="contact.html" style="color:#1769aa; text-decoration:none;">
-  Contact Us
-</a>
-  <p>© 2026 CompressPro. All rights reserved.</p>
-</footer>
+
+<!-- INSTALL APP SCRIPT -->
+
 <script>
+
 let deferredPrompt = null;
 
 const installBtn = document.getElementById("installApp");
 
-window.addEventListener("beforeinstallprompt", function(e) {
+
+window.addEventListener(
+"beforeinstallprompt",
+function(e) {
+
     e.preventDefault();
+
     deferredPrompt = e;
 
-    if (installBtn) {
-        installBtn.style.display = "inline-block";
-    }
+    installBtn.style.display = "inline-block";
+
 });
 
-if (installBtn) {
-    installBtn.addEventListener("click", async function() {
 
-        if (!deferredPrompt) {
-            alert("Install option is not available yet. Please open this website in Chrome and try again.");
-            return;
-        }
+installBtn.addEventListener(
+"click",
+async function() {
 
-        deferredPrompt.prompt();
+    if (!deferredPrompt) {
 
-        const choice = await deferredPrompt.userChoice;
+        alert(
+            "To install CompressPro, open the live website in Chrome and tap the Install App button."
+        );
 
-        if (choice.outcome === "accepted") {
-            installBtn.style.display = "none";
-        }
+        return;
 
-        deferredPrompt = null;
-    });
-}
+    }
 
-window.addEventListener("appinstalled", function() {
-    if (installBtn) {
+
+    deferredPrompt.prompt();
+
+
+    const choice =
+        await deferredPrompt.userChoice;
+
+
+    if (choice.outcome === "accepted") {
+
         installBtn.style.display = "none";
+
     }
+
+
+    deferredPrompt = null;
+
 });
+
+
+window.addEventListener(
+"appinstalled",
+function() {
+
+    installBtn.style.display = "none";
+
+});
+
 </script>
+
+
 </body>
+
 </html>
