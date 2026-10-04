@@ -1240,47 +1240,165 @@ async function convertPDFtoImages() {
 <script>
 
 let scannedPages = [];
-function checkOpenCV() {
-    if (typeof cv !== "undefined" && cv.Mat) {
-        alert("OpenCV loaded successfully!");
-    } else {
-        alert("OpenCV is still loading. Please wait and refresh.");
-    }
-    }
-async function autoCropDocument(imageData) {
 
-    if (typeof cv === "undefined" || !cv.Mat) {
-        return imageData;
+/* =========================
+   ADD SCAN PAGE
+========================= */
+
+async function addScanPage() {
+
+    const input = document.getElementById("scannerInput");
+    const result = document.getElementById("scannerResult");
+
+    if (!input.files || input.files.length === 0) {
+        alert("Please take a photo or select a document image.");
+        return;
     }
+
+    const file = input.files[0];
+
+    result.innerHTML =
+        "<p><strong>🔍 Processing document...</strong></p>";
+
+    const reader = new FileReader();
+
+    reader.onload = async function(e) {
+
+        const originalImage = e.target.result;
+
+        try {
+
+            let processedImage = originalImage;
+
+            /*
+             * OpenCV available ho to
+             * automatic document detection try karein.
+             */
+            if (typeof cv !== "undefined" && cv.Mat) {
+
+                try {
+
+                    processedImage =
+                        await autoCropDocument(originalImage);
+
+                } catch (error) {
+
+                    console.log(
+                        "Auto crop failed:",
+                        error
+                    );
+
+                    /*
+                     * Agar auto-crop fail ho,
+                     * original photo use hogi.
+                     */
+                    processedImage = originalImage;
+                }
+
+            }
+
+            scannedPages.push(processedImage);
+
+            input.value = "";
+
+            showScannedPages();
+
+        } catch (error) {
+
+            console.log(error);
+
+            input.value = "";
+
+            scannedPages.push(originalImage);
+
+            showScannedPages();
+
+        }
+
+    };
+
+    reader.onerror = function() {
+
+        input.value = "";
+
+        result.innerHTML = "";
+
+        alert(
+            "Image could not be read. Please try again."
+        );
+
+    };
+
+    reader.readAsDataURL(file);
+}
+
+
+/* =========================
+   AUTO DOCUMENT CROP
+========================= */
+
+async function autoCropDocument(imageData) {
 
     const img = new Image();
 
     img.src = imageData;
 
     await new Promise((resolve, reject) => {
+
         img.onload = resolve;
+
         img.onerror = reject;
+
     });
 
-    const canvas = document.createElement("canvas");
+
+    const canvas =
+        document.createElement("canvas");
+
     canvas.width = img.width;
     canvas.height = img.height;
 
-    canvas.getContext("2d").drawImage(img, 0, 0);
+    const ctx =
+        canvas.getContext("2d");
 
-    let src = cv.imread(canvas);
-    let gray = new cv.Mat();
-    let blurred = new cv.Mat();
-    let edges = new cv.Mat();
-    let contours = new cv.MatVector();
-    let hierarchy = new cv.Mat();
+    ctx.drawImage(
+        img,
+        0,
+        0
+    );
 
-    let cropped = null;
-    let approx = null;
+
+    const src =
+        cv.imread(canvas);
+
+    const gray =
+        new cv.Mat();
+
+    const blurred =
+        new cv.Mat();
+
+    const edges =
+        new cv.Mat();
+
+    const contours =
+        new cv.MatVector();
+
+    const hierarchy =
+        new cv.Mat();
+
 
     try {
 
-        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+        /* Convert to grayscale */
+
+        cv.cvtColor(
+            src,
+            gray,
+            cv.COLOR_RGBA2GRAY
+        );
+
+
+        /* Reduce noise */
 
         cv.GaussianBlur(
             gray,
@@ -1289,7 +1407,18 @@ async function autoCropDocument(imageData) {
             0
         );
 
-        cv.Canny(blurred, edges, 50, 150);
+
+        /* Detect edges */
+
+        cv.Canny(
+            blurred,
+            edges,
+            50,
+            150
+        );
+
+
+        /* Find contours */
 
         cv.findContours(
             edges,
@@ -1299,22 +1428,52 @@ async function autoCropDocument(imageData) {
             cv.CHAIN_APPROX_SIMPLE
         );
 
-        let best = null;
+
+        let bestCorners = null;
         let bestArea = 0;
-        const totalArea = src.rows * src.cols;
 
-        for (let i = 0; i < contours.size(); i++) {
+        const imageArea =
+            src.rows * src.cols;
 
-            const contour = contours.get(i);
+
+        /*
+         * Search for the largest
+         * 4-corner shape.
+         */
+
+        for (
+            let i = 0;
+            i < contours.size();
+            i++
+        ) {
+
+            const contour =
+                contours.get(i);
 
             try {
 
-                const area = cv.contourArea(contour);
+                const area =
+                    cv.contourArea(contour);
 
-                if (area < totalArea * 0.15) continue;
 
-                const perimeter = cv.arcLength(contour, true);
-                approx = new cv.Mat();
+                if (
+                    area <
+                    imageArea * 0.20
+                ) {
+                    continue;
+                }
+
+
+                const perimeter =
+                    cv.arcLength(
+                        contour,
+                        true
+                    );
+
+
+                const approx =
+                    new cv.Mat();
+
 
                 cv.approxPolyDP(
                     contour,
@@ -1323,234 +1482,404 @@ async function autoCropDocument(imageData) {
                     true
                 );
 
-                if (approx.rows === 4 && area > bestArea) {
 
-                    best = [];
+                if (
+                    approx.rows === 4 &&
+                    area > bestArea
+                ) {
 
-                    for (let j = 0; j < 4; j++) {
-                        best.push({
-                            x: approx.data32S[j * 2],
-                            y: approx.data32S[j * 2 + 1]
+                    bestCorners = [];
+
+                    for (
+                        let j = 0;
+                        j < 4;
+                        j++
+                    ) {
+
+                        bestCorners.push({
+
+                            x:
+                                approx.data32S[
+                                    j * 2
+                                ],
+
+                            y:
+                                approx.data32S[
+                                    j * 2 + 1
+                                ]
+
                         });
+
                     }
 
                     bestArea = area;
+
                 }
 
+
                 approx.delete();
-                approx = null;
 
             } finally {
+
                 contour.delete();
+
             }
+
         }
 
-        // Agar paper ke 4 corners na milen,
-        // original photo use hogi.
-        if (!best) {
+
+        /*
+         * Agar paper detect nahi hua,
+         * original image return karein.
+         */
+
+        if (!bestCorners) {
+
             return imageData;
+
         }
 
-        // Corners ko order mein set karein.
-        const sum = p => p.x + p.y;
-        const diff = p => p.x - p.y;
 
-        const tl = best.reduce((a, b) =>
-            sum(a) < sum(b) ? a : b
-        );
+        /* =========================
+           ORDER CORNERS
+        ========================= */
 
-        const br = best.reduce((a, b) =>
-            sum(a) > sum(b) ? a : b
-        );
+        const sum =
+            p => p.x + p.y;
 
-        const tr = best.reduce((a, b) =>
-            diff(a) > diff(b) ? a : b
-        );
+        const difference =
+            p => p.x - p.y;
 
-        const bl = best.reduce((a, b) =>
-            diff(a) < diff(b) ? a : b
-        );
 
-        const distance = (a, b) =>
-            Math.hypot(a.x - b.x, a.y - b.y);
+        const topLeft =
+            bestCorners.reduce(
+                (a, b) =>
+                    sum(a) < sum(b)
+                        ? a
+                        : b
+            );
 
-        const width = Math.round(Math.max(
-            distance(tl, tr),
-            distance(bl, br)
-        ));
 
-        const height = Math.round(Math.max(
-            distance(tl, bl),
-            distance(tr, br)
-        ));
+        const bottomRight =
+            bestCorners.reduce(
+                (a, b) =>
+                    sum(a) > sum(b)
+                        ? a
+                        : b
+            );
 
-        if (width < 100 || height < 100) {
+
+        const topRight =
+            bestCorners.reduce(
+                (a, b) =>
+                    difference(a) >
+                    difference(b)
+                        ? a
+                        : b
+            );
+
+
+        const bottomLeft =
+            bestCorners.reduce(
+                (a, b) =>
+                    difference(a) <
+                    difference(b)
+                        ? a
+                        : b
+            );
+
+
+        /* =========================
+           CALCULATE SIZE
+        ========================= */
+
+        function distance(a, b) {
+
+            return Math.hypot(
+                a.x - b.x,
+                a.y - b.y
+            );
+
+        }
+
+
+        const width =
+            Math.round(
+                Math.max(
+                    distance(
+                        topLeft,
+                        topRight
+                    ),
+
+                    distance(
+                        bottomLeft,
+                        bottomRight
+                    )
+                )
+            );
+
+
+        const height =
+            Math.round(
+                Math.max(
+                    distance(
+                        topLeft,
+                        bottomLeft
+                    ),
+
+                    distance(
+                        topRight,
+                        bottomRight
+                    )
+                )
+            );
+
+
+        if (
+            width < 100 ||
+            height < 100
+        ) {
+
             return imageData;
+
         }
 
-        const srcPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [
-            tl.x, tl.y,
-            tr.x, tr.y,
-            br.x, br.y,
-            bl.x, bl.y
-        ]);
 
-        const dstPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [
-            0, 0,
-            width - 1, 0,
-            width - 1, height - 1,
-            0, height - 1
-        ]);
+        /* =========================
+           PERSPECTIVE CORRECTION
+        ========================= */
 
-        const transform = cv.getPerspectiveTransform(
-            srcPoints,
-            dstPoints
-        );
+        const srcPoints =
+            cv.matFromArray(
+                4,
+                1,
+                cv.CV_32FC2,
+                [
 
-        cropped = new cv.Mat();
+                    topLeft.x,
+                    topLeft.y,
+
+                    topRight.x,
+                    topRight.y,
+
+                    bottomRight.x,
+                    bottomRight.y,
+
+                    bottomLeft.x,
+                    bottomLeft.y
+
+                ]
+            );
+
+
+        const dstPoints =
+            cv.matFromArray(
+                4,
+                1,
+                cv.CV_32FC2,
+                [
+
+                    0,
+                    0,
+
+                    width - 1,
+                    0,
+
+                    width - 1,
+                    height - 1,
+
+                    0,
+                    height - 1
+
+                ]
+            );
+
+
+        const transform =
+            cv.getPerspectiveTransform(
+                srcPoints,
+                dstPoints
+            );
+
+
+        const output =
+            new cv.Mat();
+
 
         cv.warpPerspective(
             src,
-            cropped,
+            output,
             transform,
-            new cv.Size(width, height)
+            new cv.Size(
+                width,
+                height
+            )
         );
 
-        const outCanvas = document.createElement("canvas");
 
-        cv.imshow(outCanvas, cropped);
+        /* =========================
+           SHOW RESULT
+        ========================= */
+
+        const outputCanvas =
+            document.createElement("canvas");
+
+        cv.imshow(
+            outputCanvas,
+            output
+        );
+
+
+        const result =
+            outputCanvas.toDataURL(
+                "image/jpeg",
+                0.92
+            );
+
+
+        /* Cleanup */
 
         srcPoints.delete();
+
         dstPoints.delete();
+
         transform.delete();
 
-        return outCanvas.toDataURL("image/jpeg", 0.92);
+        output.delete();
+
+
+        return result;
 
     } finally {
 
-        if (approx) approx.delete();
-        if (cropped) cropped.delete();
-
         src.delete();
+
         gray.delete();
+
         blurred.delete();
+
         edges.delete();
+
         contours.delete();
+
         hierarchy.delete();
 
     }
-    }
-function addScanPage() {
-
-    const input = document.getElementById("scannerInput");
-
-    if (!input.files || input.files.length === 0) {
-
-        alert("Please take a photo or select a document image.");
-
-        return;
-    }
-
-    const file = input.files[0];
-
-    const reader = new FileReader();
-
-    reader.onload = function(e) {
-
-        scannedPages.push(e.target.result);
-
-        input.value = "";
-
-        showScannedPages();
-
-    };
-
-    reader.onerror = function() {
-
-        alert("Image could not be read. Please try again.");
-
-    };
-
-    reader.readAsDataURL(file);
 
 }
 
 
+/* =========================
+   SHOW SCANNED PAGES
+========================= */
+
 function showScannedPages() {
 
     const result =
-        document.getElementById("scannerResult");
+        document.getElementById(
+            "scannerResult"
+        );
 
     result.innerHTML = "";
 
 
-    scannedPages.forEach(function(image, index) {
+    scannedPages.forEach(
+        function(image, index) {
 
-        const card =
-            document.createElement("div");
+            const card =
+                document.createElement(
+                    "div"
+                );
 
-        card.className = "card";
-
-
-        const title =
-            document.createElement("p");
-
-        title.innerHTML =
-            "<strong>Page " +
-            (index + 1) +
-            "</strong>";
+            card.className =
+                "card";
 
 
-        const preview =
-            document.createElement("img");
+            const title =
+                document.createElement(
+                    "p"
+                );
 
-        preview.src = image;
-
-        preview.style.maxWidth = "100%";
-
-        preview.style.borderRadius = "8px";
-
-
-        const removeButton =
-            document.createElement("button");
-
-        removeButton.className = "download";
-
-        removeButton.innerText =
-            "🗑️ Remove Page";
+            title.innerHTML =
+                "<strong>Page " +
+                (index + 1) +
+                "</strong>";
 
 
-        removeButton.onclick = function() {
+            const preview =
+                document.createElement(
+                    "img"
+                );
 
-            removeScanPage(index);
+            preview.src =
+                image;
 
-        };
+            preview.style.maxWidth =
+                "100%";
 
-
-        card.appendChild(title);
-
-        card.appendChild(preview);
-
-        card.appendChild(
-            document.createElement("br")
-        );
-
-        card.appendChild(
-            document.createElement("br")
-        );
-
-        card.appendChild(removeButton);
+            preview.style.borderRadius =
+                "8px";
 
 
-        result.appendChild(card);
+            const removeButton =
+                document.createElement(
+                    "button"
+                );
 
-    });
+            removeButton.className =
+                "download";
+
+            removeButton.innerText =
+                "🗑️ Remove Page";
 
 
-    if (scannedPages.length > 0) {
+            removeButton.onclick =
+                function() {
+
+                    removeScanPage(
+                        index
+                    );
+
+                };
+
+
+            card.appendChild(title);
+
+            card.appendChild(preview);
+
+            card.appendChild(
+                document.createElement(
+                    "br"
+                )
+            );
+
+            card.appendChild(
+                document.createElement(
+                    "br"
+                )
+            );
+
+            card.appendChild(
+                removeButton
+            );
+
+
+            result.appendChild(card);
+
+        }
+    );
+
+
+    /* Create PDF button */
+
+    if (
+        scannedPages.length > 0
+    ) {
 
         const pdfButton =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
 
         pdfButton.className =
             "compress-btn";
@@ -1563,34 +1892,53 @@ function showScannedPages() {
             createMultiPagePDF;
 
 
-        result.appendChild(pdfButton);
+        result.appendChild(
+            pdfButton
+        );
 
     }
 
 }
 
 
+/* =========================
+   REMOVE PAGE
+========================= */
+
 function removeScanPage(index) {
 
-    scannedPages.splice(index, 1);
+    scannedPages.splice(
+        index,
+        1
+    );
 
     showScannedPages();
 
 }
 
 
+/* =========================
+   CREATE MULTI PAGE PDF
+========================= */
+
 async function createMultiPagePDF() {
 
-    if (scannedPages.length === 0) {
+    if (
+        scannedPages.length === 0
+    ) {
 
-        alert("Please scan at least one page.");
+        alert(
+            "Please scan at least one page."
+        );
 
         return;
+
     }
 
 
     if (
-        typeof window.jspdf === "undefined"
+        typeof window.jspdf ===
+        "undefined"
     ) {
 
         alert(
@@ -1598,10 +1946,13 @@ async function createMultiPagePDF() {
         );
 
         return;
+
     }
 
 
-    const { jsPDF } =
+    const {
+        jsPDF
+    } =
         window.jspdf;
 
 
@@ -1614,15 +1965,18 @@ async function createMultiPagePDF() {
 
 
     const pageWidth = 210;
+
     const pageHeight = 297;
 
     const margin = 10;
 
     const maxWidth =
-        pageWidth - margin * 2;
+        pageWidth -
+        margin * 2;
 
     const maxHeight =
-        pageHeight - margin * 2;
+        pageHeight -
+        margin * 2;
 
 
     for (
@@ -1633,6 +1987,7 @@ async function createMultiPagePDF() {
 
         const imageData =
             scannedPages[i];
+
 
         const img =
             new Image();
@@ -1673,10 +2028,17 @@ async function createMultiPagePDF() {
 
 
         const x =
-            (pageWidth - width) / 2;
+            (
+                pageWidth -
+                width
+            ) / 2;
+
 
         const y =
-            (pageHeight - height) / 2;
+            (
+                pageHeight -
+                height
+            ) / 2;
 
 
         if (i > 0) {
@@ -1704,7 +2066,7 @@ async function createMultiPagePDF() {
 
 }
 
-</script>         
+</script>
 
 </body>
 
