@@ -316,6 +316,7 @@ footer a {
 
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 
 
@@ -430,7 +431,44 @@ Convert to PDF
 
 <div id="results"></div>
 
+<!-- PDF TO IMAGE CONVERTER -->
 
+<div class="upload-box">
+
+    <div class="upload-icon">📑</div>
+
+    <h2>Convert PDF to JPG/PNG</h2>
+
+    <p>
+        Convert PDF pages into JPG or PNG images.
+    </p>
+
+    <input
+        type="file"
+        id="pdfFileInput"
+        accept="application/pdf"
+    >
+
+    <label for="pdfFormat">Choose image format:</label>
+
+    <select id="pdfFormat"
+        style="width:100%; padding:12px; margin:12px 0;
+        border:1px solid #ddd; border-radius:8px;">
+
+        <option value="jpeg">JPG</option>
+        <option value="png">PNG</option>
+
+    </select>
+
+    <button
+        class="compress-btn"
+        onclick="convertPDFtoImages()">
+        Convert PDF
+    </button>
+
+    <div id="pdfResults"></div>
+
+</div>
 <!-- FEATURES -->
 
 <section class="features">
@@ -986,6 +1024,103 @@ function readImage(file) {
 
 }
 
+</script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+async function convertPDFtoImages() {
+
+    const input = document.getElementById("pdfFileInput");
+    const format = document.getElementById("pdfFormat").value;
+    const results = document.getElementById("pdfResults");
+
+    results.innerHTML = "";
+
+    if (!input.files.length) {
+        alert("Please select a PDF file.");
+        return;
+    }
+
+    if (typeof pdfjsLib === "undefined") {
+        alert("PDF converter library could not load. Please check your internet connection.");
+        return;
+    }
+
+    try {
+
+        const file = input.files[0];
+        const buffer = await file.arrayBuffer();
+
+        const pdf = await pdfjsLib.getDocument({
+            data: new Uint8Array(buffer)
+        }).promise;
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+
+            const page = await pdf.getPage(i);
+
+            const viewport = page.getViewport({ scale: 1.5 });
+
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            await page.render({
+                canvasContext: ctx,
+                viewport: viewport
+            }).promise;
+
+            const mime = format === "png"
+                ? "image/png"
+                : "image/jpeg";
+
+            const imageURL = canvas.toDataURL(mime, 0.92);
+
+            const card = document.createElement("div");
+            card.className = "card";
+
+            const title = document.createElement("p");
+            title.textContent = "PDF Page " + i;
+
+            const preview = document.createElement("img");
+            preview.src = imageURL;
+            preview.alt = "Converted PDF page " + i;
+
+            const button = document.createElement("button");
+            button.className = "download";
+            button.textContent = "Download Page " + i;
+
+            button.onclick = function() {
+
+                const link = document.createElement("a");
+
+                link.href = imageURL;
+                link.download =
+                    "CompressPro-Page-" + i +
+                    (format === "png" ? ".png" : ".jpg");
+
+                link.click();
+
+            };
+
+            card.appendChild(title);
+            card.appendChild(preview);
+            card.appendChild(button);
+
+            results.appendChild(card);
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("PDF conversion failed. Please try another PDF file.");
+
+    }
+}
 </script>
 </body>
 
