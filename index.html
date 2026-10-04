@@ -317,6 +317,7 @@ footer a {
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 
 
@@ -393,7 +394,14 @@ onclick="downloadAll()"
 >
 Download All
 </button>
-
+<button
+class="download-all"
+id="downloadZip"
+onclick="downloadZIP()"
+style="display:none;"
+>
+📦 Download All as ZIP
+</button>
 </div>
 
 <!-- IMAGE TO PDF -->
@@ -793,13 +801,15 @@ function compressImages() {
 
                     results.appendChild(card);
 
+document.getElementById("downloadAll").style.display =
+    compressedImages.length > 1
+    ? "inline-block"
+    : "none";
 
-                    document.getElementById("downloadAll").style.display =
-
-                        compressedImages.length > 1
-                        ? "inline-block"
-                        : "none";
-
+document.getElementById("downloadZip").style.display =
+    compressedImages.length > 1
+    ? "inline-block"
+    : "none";
 
                 }, "image/jpeg", 0.7);
 
@@ -855,6 +865,52 @@ function downloadAll() {
     });
 
 }
+
+
+async function downloadZIP() {
+
+    if (compressedImages.length === 0) {
+
+        alert("Please compress some images first.");
+
+        return;
+    }
+
+    if (typeof JSZip === "undefined") {
+
+        alert("ZIP library could not load. Please check your internet connection.");
+
+        return;
+    }
+
+    const zip = new JSZip();
+
+    compressedImages.forEach((item) => {
+
+        zip.file(item.name, item.blob);
+
+    });
+
+    const zipBlob = await zip.generateAsync({
+        type: "blob"
+    });
+
+    const link = document.createElement("a");
+
+    link.href = URL.createObjectURL(zipBlob);
+
+    link.download = "CompressPro-Compressed-Images.zip";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(link.href);
+
+}
+
 
 </script>
 
