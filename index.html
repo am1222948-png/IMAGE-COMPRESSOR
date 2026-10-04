@@ -1440,75 +1440,16 @@ async function autoCropDocument(imageData) {
 
     }
     }
-async function addScanPage() {
+function addScanPage() {
 
-    const input =
-        document.getElementById("scannerInput");
-
-    const result =
-        document.getElementById("scannerResult");
+    const input = document.getElementById("scannerInput");
 
     if (!input.files || input.files.length === 0) {
 
-        alert(
-            "Please take a photo or select a document image."
-        );
+        alert("Please take a photo or select a document image.");
 
         return;
     }
-
-    const file = input.files[0];
-
-    const reader = new FileReader();
-
-    reader.onload = async function(e) {
-
-        try {
-
-            result.innerHTML = `
-                <p class="success">
-                🔍 Detecting document...
-                </p>
-            `;
-
-            const processedImage =
-                await autoCropDocument(e.target.result);
-
-            scannedPages.push(processedImage);
-
-            input.value = "";
-
-            showScannedPages();
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert(
-                "Auto-crop failed. Original photo will be used."
-            );
-
-            scannedPages.push(e.target.result);
-
-            input.value = "";
-
-            showScannedPages();
-
-        }
-
-    };
-
-    reader.onerror = function() {
-
-        alert(
-            "Image could not be read. Please try again."
-        );
-
-    };
-
-    reader.readAsDataURL(file);
-
-}
 
     const file = input.files[0];
 
