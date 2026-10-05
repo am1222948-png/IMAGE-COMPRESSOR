@@ -478,10 +478,11 @@ crop all four sides, and straighten the document.
 </div>
 
 <input
-type="file"
-id="scannerInput"
-accept="image/*"
-capture="environment"
+    type="file"
+    id="scannerInput"
+    accept="image/*"
+    capture="environment"
+    onchange="handleScannerFile(event)"
 >
 
 <br>
