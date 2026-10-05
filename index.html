@@ -435,6 +435,7 @@ Convert to PDF
 </button>
 
 </div>
+
 <!-- DOCUMENT SCANNER -->
 
 <div class="upload-box">
@@ -452,19 +453,197 @@ Convert to PDF
         id="scannerInput"
         accept="image/*"
         capture="environment"
+        onchange="previewScanImage(event)"
     >
 
     <br><br>
 
     <button
         class="compress-btn"
-        onclick="addScanPage()">
+        onclick="openScannerCamera()">
         📷 Scan Document
     </button>
 
-    <div id="scannerResult"></div>
+    <div id="scannerResult" style="margin-top:20px;"></div>
 
 </div>
+
+<script>
+
+let scannerImage = null;
+
+/* Camera / Image Select */
+function openScannerCamera() {
+    document.getElementById("scannerInput").click();
+}
+
+/* Show selected image */
+function previewScanImage(event) {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        scannerImage = e.target.result;
+
+        document.getElementById("scannerResult").innerHTML = `
+
+            <div style="text-align:center;">
+
+                <img
+                    src="${scannerImage}"
+                    id="scanPreview"
+                    style="
+                    max-width:100%;
+                    border-radius:10px;
+                    margin-top:10px;
+                    "
+                >
+
+                <br><br>
+
+                <button
+                    class="compress-btn"
+                    onclick="cropScanImage()">
+                    ✂️ Crop Document
+                </button>
+
+                <button
+                    class="compress-btn"
+                    onclick="useFullScan()">
+                    ✅ Use Full Image
+                </button>
+
+            </div>
+
+        `;
+
+    };
+
+    reader.readAsDataURL(file);
+}
+
+
+/* Crop button */
+function cropScanImage() {
+
+    const img = document.getElementById("scanPreview");
+
+    if (!img) return;
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const width = img.naturalWidth;
+    const height = img.naturalHeight;
+
+    /* Basic automatic document crop */
+    const marginX = width * 0.05;
+    const marginY = height * 0.05;
+
+    const cropWidth = width - (marginX * 2);
+    const cropHeight = height - (marginY * 2);
+
+    canvas.width = cropWidth;
+    canvas.height = cropHeight;
+
+    ctx.drawImage(
+        img,
+        marginX,
+        marginY,
+        cropWidth,
+        cropHeight,
+        0,
+        0,
+        cropWidth,
+        cropHeight
+    );
+
+    const croppedImage = canvas.toDataURL("image/jpeg", 0.90);
+
+    scannerImage = croppedImage;
+
+    document.getElementById("scannerResult").innerHTML = `
+
+        <div style="text-align:center;">
+
+            <h3>✅ Document Cropped</h3>
+
+            <img
+                src="${croppedImage}"
+                style="
+                max-width:100%;
+                border-radius:10px;
+                margin-top:10px;
+                "
+            >
+
+            <br><br>
+
+            <button
+                class="compress-btn"
+                onclick="downloadScan()">
+                📥 Download Scan
+            </button>
+
+        </div>
+
+    `;
+}
+
+
+/* Use original image */
+function useFullScan() {
+
+    if (!scannerImage) return;
+
+    document.getElementById("scannerResult").innerHTML = `
+
+        <div style="text-align:center;">
+
+            <h3>✅ Scan Ready</h3>
+
+            <img
+                src="${scannerImage}"
+                style="
+                max-width:100%;
+                border-radius:10px;
+                margin-top:10px;
+                "
+            >
+
+            <br><br>
+
+            <button
+                class="compress-btn"
+                onclick="downloadScan()">
+                📥 Download Scan
+            </button>
+
+        </div>
+
+    `;
+}
+
+
+/* Download */
+function downloadScan() {
+
+    if (!scannerImage) return;
+
+    const link = document.createElement("a");
+
+    link.href = scannerImage;
+    link.download = "CompressPro-Scan.jpg";
+
+    link.click();
+}
+
+</script>
 <!-- PDF TO IMAGE CONVERTER -->
 
 <div class="upload-box">
