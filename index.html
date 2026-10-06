@@ -1699,212 +1699,388 @@ function createScannedPDF() {
 
 }
 
-
-/* =========================
-   DOCUMENT EDGE DETECTION
-========================= */
-
 async function detectAndCropDocument(dataURL) {
 
-    await waitForOpenCV();
+    try {
 
-    if (
-        typeof cv === "undefined" ||
-        !cv.Mat
-    ) {
+        await waitForOpenCV();
 
-        return dataURL;
-
-    }
-
-    const img =
-        await loadImage(dataURL);
-
-    const maxDimension = 1600;
-
-    let width =
-        img.width;
-
-    let height =
-        img.height;
-
-    if (Math.max(width, height) > maxDimension) {
-
-        const scale =
-            maxDimension /
-            Math.max(width, height);
-
-        width =
-            Math.round(width * scale);
-
-        height =
-            Math.round(height * scale);
-
-    }
-
-    const canvas =
-        document.createElement("canvas");
-
-    canvas.width = width;
-    canvas.height = height;
-
-    const ctx =
-        canvas.getContext("2d");
-
-    ctx.drawImage(
-        img,
-        0,
-        0,
-        width,
-        height
-    );
-
-    const src =
-        cv.imread(canvas);
-
-    const gray =
-        new cv.Mat();
-
-    const blurred =
-        new cv.Mat();
-
-    const edges =
-        new cv.Mat();
-
-    cv.cvtColor(
-        src,
-        gray,
-        cv.COLOR_RGBA2GRAY
-    );
-
-    cv.GaussianBlur(
-        gray,
-        blurred,
-        new cv.Size(5, 5),
-        0
-    );
-
-    cv.Canny(
-        blurred,
-        edges,
-        50,
-        150
-    );
-
-    const contours =
-        new cv.MatVector();
-
-    const hierarchy =
-        new cv.Mat();
-
-    cv.findContours(
-        edges,
-        contours,
-        hierarchy,
-        cv.RETR_EXTERNAL,
-        cv.CHAIN_APPROX_SIMPLE
-    );
-
-    let bestPoints = null;
-
-    let bestArea = 0;
-
-    for (
-        let i = 0;
-        i < contours.size();
-        i++
-    ) {
-
-        const contour =
-            contours.get(i);
-
-        const area =
-            cv.contourArea(contour);
-
-        if (area < width * height * 0.15) {
-
-            contour.delete();
-
-            continue;
-
+        if (
+            typeof cv === "undefined" ||
+            !cv.Mat
+        ) {
+            return dataURL;
         }
 
-        const perimeter =
-            cv.arcLength(
+        const img =
+            await loadImage(dataURL);
+
+        const maxDimension = 1600;
+
+        let width = img.width;
+        let height = img.height;
+
+        if (Math.max(width, height) > maxDimension) {
+
+            const scale =
+                maxDimension /
+                Math.max(width, height);
+
+            width =
+                Math.round(width * scale);
+
+            height =
+                Math.round(height * scale);
+        }
+
+        const canvas =
+            document.createElement("canvas");
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx =
+            canvas.getContext("2d");
+
+        ctx.drawImage(
+            img,
+            0,
+            0,
+            width,
+            height
+        );
+
+        const src =
+            cv.imread(canvas);
+
+        const gray =
+            new cv.Mat();
+
+        const blurred =
+            new cv.Mat();
+
+        const edges =
+            new cv.Mat();
+
+        cv.cvtColor(
+            src,
+            gray,
+            cv.COLOR_RGBA2GRAY
+        );
+
+        cv.GaussianBlur(
+            gray,
+            blurred,
+            new cv.Size(5, 5),
+            0
+        );
+
+        cv.Canny(
+            blurred,
+            edges,
+            50,
+            150
+        );
+
+        const contours =
+            new cv.MatVector();
+
+        const hierarchy =
+            new cv.Mat();
+
+        cv.findContours(
+            edges,
+            contours,
+            hierarchy,
+            cv.RETR_EXTERNAL,
+            cv.CHAIN_APPROX_SIMPLE
+        );
+
+        let bestPoints = null;
+        let bestArea = 0;
+
+        for (
+            let i = 0;
+            i < contours.size();
+            i++
+        ) {
+
+            const contour =
+                contours.get(i);
+
+            const area =
+                cv.contourArea(contour);
+
+            if (
+                area <
+                width * height * 0.12
+            ) {
+
+                contour.delete();
+                continue;
+            }
+
+            const perimeter =
+                cv.arcLength(
+                    contour,
+                    true
+                );
+
+            const approx =
+                new cv.Mat();
+
+            cv.approxPolyDP(
                 contour,
+                approx,
+                0.02 * perimeter,
                 true
             );
 
-        const approx =
-            new cv.Mat();
-
-        cv.approxPolyDP(
-            contour,
-            approx,
-            0.02 * perimeter,
-            true
-        );
-
-        if (
-            approx.rows === 4 &&
-            area > bestArea
-        ) {
-
-            bestArea = area;
-
-            bestPoints = [];
-
-            for (
-                let j = 0;
-                j < 4;
-                j++
+            if (
+                approx.rows === 4 &&
+                area > bestArea
             ) {
 
-                bestPoints.push({
-                    x: approx.data32S[j * 2],
-                    y: approx.data32S[j * 2 + 1]
-                });
+                bestArea = area;
+                bestPoints = [];
 
+                for (
+                    let j = 0;
+                    j < 4;
+                    j++
+                ) {
+
+                    bestPoints.push({
+                        x:
+                            approx.data32S[j * 2],
+
+                        y:
+                            approx.data32S[
+                                j * 2 + 1
+                            ]
+                    });
+
+                }
             }
 
+            approx.delete();
+            contour.delete();
         }
 
-        approx.delete();
-        contour.delete();
+        if (
+            !bestPoints ||
+            bestPoints.length !== 4
+        ) {
 
-    }
+            src.delete();
+            gray.delete();
+            blurred.delete();
+            edges.delete();
+            contours.delete();
+            hierarchy.delete();
 
-    if (
-        bestPoints &&
-        bestPoints.length === 4
-    ) {
+            return dataURL;
+        }
 
-        console.log(
-            "CompressPro: Document edges detected.",
-            bestPoints
+        const points =
+            orderPoints(bestPoints);
+
+        const topLeft = points[0];
+        const topRight = points[1];
+        const bottomRight = points[2];
+        const bottomLeft = points[3];
+
+        const topWidth =
+            distance(
+                topLeft,
+                topRight
+            );
+
+        const bottomWidth =
+            distance(
+                bottomLeft,
+                bottomRight
+            );
+
+        const leftHeight =
+            distance(
+                topLeft,
+                bottomLeft
+            );
+
+        const rightHeight =
+            distance(
+                topRight,
+                bottomRight
+            );
+
+        let outputWidth =
+            Math.round(
+                Math.max(
+                    topWidth,
+                    bottomWidth
+                )
+            );
+
+        let outputHeight =
+            Math.round(
+                Math.max(
+                    leftHeight,
+                    rightHeight
+                )
+            );
+
+        if (
+            outputWidth < 100 ||
+            outputHeight < 100
+        ) {
+
+            src.delete();
+            gray.delete();
+            blurred.delete();
+            edges.delete();
+            contours.delete();
+            hierarchy.delete();
+
+            return dataURL;
+        }
+
+        const maxOutput = 1600;
+
+        if (
+            Math.max(
+                outputWidth,
+                outputHeight
+            ) > maxOutput
+        ) {
+
+            const scale =
+                maxOutput /
+                Math.max(
+                    outputWidth,
+                    outputHeight
+                );
+
+            outputWidth =
+                Math.round(
+                    outputWidth * scale
+                );
+
+            outputHeight =
+                Math.round(
+                    outputHeight * scale
+                );
+        }
+
+        const srcPoints =
+            cv.matFromArray(
+                4,
+                1,
+                cv.CV_32FC2,
+                [
+                    topLeft.x,
+                    topLeft.y,
+
+                    topRight.x,
+                    topRight.y,
+
+                    bottomRight.x,
+                    bottomRight.y,
+
+                    bottomLeft.x,
+                    bottomLeft.y
+                ]
+            );
+
+        const dstPoints =
+            cv.matFromArray(
+                4,
+                1,
+                cv.CV_32FC2,
+                [
+                    0,
+                    0,
+
+                    outputWidth - 1,
+                    0,
+
+                    outputWidth - 1,
+                    outputHeight - 1,
+
+                    0,
+                    outputHeight - 1
+                ]
+            );
+
+        const transform =
+            cv.getPerspectiveTransform(
+                srcPoints,
+                dstPoints
+            );
+
+        const warped =
+            new cv.Mat();
+
+        cv.warpPerspective(
+            src,
+            warped,
+            transform,
+            new cv.Size(
+                outputWidth,
+                outputHeight
+            ),
+            cv.INTER_LINEAR,
+            cv.BORDER_CONSTANT,
+            new cv.Scalar()
         );
 
-        /*
-        IMPORTANT:
-        For now return original image.
-        */
+        const outputCanvas =
+            document.createElement(
+                "canvas"
+            );
 
-        return dataURL;
+        outputCanvas.width =
+            outputWidth;
+
+        outputCanvas.height =
+            outputHeight;
+
+        cv.imshow(
+            outputCanvas,
+            warped
+        );
+
+        const result =
+            outputCanvas.toDataURL(
+                "image/jpeg",
+                0.92
+            );
+
+        src.delete();
+        gray.delete();
+        blurred.delete();
+        edges.delete();
+        contours.delete();
+        hierarchy.delete();
+        srcPoints.delete();
+        dstPoints.delete();
+        transform.delete();
+        warped.delete();
+
+        return result;
 
     }
 
-    src.delete();
-    gray.delete();
-    blurred.delete();
-    edges.delete();
-    contours.delete();
-    hierarchy.delete();
+    catch (error) {
 
-    return dataURL;
+        console.error(
+            "CompressPro Scanner Error:",
+            error
+        );
 
+        return dataURL;
+    }
 }
-
-
 /* =========================
    WAIT FOR OPENCV
 ========================= */
