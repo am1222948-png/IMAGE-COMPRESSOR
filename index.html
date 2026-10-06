@@ -1698,7 +1698,6 @@ function createScannedPDF() {
     );
 
 }
-
 async function detectAndCropDocument(dataURL) {
 
     try {
@@ -1715,7 +1714,7 @@ async function detectAndCropDocument(dataURL) {
         const img =
             await loadImage(dataURL);
 
-        const maxDimension = 1600;
+        const maxDimension = 1800;
 
         let width = img.width;
         let height = img.height;
@@ -1778,8 +1777,28 @@ async function detectAndCropDocument(dataURL) {
         cv.Canny(
             blurred,
             edges,
-            50,
-            150
+            30,
+            120
+        );
+
+        /*
+        Make edges stronger
+        */
+
+        const dilated =
+            new cv.Mat();
+
+        const kernel =
+            cv.Mat.ones(
+                5,
+                5,
+                cv.CV_8U
+            );
+
+        cv.dilate(
+            edges,
+            dilated,
+            kernel
         );
 
         const contours =
@@ -1789,10 +1808,10 @@ async function detectAndCropDocument(dataURL) {
             new cv.Mat();
 
         cv.findContours(
-            edges,
+            dilated,
             contours,
             hierarchy,
-            cv.RETR_EXTERNAL,
+            cv.RETR_LIST,
             cv.CHAIN_APPROX_SIMPLE
         );
 
@@ -1811,9 +1830,13 @@ async function detectAndCropDocument(dataURL) {
             const area =
                 cv.contourArea(contour);
 
+            /*
+            Ignore very small objects
+            */
+
             if (
                 area <
-                width * height * 0.12
+                width * height * 0.10
             ) {
 
                 contour.delete();
@@ -1832,7 +1855,7 @@ async function detectAndCropDocument(dataURL) {
             cv.approxPolyDP(
                 contour,
                 approx,
-                0.02 * perimeter,
+                0.03 * perimeter,
                 true
             );
 
@@ -1841,8 +1864,7 @@ async function detectAndCropDocument(dataURL) {
                 area > bestArea
             ) {
 
-                bestArea = area;
-                bestPoints = [];
+                const points = [];
 
                 for (
                     let j = 0;
@@ -1850,22 +1872,71 @@ async function detectAndCropDocument(dataURL) {
                     j++
                 ) {
 
-                    bestPoints.push({
+                    points.push({
                         x:
-                            approx.data32S[j * 2],
+                            approx.data32S[
+                                j * 2
+                            ],
 
                         y:
                             approx.data32S[
                                 j * 2 + 1
                             ]
                     });
+                }
 
+                /*
+                Check that the detected
+                shape is reasonably large
+                */
+
+                const ordered =
+                    orderPoints(points);
+
+                const w1 =
+                    distance(
+                        ordered[0],
+                        ordered[1]
+                    );
+
+                const w2 =
+                    distance(
+                        ordered[3],
+                        ordered[2]
+                    );
+
+                const h1 =
+                    distance(
+                        ordered[0],
+                        ordered[3]
+                    );
+
+                const h2 =
+                    distance(
+                        ordered[1],
+                        ordered[2]
+                    );
+
+                if (
+                    w1 > width * 0.20 &&
+                    w2 > width * 0.20 &&
+                    h1 > height * 0.20 &&
+                    h2 > height * 0.20
+                ) {
+
+                    bestArea = area;
+                    bestPoints = ordered;
                 }
             }
 
             approx.delete();
             contour.delete();
         }
+
+        /*
+        If document was not detected,
+        return original image.
+        */
 
         if (
             !bestPoints ||
@@ -1876,76 +1947,59 @@ async function detectAndCropDocument(dataURL) {
             gray.delete();
             blurred.delete();
             edges.delete();
+            dilated.delete();
+            kernel.delete();
             contours.delete();
             hierarchy.delete();
 
             return dataURL;
         }
 
-        const points =
-            orderPoints(bestPoints);
+        const topLeft =
+            bestPoints[0];
 
-        const topLeft = points[0];
-        const topRight = points[1];
-        const bottomRight = points[2];
-        const bottomLeft = points[3];
+        const topRight =
+            bestPoints[1];
 
-        const topWidth =
-            distance(
-                topLeft,
-                topRight
-            );
+        const bottomRight =
+            bestPoints[2];
 
-        const bottomWidth =
-            distance(
-                bottomLeft,
-                bottomRight
-            );
-
-        const leftHeight =
-            distance(
-                topLeft,
-                bottomLeft
-            );
-
-        const rightHeight =
-            distance(
-                topRight,
-                bottomRight
-            );
+        const bottomLeft =
+            bestPoints[3];
 
         let outputWidth =
             Math.round(
                 Math.max(
-                    topWidth,
-                    bottomWidth
+                    distance(
+                        topLeft,
+                        topRight
+                    ),
+                    distance(
+                        bottomLeft,
+                        bottomRight
+                    )
                 )
             );
 
         let outputHeight =
             Math.round(
                 Math.max(
-                    leftHeight,
-                    rightHeight
+                    distance(
+                        topLeft,
+                        bottomLeft
+                    ),
+                    distance(
+                        topRight,
+                        bottomRight
+                    )
                 )
             );
 
-        if (
-            outputWidth < 100 ||
-            outputHeight < 100
-        ) {
+        /*
+        Limit output size
+        */
 
-            src.delete();
-            gray.delete();
-            blurred.delete();
-            edges.delete();
-            contours.delete();
-            hierarchy.delete();
-
-            return dataURL;
-        }
-
-        const maxOutput = 1600;
+        const maxOutput = 1800;
 
         if (
             Math.max(
@@ -2030,8 +2084,7 @@ async function detectAndCropDocument(dataURL) {
                 outputHeight
             ),
             cv.INTER_LINEAR,
-            cv.BORDER_CONSTANT,
-            new cv.Scalar()
+            cv.BORDER_CONSTANT
         );
 
         const outputCanvas =
@@ -2056,16 +2109,26 @@ async function detectAndCropDocument(dataURL) {
                 0.92
             );
 
+        /*
+        Cleanup
+        */
+
         src.delete();
         gray.delete();
         blurred.delete();
         edges.delete();
+        dilated.delete();
+        kernel.delete();
         contours.delete();
         hierarchy.delete();
         srcPoints.delete();
         dstPoints.delete();
         transform.delete();
         warped.delete();
+
+        console.log(
+            "CompressPro: Document cropped successfully."
+        );
 
         return result;
 
@@ -2080,7 +2143,7 @@ async function detectAndCropDocument(dataURL) {
 
         return dataURL;
     }
-}
+    }
 /* =========================
    WAIT FOR OPENCV
 ========================= */
