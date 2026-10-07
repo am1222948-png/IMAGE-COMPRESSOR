@@ -1784,8 +1784,8 @@ cv.GaussianBlur(
 cv.Canny(
     blurred,
     edges,
-    20,
-    100
+    30,
+    120
 );
 
 
@@ -1832,7 +1832,7 @@ cv.Canny(
                 cv.approxPolyDP(
                     contour,
                     approx,
-                    0.03 * perimeter,
+                    0.02 * perimeter,
                     true
                 );
 
