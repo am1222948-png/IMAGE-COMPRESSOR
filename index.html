@@ -2155,26 +2155,30 @@ async function detectAndCropDocument(dataURL) {
                 ]
             );
 
-        const transform =
-            cv.getPerspectiveTransform(
-                srcPoints,
-                dstPoints
-            );
+    const transform =
+    cv.getPerspectiveTransform(
+        srcPoints,
+        dstPoints
+    );
 
-        const warped =
-            new cv.Mat();
+/* =================================
+   STRAIGHT FRONT VIEW CORRECTION
+================================= */
 
-        cv.warpPerspective(
-            src,
-            warped,
-            transform,
-            new cv.Size(
-                outputWidth,
-                outputHeight
-            ),
-            cv.INTER_LINEAR,
-            cv.BORDER_CONSTANT
-        );
+const warped =
+    new cv.Mat();
+
+cv.warpPerspective(
+    src,
+    warped,
+    transform,
+    new cv.Size(
+        outputWidth,
+        outputHeight
+    ),
+    cv.INTER_CUBIC,
+    cv.BORDER_REPLICATE
+);
 
         const outputCanvas =
             document.createElement(
