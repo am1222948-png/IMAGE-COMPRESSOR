@@ -1768,26 +1768,26 @@ async function detectAndCropDocument(dataURL) {
            METHOD 1
            EDGE DETECTION
         ================================= */
+const blurred =
+    new cv.Mat();
 
-        const blurred =
-            new cv.Mat();
+const edges =
+    new cv.Mat();
 
-        const edges =
-            new cv.Mat();
+cv.GaussianBlur(
+    gray,
+    blurred,
+    new cv.Size(5, 5),
+    0
+);
 
-        cv.GaussianBlur(
-            gray,
-            blurred,
-            new cv.Size(5, 5),
-            0
-        );
+cv.Canny(
+    blurred,
+    edges,
+    20,
+    100
+);
 
-        cv.Canny(
-            blurred,
-            edges,
-            30,
-            120
-        );
 
         const contours1 =
             new cv.MatVector();
