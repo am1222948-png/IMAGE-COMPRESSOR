@@ -2179,30 +2179,7 @@ cv.warpPerspective(
     cv.INTER_CUBIC,
     cv.BORDER_REPLICATE
 );
-/* =================================
-   DOCUMENT FLATTENING
-================================= */
-
-const flat =
-    new cv.Mat();
-
-cv.GaussianBlur(
-    warped,
-    flat,
-    new cv.Size(3, 3),
-    0
-);
-
-cv.addWeighted(
-    warped,
-    1.15,
-    flat,
-    -0.15,
-    0,
-    warped
-);
-
-flat.delete();
+        
         const outputCanvas =
             document.createElement(
                 "canvas"
