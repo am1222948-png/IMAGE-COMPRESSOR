@@ -2187,32 +2187,77 @@ async function detectAndCropDocument(dataURL) {
         outputCanvas.height =
             outputHeight;
 
-        cv.imshow(
-            outputCanvas,
-            warped
-        );
+    /* =================================
+   CLEAN & SHARPEN SCANNED DOCUMENT
+================================= */
 
-        const result =
-            outputCanvas.toDataURL(
-                "image/jpeg",
-                0.92
-            );
+const cleanGray =
+    new cv.Mat();
 
-        /* =================================
-           CLEANUP
-        ================================= */
+const enhanced =
+    new cv.Mat();
 
-        src.delete();
-        gray.delete();
-        blurred.delete();
-        edges.delete();
-        threshold.delete();
-        kernel.delete();
-        clean.delete();
-        srcPoints.delete();
-        dstPoints.delete();
-        transform.delete();
-        warped.delete();
+const sharp =
+    new cv.Mat();
+
+/* Convert document to grayscale */
+
+cv.cvtColor(
+    warped,
+    cleanGray,
+    cv.COLOR_RGBA2GRAY
+);
+
+/* Improve contrast */
+
+const clahe =
+    new cv.CLAHE(
+        2.0,
+        new cv.Size(8, 8)
+    );
+
+clahe.apply(
+    cleanGray,
+    enhanced
+);
+
+/* Sharpen text */
+
+cv.GaussianBlur(
+    enhanced,
+    sharp,
+    new cv.Size(0, 0),
+    2
+);
+
+cv.addWeighted(
+    enhanced,
+    1.5,
+    sharp,
+    -0.5,
+    0,
+    enhanced
+);
+
+/* Show cleaned document */
+
+cv.imshow(
+    outputCanvas,
+    enhanced
+);
+
+const result =
+    outputCanvas.toDataURL(
+        "image/jpeg",
+        0.92
+    );
+
+/* Cleanup */
+
+cleanGray.delete();
+enhanced.delete();
+sharp.delete();
+clahe.delete();
 
         console.log(
             "CompressPro: Document cropped successfully."
