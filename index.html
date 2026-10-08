@@ -2179,7 +2179,7 @@ async function startDocumentScan() {
 
 
         status.innerHTML =
-            "⚠️ Scanner could not detect the page. Original photo was kept.";
+            "⚠️ Scanner could not process the page. Original photo was kept.";
 
 
         scannedPages.push(
@@ -2390,7 +2390,7 @@ function updateScanButtons() {
 
 
 /* =====================================================
-ROBUST DOCUMENT DETECTION
+IMPROVED DOCUMENT DETECTION
 ===================================================== */
 
 async function detectAndCropDocument(dataURL) {
@@ -2416,8 +2416,13 @@ async function detectAndCropDocument(dataURL) {
             );
 
 
+        /*
+         Work on a smaller copy for
+         faster and more stable detection.
+        */
+
         const maxDimension =
-            2000;
+            1800;
 
 
         let width =
@@ -2474,7 +2479,10 @@ async function detectAndCropDocument(dataURL) {
 
         const ctx =
             canvas.getContext(
-                "2d"
+                "2d",
+                {
+                    willReadFrequently: true
+                }
             );
 
 
@@ -2505,6 +2513,10 @@ async function detectAndCropDocument(dataURL) {
             new cv.Mat();
 
 
+        /*
+         Grayscale + blur first.
+         */
+
         cv.cvtColor(
             src,
             gray,
@@ -2523,20 +2535,29 @@ async function detectAndCropDocument(dataURL) {
         );
 
 
+        /*
+         Slightly stronger edge detection
+         reduces background texture.
+         */
+
         cv.Canny(
             blurred,
             edges,
-            30,
-            120
+            45,
+            140
         );
 
+
+        /*
+         Close small gaps in document edges.
+         */
 
         const kernel =
             cv.getStructuringElement(
                 cv.MORPH_RECT,
                 new cv.Size(
-                    5,
-                    5
+                    7,
+                    7
                 )
             );
 
@@ -2557,11 +2578,16 @@ async function detectAndCropDocument(dataURL) {
             new cv.Mat();
 
 
+        /*
+         External contours are more reliable
+         for finding the outside of a document.
+         */
+
         cv.findContours(
             edges,
             contours,
             hierarchy,
-            cv.RETR_LIST,
+            cv.RETR_EXTERNAL,
             cv.CHAIN_APPROX_SIMPLE
         );
 
@@ -2601,9 +2627,20 @@ async function detectAndCropDocument(dataURL) {
                     );
 
 
+                const areaRatio =
+                    area /
+                    imageArea;
+
+
+                /*
+                 Ignore tiny objects and
+                 also ignore almost the complete
+                 camera frame.
+                 */
+
                 if (
-                    area <
-                    imageArea * 0.08
+                    areaRatio < 0.12 ||
+                    areaRatio > 0.97
                 ) {
 
                     continue;
@@ -2625,7 +2662,7 @@ async function detectAndCropDocument(dataURL) {
                 cv.approxPolyDP(
                     contour,
                     approx,
-                    0.02 * perimeter,
+                    0.025 * perimeter,
                     true
                 );
 
@@ -2677,26 +2714,21 @@ async function detectAndCropDocument(dataURL) {
                     );
 
 
+                if (
+                    quad <= 0
+                ) {
+
+                    continue;
+
+                }
+
+
                 const rectangularity =
                     quad /
                     Math.max(
                         1,
                         area
                     );
-
-
-                const areaRatio =
-                    area /
-                    imageArea;
-
-
-                if (
-                    areaRatio < 0.08
-                ) {
-
-                    continue;
-
-                }
 
 
                 const topWidth =
@@ -2765,50 +2797,63 @@ async function detectAndCropDocument(dataURL) {
                     );
 
 
+                /*
+                 Very wide or very strange
+                 shapes are unlikely to be paper.
+                 */
+
+                if (
+                    aspect > 3.2
+                ) {
+
+                    continue;
+
+                }
+
+
                 let score =
                     areaRatio * 100;
 
 
                 score +=
                     Math.min(
-                        25,
-                        rectangularity * 25
+                        30,
+                        rectangularity * 30
                     );
 
 
                 /*
-                 Do not select the complete
-                 camera image as the document.
-                */
+                 Prefer normal document proportions.
+                 */
+
+                if (
+                    aspect >= 1.15 &&
+                    aspect <= 2.2
+                ) {
+
+                    score += 15;
+
+                }
+
+
+                /*
+                 Avoid selecting the entire photo
+                 as the document.
+                 */
 
                 if (
                     areaRatio > 0.94
                 ) {
 
-                    score -= 40;
+                    score -= 45;
 
                 }
 
 
                 /*
-                 Prefer normal paper-like
-                 proportions.
-                */
-
-                if (
-                    aspect >= 1.15 &&
-                    aspect <= 2.1
-                ) {
-
-                    score += 12;
-
-                }
-
-
-                /*
-                 Prefer a rectangle that
-                 has a small border around it.
-                */
+                 Prefer a document that has
+                 at least a little visible margin.
+                 */
 
                 const marginX =
                     Math.min(
@@ -2833,7 +2878,7 @@ async function detectAndCropDocument(dataURL) {
                     marginY > height * 0.01
                 ) {
 
-                    score += 4;
+                    score += 5;
 
                 }
 
@@ -2880,9 +2925,15 @@ async function detectAndCropDocument(dataURL) {
         let result;
 
 
+        /*
+         Only use perspective correction when
+         the detected rectangle is reasonably
+         reliable.
+         */
+
         if (
             bestPoints &&
-            bestScore >= 15
+            bestScore >= 20
         ) {
 
             result =
@@ -2896,9 +2947,9 @@ async function detectAndCropDocument(dataURL) {
         else {
 
             /*
-             If the four corners cannot
-             be detected reliably, do not
-             make a random crop.
+             Never make a random crop.
+             If detection is uncertain,
+             enhance the whole image gently.
             */
 
             result =
@@ -3106,23 +3157,34 @@ function perspectiveEnhance(
 
 
 /* =====================================================
-PROFESSIONAL DOCUMENT ENHANCEMENT
-WHITE PAPER + DARK TEXT
+CLEAN DOCUMENT ENHANCEMENT
+CAMSCANNER-LIKE NATURAL LOOK
 ===================================================== */
 
 function enhanceDocument(
     mat
 ) {
 
+    let gray = null;
+    let denoise = null;
+    let contrast = null;
+    let background = null;
+    let normalized = null;
+    let normalized8 = null;
+    let blended = null;
+    let sharpened = null;
+    let clahe = null;
+    let sharpenKernel = null;
+
     try {
 
-        const gray =
+        gray =
             new cv.Mat();
 
 
         /*
          Convert to grayscale.
-        */
+         */
 
         if (
             mat.channels() === 4
@@ -3136,7 +3198,9 @@ function enhanceDocument(
 
         }
 
-        else {
+        else if (
+            mat.channels() === 3
+        ) {
 
             cv.cvtColor(
                 mat,
@@ -3146,12 +3210,20 @@ function enhanceDocument(
 
         }
 
+        else {
+
+            mat.copyTo(
+                gray
+            );
+
+        }
+
 
         /*
-         Gentle denoise.
-        */
+         Gentle noise reduction.
+         */
 
-        const denoise =
+        denoise =
             new cv.Mat();
 
 
@@ -3167,12 +3239,14 @@ function enhanceDocument(
 
 
         /*
-         Improve local contrast.
-        */
+         Local contrast improvement.
+         Lower CLAHE strength prevents
+         paper texture from becoming noise.
+         */
 
-        const clahe =
+        clahe =
             new cv.CLAHE(
-                2.4,
+                1.8,
                 new cv.Size(
                     8,
                     8
@@ -3180,7 +3254,7 @@ function enhanceDocument(
             );
 
 
-        const contrast =
+        contrast =
             new cv.Mat();
 
 
@@ -3191,10 +3265,88 @@ function enhanceDocument(
 
 
         /*
-         Slight sharpening.
-        */
+         Estimate the large-scale paper
+         background. This helps remove
+         shadows and grey paper without
+         destroying natural text.
+         */
 
-        const sharpenKernel =
+        background =
+            new cv.Mat();
+
+
+        cv.GaussianBlur(
+            contrast,
+            background,
+            new cv.Size(
+                0,
+                0
+            ),
+            25,
+            25,
+            cv.BORDER_DEFAULT
+        );
+
+
+        /*
+         Normalize illumination.
+
+         This is intentionally NOT a hard
+         adaptive threshold. The output stays
+         grayscale so paper texture and text
+         remain natural instead of turning
+         into harsh black/white noise.
+         */
+
+        normalized =
+            new cv.Mat();
+
+
+        cv.divide(
+            contrast,
+            background,
+            normalized,
+            255
+        );
+
+
+        normalized8 =
+            new cv.Mat();
+
+
+        normalized.convertTo(
+            normalized8,
+            cv.CV_8U
+        );
+
+
+        /*
+         Mix mostly the original contrast
+         with a smaller amount of normalized
+         illumination correction.
+         */
+
+        blended =
+            new cv.Mat();
+
+
+        cv.addWeighted(
+            contrast,
+            0.70,
+            normalized8,
+            0.30,
+            0,
+            blended
+        );
+
+
+        /*
+         Very mild sharpening.
+         This is intentionally much weaker
+         than the old 5/-1 sharpening kernel.
+         */
+
+        sharpenKernel =
             cv.matFromArray(
                 3,
                 3,
@@ -3202,27 +3354,27 @@ function enhanceDocument(
                 [
 
                     0,
-                    -1,
+                    -0.5,
                     0,
 
-                    -1,
-                    5,
-                    -1,
+                    -0.5,
+                    3,
+                    -0.5,
 
                     0,
-                    -1,
+                    -0.5,
                     0
 
                 ]
             );
 
 
-        const sharpened =
+        sharpened =
             new cv.Mat();
 
 
         cv.filter2D(
-            contrast,
+            blended,
             sharpened,
             cv.CV_8U,
             sharpenKernel
@@ -3230,82 +3382,10 @@ function enhanceDocument(
 
 
         /*
-         Adaptive threshold creates
-         a clean scanner appearance:
-         light paper + dark text.
-        */
-
-        const binary =
-            new cv.Mat();
-
-
-        cv.adaptiveThreshold(
-            sharpened,
-            binary,
-            255,
-            cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-            cv.THRESH_BINARY,
-            31,
-            11
-        );
-
-
-        /*
-         Remove isolated tiny noise.
-        */
-
-        const openKernel =
-            cv.getStructuringElement(
-                cv.MORPH_RECT,
-                new cv.Size(
-                    2,
-                    2
-                )
-            );
-
-
-        const cleaned =
-            new cv.Mat();
-
-
-        cv.morphologyEx(
-            binary,
-            cleaned,
-            cv.MORPH_OPEN,
-            openKernel
-        );
-
-
-        /*
-         Reconnect small broken
-         characters and lines.
-        */
-
-        const closeKernel =
-            cv.getStructuringElement(
-                cv.MORPH_RECT,
-                new cv.Size(
-                    2,
-                    2
-                )
-            );
-
-
-        const finalMat =
-            new cv.Mat();
-
-
-        cv.morphologyEx(
-            cleaned,
-            finalMat,
-            cv.MORPH_CLOSE,
-            closeKernel
-        );
-
-
-        /*
-         Output canvas.
-        */
+         Slightly increase brightness of
+         the final paper without clipping
+         text to pure black.
+         */
 
         const outputCanvas =
             document.createElement(
@@ -3314,50 +3394,23 @@ function enhanceDocument(
 
 
         outputCanvas.width =
-            finalMat.cols;
+            sharpened.cols;
 
         outputCanvas.height =
-            finalMat.rows;
+            sharpened.rows;
 
 
         cv.imshow(
             outputCanvas,
-            finalMat
+            sharpened
         );
 
 
         const data =
             outputCanvas.toDataURL(
                 "image/jpeg",
-                0.96
+                0.94
             );
-
-
-        /*
-         Clean memory.
-        */
-
-        gray.delete();
-
-        denoise.delete();
-
-        contrast.delete();
-
-        sharpenKernel.delete();
-
-        sharpened.delete();
-
-        binary.delete();
-
-        openKernel.delete();
-
-        cleaned.delete();
-
-        closeKernel.delete();
-
-        finalMat.delete();
-
-        clahe.delete();
 
 
         return data;
@@ -3373,33 +3426,90 @@ function enhanceDocument(
 
 
         /*
-         If enhancement fails,
-         return original processed image.
-        */
+         Safe fallback.
+         */
 
-        const canvas =
-            document.createElement(
-                "canvas"
+        try {
+
+            const fallbackCanvas =
+                document.createElement(
+                    "canvas"
+                );
+
+
+            fallbackCanvas.width =
+                mat.cols;
+
+            fallbackCanvas.height =
+                mat.rows;
+
+
+            cv.imshow(
+                fallbackCanvas,
+                mat
             );
 
 
-        canvas.width =
-            mat.cols;
+            return fallbackCanvas.toDataURL(
+                "image/jpeg",
+                0.94
+            );
 
-        canvas.height =
-            mat.rows;
+        }
 
+        catch(fallbackError) {
 
-        cv.imshow(
-            canvas,
-            mat
-        );
+            console.error(
+                fallbackError
+            );
 
+            return null;
 
-        return canvas.toDataURL(
-            "image/jpeg",
-            0.94
-        );
+        }
+
+    }
+
+    finally {
+
+        if (gray) {
+            gray.delete();
+        }
+
+        if (denoise) {
+            denoise.delete();
+        }
+
+        if (contrast) {
+            contrast.delete();
+        }
+
+        if (background) {
+            background.delete();
+        }
+
+        if (normalized) {
+            normalized.delete();
+        }
+
+        if (normalized8) {
+            normalized8.delete();
+        }
+
+        if (blended) {
+            blended.delete();
+        }
+
+        if (sharpened) {
+            sharpened.delete();
+        }
+
+        if (clahe) {
+            clahe.delete();
+        }
+
+        if (sharpenKernel) {
+            sharpenKernel.delete();
+        }
 
     }
 
