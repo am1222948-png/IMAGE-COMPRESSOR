@@ -986,14 +986,11 @@ alt="Document preview">
 
 
 <button
-class="compress-btn"
-id="scanDocumentBtn"
-onclick="startDocumentScan()">
-
-📷 Scan Document
-
+    class="compress-btn"
+    id="scanDocumentBtn"
+    onclick="startDocumentScan()">
+    📷 Scan Document
 </button>
-
 
 <button
 class="compress-btn"
@@ -3136,150 +3133,212 @@ function perspectiveEnhance(
 
 }
 
-
 /* =====================================================
-DOCUMENT ENHANCEMENT
+   PROFESSIONAL DOCUMENT ENHANCEMENT
+   WHITE PAPER + DARK TEXT SCANNER
 ===================================================== */
 
-function enhanceDocument(
-    mat
-) {
+function enhanceDocument(mat) {
 
-    const gray =
-        new cv.Mat();
+    try {
 
+        const gray =
+            new cv.Mat();
 
-    cv.cvtColor(
-        mat,
-        gray,
-        cv.COLOR_RGBA2GRAY
-    );
+        /* -----------------------------------------
+           CONVERT TO GRAYSCALE
+        ----------------------------------------- */
 
-
-    /*
-     Slight noise reduction.
-    */
-
-    const denoise =
-        new cv.Mat();
-
-
-    cv.GaussianBlur(
-        gray,
-        denoise,
-        new cv.Size(
-            3,
-            3
-        ),
-        0
-    );
-
-
-    /*
-     Improve local contrast.
-    */
-
-    const enhanced =
-        new cv.Mat();
-
-
-    const clahe =
-        new cv.CLAHE(
-            2.2,
-            new cv.Size(
-                8,
-                8
-            )
+        cv.cvtColor(
+            mat,
+            gray,
+            cv.COLOR_RGBA2GRAY
         );
 
 
-    clahe.apply(
-        denoise,
-        enhanced
-    );
+        /* -----------------------------------------
+           REMOVE CAMERA NOISE
+        ----------------------------------------- */
 
+        const denoise =
+            new cv.Mat();
 
-    /*
-     Sharpen text.
-    */
-
-    const blur2 =
-        new cv.Mat();
-
-
-    const sharp =
-        new cv.Mat();
-
-
-    cv.GaussianBlur(
-        enhanced,
-        blur2,
-        new cv.Size(
-            0,
+        cv.GaussianBlur(
+            gray,
+            denoise,
+            new cv.Size(3, 3),
             0
-        ),
-        1.1
-    );
-
-
-    cv.addWeighted(
-        enhanced,
-        1.4,
-        blur2,
-        -0.4,
-        0,
-        sharp
-    );
-
-
-    /*
-     Keep grayscale document.
-    */
-
-    const outputCanvas =
-        document.createElement(
-            "canvas"
         );
 
 
-    outputCanvas.width =
-        sharp.cols;
+        /* -----------------------------------------
+           IMPROVE LOCAL CONTRAST
+        ----------------------------------------- */
+
+        const clahe =
+            new cv.CLAHE(
+                3.0,
+                new cv.Size(8, 8)
+            );
+
+        const contrast =
+            new cv.Mat();
+
+        clahe.apply(
+            denoise,
+            contrast
+        );
 
 
-    outputCanvas.height =
-        sharp.rows;
+        /* -----------------------------------------
+           ADAPTIVE THRESHOLD
+           MAKES PAPER WHITE
+           AND TEXT DARK
+        ----------------------------------------- */
+
+        const binary =
+            new cv.Mat();
+
+        cv.adaptiveThreshold(
+            contrast,
+            binary,
+            255,
+            cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv.THRESH_BINARY,
+            31,
+            12
+        );
 
 
-    cv.imshow(
-        outputCanvas,
-        sharp
-    );
+        /* -----------------------------------------
+           CLEAN SMALL NOISE
+        ----------------------------------------- */
+
+        const kernel =
+            cv.getStructuringElement(
+                cv.MORPH_RECT,
+                new cv.Size(2, 2)
+            );
+
+        const cleaned =
+            new cv.Mat();
+
+        cv.morphologyEx(
+            binary,
+            cleaned,
+            cv.MORPH_OPEN,
+            kernel
+        );
 
 
-    const data =
-        outputCanvas.toDataURL(
+        /* -----------------------------------------
+           LIGHT MORPHOLOGICAL CLOSE
+           KEEPS TEXT CONNECTED
+        ----------------------------------------- */
+
+        const closeKernel =
+            cv.getStructuringElement(
+                cv.MORPH_RECT,
+                new cv.Size(2, 2)
+            );
+
+        const finalMat =
+            new cv.Mat();
+
+        cv.morphologyEx(
+            cleaned,
+            finalMat,
+            cv.MORPH_CLOSE,
+            closeKernel
+        );
+
+
+        /* -----------------------------------------
+           OUTPUT CANVAS
+        ----------------------------------------- */
+
+        const outputCanvas =
+            document.createElement(
+                "canvas"
+            );
+
+        outputCanvas.width =
+            finalMat.cols;
+
+        outputCanvas.height =
+            finalMat.rows;
+
+
+        cv.imshow(
+            outputCanvas,
+            finalMat
+        );
+
+
+        const data =
+            outputCanvas.toDataURL(
+                "image/jpeg",
+                0.94
+            );
+
+
+        /* -----------------------------------------
+           CLEAN MEMORY
+        ----------------------------------------- */
+
+        gray.delete();
+        denoise.delete();
+        contrast.delete();
+        binary.delete();
+        cleaned.delete();
+        finalMat.delete();
+
+        kernel.delete();
+        closeKernel.delete();
+
+        clahe.delete();
+
+
+        return data;
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Document enhancement error:",
+            error
+        );
+
+        /*
+         If enhancement fails,
+         return original image
+        */
+
+        const canvas =
+            document.createElement(
+                "canvas"
+            );
+
+        canvas.width =
+            mat.cols;
+
+        canvas.height =
+            mat.rows;
+
+        cv.imshow(
+            canvas,
+            mat
+        );
+
+        return canvas.toDataURL(
             "image/jpeg",
-            0.94
+            0.92
         );
 
-
-    gray.delete();
-
-    denoise.delete();
-
-    enhanced.delete();
-
-    blur2.delete();
-
-    sharp.delete();
-
-    clahe.delete();
-
-
-    return data;
+    }
 
 }
-
 
 /* =====================================================
 QUADRILATERAL AREA
