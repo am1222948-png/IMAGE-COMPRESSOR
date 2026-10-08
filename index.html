@@ -1,34 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Free Image Compressor & PDF Converter Online | CompressPro</title>
 
 <meta name="description"
-content="Compress JPG and PNG images, convert images to PDF, convert PDF to JPG or PNG, scan documents, and download compressed images as ZIP with CompressPro.">
+content="Compress JPG and PNG images, convert images to PDF, convert PDF to JPG or PNG, scan documents, and download compressed images as ZIP with CompressPro. Free online tools for mobile and desktop.">
 
-<meta name="robots" content="index, follow">
+<meta name="robots"
+content="index, follow">
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1769aa">
+<link rel="manifest"
+href="manifest.json">
+
+<meta name="theme-color"
+content="#1769aa">
 
 <link rel="apple-touch-icon"
 href="/IMAGE-COMPRESSOR/compresspro-logo%20(1).png">
 
+
 <!-- PDF LIBRARY -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- PDF TO IMAGE -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+</script>
 
-<!-- ZIP -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- PDF TO IMAGE LIBRARY -->
+
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
+</script>
+
+
+<!-- ZIP LIBRARY -->
+
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js">
+</script>
+
 
 <!-- OPENCV -->
-<script async src="https://docs.opencv.org/4.x/opencv.js"></script>
+
+<script
+async
+src="https://docs.opencv.org/4.x/opencv.js">
+</script>
+
 
 <style>
 
@@ -37,347 +62,725 @@ href="/IMAGE-COMPRESSOR/compresspro-logo%20(1).png">
 }
 
 body {
+
     font-family: Arial, sans-serif;
+
     margin: 0;
+
     padding: 15px;
-    background: linear-gradient(135deg,#eef6ff,#f8fbff);
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef6ff,
+            #f8fbff
+        );
+
     color: #222;
+
 }
+
 
 .container {
+
     max-width: 760px;
+
     margin: 20px auto;
+
     background: white;
+
     padding: 25px;
+
     border-radius: 22px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.10);
+
+    box-shadow:
+        0 8px 30px
+        rgba(0,0,0,0.10);
+
 }
+
+
+/* =====================================================
+INSTALL
+===================================================== */
 
 .install-area {
+
     text-align: center;
+
     margin: 10px 0 20px;
+
 }
+
 
 #installApp {
+
     display: inline-block;
+
     background: #1769aa;
+
     color: white;
+
     padding: 13px 25px;
+
     border: none;
+
     border-radius: 10px;
+
     font-size: 16px;
+
     font-weight: bold;
+
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(23,105,170,0.25);
+
+    box-shadow:
+        0 4px 12px
+        rgba(23,105,170,0.25);
+
 }
+
+
+/* =====================================================
+HERO
+===================================================== */
 
 .hero {
+
     text-align: center;
+
 }
+
 
 .logo {
+
     width: 180px;
+
     max-width: 75%;
+
     height: auto;
+
     display: block;
+
     margin: 0 auto 10px;
+
     object-fit: contain;
+
 }
+
 
 .hero h1 {
+
     font-size: 32px;
+
     margin: 5px 0;
+
     color: #1769aa;
+
 }
+
 
 .subtitle {
+
     color: #666;
+
     font-size: 17px;
+
     margin-bottom: 25px;
+
 }
+
+
+/* =====================================================
+UPLOAD BOX
+===================================================== */
 
 .upload-box {
-    border: 2px dashed #8bbce5;
+
+    border:
+        2px dashed #8bbce5;
+
     background: #f7fbff;
+
     border-radius: 16px;
+
     padding: 25px 15px;
+
     text-align: center;
+
     margin-top: 20px;
+
 }
+
 
 .upload-icon {
+
     font-size: 40px;
+
     margin-bottom: 8px;
+
 }
+
 
 .upload-box h2 {
+
     margin: 5px 0;
+
     color: #1769aa;
+
 }
+
 
 .upload-box p {
+
     color: #666;
+
     margin-bottom: 18px;
+
 }
+
+
+/* =====================================================
+INPUT
+===================================================== */
 
 input[type="file"] {
+
     width: 100%;
+
     padding: 12px;
+
     background: white;
+
     border: 1px solid #ddd;
+
     border-radius: 8px;
+
     margin-bottom: 15px;
+
 }
+
 
 select {
+
     background: white;
+
 }
+
+
+/* =====================================================
+BUTTONS
+===================================================== */
 
 button {
+
     border: none;
+
     padding: 12px 20px;
+
     border-radius: 9px;
+
     cursor: pointer;
+
     font-size: 15px;
+
     font-weight: bold;
+
     margin: 5px;
+
 }
+
 
 button:disabled {
-    opacity: 0.6;
+
+    opacity: 0.55;
+
     cursor: not-allowed;
+
 }
+
 
 .compress-btn {
+
     background: #1769aa;
+
     color: white;
+
 }
+
 
 .compress-btn:hover {
+
     background: #12598f;
+
 }
+
 
 .download-all {
+
     background: #16803c;
+
     color: white;
+
     display: none;
+
 }
+
 
 .download {
+
     background: #1677ff;
+
     color: white;
+
 }
+
 
 .danger-btn {
+
     background: #d9534f;
+
     color: white;
+
 }
+
+
+/* =====================================================
+RESULTS
+===================================================== */
 
 .card {
+
     margin-top: 20px;
+
     padding: 18px;
+
     border: 1px solid #ddd;
+
     border-radius: 14px;
+
     text-align: left;
+
     background: #fff;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,0.05);
+
 }
+
 
 .card img {
+
     max-width: 100%;
+
     max-height: 230px;
+
     display: block;
+
     margin: 12px auto;
+
     border-radius: 10px;
+
 }
+
 
 .info {
+
     line-height: 1.8;
+
 }
+
 
 .success {
+
     color: #16803c;
+
     font-weight: bold;
+
 }
+
 
 .error {
+
     color: #d9534f;
+
     font-weight: bold;
+
 }
+
 
 .loading {
+
     color: #1769aa;
+
     font-weight: bold;
+
     padding: 10px;
+
 }
 
-/* =========================
-   SCANNER
-========================= */
+
+/* =====================================================
+SCANNER
+===================================================== */
 
 .scanner-note {
+
     background: #eef6ff;
+
     border-radius: 10px;
+
     padding: 12px;
+
     color: #555;
+
     line-height: 1.6;
+
     margin-bottom: 15px;
+
 }
+
 
 .scanner-preview {
+
     width: 100%;
+
     max-height: 450px;
+
     object-fit: contain;
+
     border-radius: 12px;
+
     margin-top: 15px;
+
     border: 1px solid #ddd;
+
+    background: #f5f5f5;
+
 }
+
 
 .scan-page {
+
     background: white;
+
     border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 10px;
-    margin-top: 15px;
+
+    border-radius: 16px;
+
+    padding: 14px;
+
+    margin-top: 18px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,0.06);
+
 }
+
+
+.scan-page h3 {
+
+    text-align: center;
+
+    margin: 8px 0 15px;
+
+    color: #222;
+
+}
+
 
 .scan-page img {
+
     width: 100%;
-    max-height: 350px;
+
+    max-height: 600px;
+
     object-fit: contain;
-    border-radius: 8px;
+
+    border-radius: 10px;
+
+    display: block;
+
+    margin: auto;
+
+    background: #eee;
+
 }
+
+
+.scanner-status {
+
+    min-height: 28px;
+
+    margin-top: 10px;
+
+    font-weight: bold;
+
+    color: #1769aa;
+
+}
+
+
+.scan-actions {
+
+    margin-top: 10px;
+
+}
+
+
+/* =====================================================
+PDF RESULTS
+===================================================== */
 
 .pdf-page {
+
     background: white;
+
     border: 1px solid #ddd;
+
     border-radius: 12px;
+
     padding: 12px;
+
     margin-top: 15px;
+
 }
+
 
 .pdf-page img {
+
     width: 100%;
+
     max-height: 450px;
+
     object-fit: contain;
+
     border-radius: 8px;
+
 }
 
-/* FEATURES */
+
+/* =====================================================
+FEATURES
+===================================================== */
 
 .features {
+
     margin-top: 40px;
+
 }
+
 
 .features h2 {
+
     text-align: center;
+
     color: #1769aa;
+
     margin-bottom: 20px;
+
 }
+
 
 .feature-grid {
+
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+
+    grid-template-columns:
+        repeat(3,1fr);
+
     gap: 12px;
+
 }
+
 
 .feature-card {
+
     background: #f7fbff;
+
     border: 1px solid #e0edf8;
+
     border-radius: 14px;
+
     padding: 18px 10px;
+
     text-align: center;
+
 }
+
 
 .feature-card .icon {
+
     font-size: 30px;
+
 }
+
 
 .feature-card h3 {
+
     font-size: 16px;
+
     margin: 8px 0;
+
 }
+
 
 .feature-card p {
+
     font-size: 13px;
+
     color: #666;
+
     line-height: 1.5;
+
 }
 
-/* SEO */
+
+/* =====================================================
+SEO
+===================================================== */
 
 .content-section {
+
     margin-top: 40px;
+
     line-height: 1.8;
+
 }
+
 
 .content-section h2 {
+
     color: #1769aa;
+
     margin-top: 30px;
+
 }
+
 
 .content-section h3 {
+
     color: #333;
+
     margin-top: 20px;
+
 }
 
-/* FOOTER */
+
+/* =====================================================
+FOOTER
+===================================================== */
 
 footer {
+
     text-align: center;
+
     padding: 25px 10px;
+
     margin-top: 40px;
+
     border-top: 1px solid #ddd;
+
     color: #666;
+
     line-height: 2;
+
 }
+
 
 footer a {
+
     color: #1769aa;
+
     text-decoration: none;
+
     font-weight: bold;
+
 }
 
-/* MOBILE */
+
+/* =====================================================
+MOBILE
+===================================================== */
 
 @media (max-width:600px) {
 
     body {
+
         padding: 8px;
+
     }
+
 
     .container {
+
         padding: 18px 14px;
+
         margin-top: 10px;
+
     }
+
 
     .hero h1 {
+
         font-size: 27px;
+
     }
+
 
     .subtitle {
+
         font-size: 15px;
+
     }
+
 
     .logo {
+
         width: 160px;
+
     }
+
 
     .feature-grid {
+
         grid-template-columns: 1fr;
+
     }
+
 
     .feature-card {
+
         padding: 15px;
+
     }
+
 
     button {
+
         width: 90%;
+
         margin: 6px auto;
+
+        display: block;
+
     }
 
+
     #installApp {
+
         width: auto;
+
+        display: inline-block;
+
+    }
+
+
+    .scan-page img {
+
+        max-height: 520px;
+
     }
 
 }
@@ -386,21 +789,31 @@ footer a {
 
 </head>
 
+
 <body>
 
-<!-- INSTALL -->
+
+<!-- =====================================================
+INSTALL
+===================================================== -->
 
 <div class="install-area">
 
 <button id="installApp">
+
 📲 Install CompressPro App
+
 </button>
 
 </div>
 
+
 <div class="container">
 
-<!-- HERO -->
+
+<!-- =====================================================
+HERO
+===================================================== -->
 
 <div class="hero">
 
@@ -409,7 +822,9 @@ src="compresspro-logo (1).png"
 alt="CompressPro Logo"
 class="logo">
 
-<h1>CompressPro</h1>
+<h1>
+CompressPro
+</h1>
 
 <p class="subtitle">
 Fast, Free & Easy Image Compressor
@@ -428,7 +843,9 @@ IMAGE COMPRESSOR
 🖼️
 </div>
 
-<h2>Compress Your Images</h2>
+<h2>
+Compress Your Images
+</h2>
 
 <p>
 Reduce image file size quickly while keeping your images looking great.
@@ -445,21 +862,27 @@ multiple>
 <button
 class="compress-btn"
 onclick="compressImages()">
+
 Compress Images
+
 </button>
 
 <button
 class="download-all"
 id="downloadAll"
 onclick="downloadAll()">
+
 Download All
+
 </button>
 
 <button
 class="download-all"
 id="downloadZip"
 onclick="downloadZIP()">
+
 📦 Download All as ZIP
+
 </button>
 
 <div id="results"></div>
@@ -477,7 +900,9 @@ IMAGE TO PDF
 📄
 </div>
 
-<h2>Convert Images to PDF</h2>
+<h2>
+Convert Images to PDF
+</h2>
 
 <p>
 Convert JPG and PNG images into one PDF file.
@@ -494,7 +919,9 @@ multiple>
 <button
 class="compress-btn"
 onclick="convertImagesToPDF()">
+
 Convert to PDF
+
 </button>
 
 <div id="imagePdfResult"></div>
@@ -512,22 +939,33 @@ SMART DOCUMENT SCANNER
 📷
 </div>
 
-<h2>Smart Document Scanner</h2>
+<h2>
+Smart Document Scanner
+</h2>
 
 <p>
 Scan documents using your mobile camera and create a multi-page PDF.
 </p>
 
+
 <div class="scanner-note">
 
-<strong>How it works:</strong><br>
+<strong>
+How it works:
+</strong>
+
+<br>
 
 Take a clear photo of your document.
-CompressPro detects the page boundary,
-corrects perspective and rotation,
-and enhances the scanned page.
+
+<br>
+
+CompressPro will try to detect the document edges,
+straighten the page, crop the document and improve
+text visibility automatically.
 
 </div>
+
 
 <input
 type="file"
@@ -536,48 +974,67 @@ accept="image/*"
 capture="environment"
 onchange="handleScannerFile(event)">
 
-<br>
 
 <img
 id="scannerPreview"
 class="scanner-preview"
-style="display:none"
-alt="Scanner preview">
+style="display:none;"
+alt="Document preview">
 
-<br>
+
+<div class="scan-actions">
+
 
 <button
 class="compress-btn"
 id="scanDocumentBtn"
 onclick="startDocumentScan()">
+
 📷 Scan Document
+
 </button>
+
 
 <button
 class="compress-btn"
 id="addScanBtn"
 onclick="addAnotherScanPage()"
-style="display:none">
+style="display:none;">
+
 ➕ Add Another Page
+
 </button>
+
 
 <button
 class="compress-btn"
 id="createScanPDF"
 onclick="createScannedPDF()"
-style="display:none">
+style="display:none;">
+
 📄 Create PDF
+
 </button>
+
 
 <button
 class="danger-btn"
 id="clearScans"
 onclick="clearScannedPages()"
-style="display:none">
+style="display:none;">
+
 Clear Scans
+
 </button>
 
-<div id="scannerStatus"></div>
+</div>
+
+
+<div
+id="scannerStatus"
+class="scanner-status">
+</div>
+
 
 <div id="scannerResult"></div>
 
@@ -594,7 +1051,9 @@ PDF TO JPG / PNG
 📑
 </div>
 
-<h2>Convert PDF to JPG/PNG</h2>
+<h2>
+Convert PDF to JPG/PNG
+</h2>
 
 <p>
 Convert PDF pages into JPG or PNG images directly in your browser.
@@ -605,9 +1064,11 @@ type="file"
 id="pdfFileInput"
 accept="application/pdf">
 
+
 <label for="pdfFormat">
 Choose image format:
 </label>
+
 
 <select
 id="pdfFormat"
@@ -618,16 +1079,25 @@ margin:12px 0;
 border:1px solid #ddd;
 border-radius:8px;">
 
-<option value="jpeg">JPG</option>
-<option value="png">PNG</option>
+<option value="jpeg">
+JPG
+</option>
+
+<option value="png">
+PNG
+</option>
 
 </select>
+
 
 <button
 class="compress-btn"
 onclick="convertPDFtoImages()">
+
 Convert PDF
+
 </button>
+
 
 <div id="pdfResults"></div>
 
@@ -640,15 +1110,22 @@ FEATURES
 
 <section class="features">
 
-<h2>Why Choose CompressPro?</h2>
+<h2>
+Why Choose CompressPro?
+</h2>
 
 <div class="feature-grid">
 
+
 <div class="feature-card">
 
-<div class="icon">⚡</div>
+<div class="icon">
+⚡
+</div>
 
-<h3>Fast Compression</h3>
+<h3>
+Fast Compression
+</h3>
 
 <p>
 Compress your images quickly and easily.
@@ -656,11 +1133,16 @@ Compress your images quickly and easily.
 
 </div>
 
+
 <div class="feature-card">
 
-<div class="icon">🆓</div>
+<div class="icon">
+🆓
+</div>
 
-<h3>100% Free</h3>
+<h3>
+100% Free
+</h3>
 
 <p>
 Use CompressPro without paying anything.
@@ -668,17 +1150,23 @@ Use CompressPro without paying anything.
 
 </div>
 
+
 <div class="feature-card">
 
-<div class="icon">📱</div>
+<div class="icon">
+📱
+</div>
 
-<h3>Mobile Friendly</h3>
+<h3>
+Mobile Friendly
+</h3>
 
 <p>
 Works smoothly on phones, tablets and computers.
 </p>
 
 </div>
+
 
 </div>
 
@@ -699,48 +1187,234 @@ Free Online Image Compressor and PDF Converter
 CompressPro is a free online image compressor and PDF converter.
 You can compress JPG and PNG images, convert images to PDF,
 convert PDF pages to JPG or PNG, scan documents, and download
-multiple compressed images as a ZIP file.
+multiple compressed images as a ZIP file. CompressPro works
+directly in your browser on mobile phones, tablets, and computers.
 </p>
+
+
+<h2>
+Free JPG and PNG Image Compressor
+</h2>
+
+<p>
+Reduce JPG and PNG image file sizes quickly with CompressPro.
+Select one or multiple images, compress them, compare the original
+and compressed file sizes, and download your compressed images.
+</p>
+
+
+<h2>
+JPG and PNG to PDF Converter
+</h2>
+
+<p>
+Convert multiple JPG and PNG images into a PDF document with
+CompressPro.
+</p>
+
 
 <h2>
 Smart Document Scanner
 </h2>
 
 <p>
-Use the CompressPro document scanner to capture a document with
-your mobile camera. The scanner detects document edges,
-corrects perspective and rotation, enhances the page,
-and prepares scanned pages for PDF creation.
+Use the CompressPro document scanner to capture documents with
+your mobile camera. The scanner attempts to detect document edges,
+crop the page, correct perspective, improve contrast, and prepare
+scanned pages for PDF creation.
 </p>
+
+
+<h2>
+PDF to JPG and PNG Converter
+</h2>
+
+<p>
+Convert PDF pages into JPG or PNG images directly in your browser.
+</p>
+
+
+<h2>
+Download Compressed Images as ZIP
+</h2>
+
+<p>
+Compress multiple images and download them together in one ZIP file.
+</p>
+
+
+<h2>
+How to Compress Images
+</h2>
+
+<ol>
+
+<li>
+Select one or more JPG or PNG images.
+</li>
+
+<li>
+Click the Compress Images button.
+</li>
+
+<li>
+Check the original and compressed file sizes.
+</li>
+
+<li>
+Download individual images or download all images as a ZIP file.
+</li>
+
+</ol>
+
+
+<h2>
+How to Convert Images to PDF
+</h2>
+
+<ol>
+
+<li>
+Select multiple JPG or PNG images.
+</li>
+
+<li>
+Click Convert to PDF.
+</li>
+
+<li>
+Wait for the PDF to be created.
+</li>
+
+<li>
+Download your PDF file.
+</li>
+
+</ol>
+
+
+<h2>
+How to Scan a Document
+</h2>
+
+<ol>
+
+<li>
+Open the Smart Document Scanner.
+</li>
+
+<li>
+Take a clear photo of your document.
+</li>
+
+<li>
+Click Scan Document.
+</li>
+
+<li>
+Add more pages if needed.
+</li>
+
+<li>
+Click Create PDF.
+</li>
+
+</ol>
+
 
 <h2>
 Frequently Asked Questions
 </h2>
+
 
 <h3>
 Is CompressPro free?
 </h3>
 
 <p>
-Yes. CompressPro provides free image compression,
-document scanning, and PDF conversion directly in your browser.
+Yes. CompressPro provides free image compression, document
+scanning, and PDF conversion tools directly in your browser.
 </p>
+
+
+<h3>
+Can I compress multiple images?
+</h3>
+
+<p>
+Yes. You can select multiple JPG and PNG images and compress
+them together.
+</p>
+
+
+<h3>
+Can I convert images to PDF?
+</h3>
+
+<p>
+Yes. CompressPro can convert multiple JPG and PNG images into
+a single PDF file.
+</p>
+
+
+<h3>
+Can I scan documents with CompressPro?
+</h3>
+
+<p>
+Yes. You can use the camera to capture documents and prepare
+them as scanned pages.
+</p>
+
 
 <h3>
 Can I create a PDF from multiple scanned pages?
 </h3>
 
 <p>
-Yes. Scan multiple pages and combine them into one multi-page PDF document.
+Yes. You can scan multiple pages and combine them into one
+multi-page PDF document.
 </p>
+
+
+<h3>
+Can I convert PDF to JPG or PNG?
+</h3>
+
+<p>
+Yes. You can select a PDF file and convert its pages into JPG
+or PNG images.
+</p>
+
+
+<h3>
+Can I download multiple compressed images together?
+</h3>
+
+<p>
+Yes. After compressing multiple images, you can download them
+together as a ZIP file.
+</p>
+
 
 <h3>
 Does CompressPro work on mobile phones?
 </h3>
 
 <p>
-Yes. CompressPro is designed to work on mobile phones,
-tablets, and computers.
+Yes. CompressPro is designed to work on mobile phones, tablets,
+and computers.
+</p>
+
+
+<h3>
+Do I need to install an app?
+</h3>
+
+<p>
+No. You can use CompressPro directly from a supported web browser.
+If your browser supports Progressive Web Apps, you can also install
+CompressPro on your device.
 </p>
 
 </section>
@@ -748,7 +1422,9 @@ tablets, and computers.
 </div>
 
 
-<!-- FOOTER -->
+<!-- =====================================================
+FOOTER
+===================================================== -->
 
 <footer>
 
@@ -781,26 +1457,41 @@ MAIN JAVASCRIPT
 
 <script>
 
+
 /* =====================================================
 SERVICE WORKER
 ===================================================== */
 
 if ("serviceWorker" in navigator) {
 
-    window.addEventListener("load", function() {
+    window.addEventListener(
+        "load",
+        function() {
 
-        navigator.serviceWorker
-        .register("service-worker.js")
-        .catch(function(error) {
+            navigator.serviceWorker
+                .register("service-worker.js")
+                .then(
+                    function() {
 
-            console.log(
-                "Service worker error:",
-                error
-            );
+                        console.log(
+                            "CompressPro service worker ready"
+                        );
 
-        });
+                    }
+                )
+                .catch(
+                    function(error) {
 
-    });
+                        console.log(
+                            "Service worker error:",
+                            error
+                        );
+
+                    }
+                );
+
+        }
+    );
 
 }
 
@@ -811,169 +1502,231 @@ IMAGE COMPRESSION
 
 let compressedImages = [];
 
+
 function compressImages() {
 
     const input =
-        document.getElementById("imageInput");
+        document.getElementById(
+            "imageInput"
+        );
 
     const results =
-        document.getElementById("results");
+        document.getElementById(
+            "results"
+        );
 
-    const all =
-        document.getElementById("downloadAll");
+    const downloadAllBtn =
+        document.getElementById(
+            "downloadAll"
+        );
 
-    const zipButton =
-        document.getElementById("downloadZip");
+    const downloadZipBtn =
+        document.getElementById(
+            "downloadZip"
+        );
+
 
     results.innerHTML = "";
 
     compressedImages = [];
 
-    all.style.display = "none";
-    zipButton.style.display = "none";
 
-    if (!input.files || !input.files.length) {
+    downloadAllBtn.style.display =
+        "none";
+
+    downloadZipBtn.style.display =
+        "none";
+
+
+    if (
+        !input.files ||
+        !input.files.length
+    ) {
 
         alert(
             "Please select at least one image."
         );
 
         return;
+
     }
 
-    Array.from(input.files).forEach(function(file) {
 
-        const reader =
-            new FileReader();
+    Array.from(
+        input.files
+    ).forEach(
+        function(file) {
 
-        reader.onload = function(e) {
+            const reader =
+                new FileReader();
 
-            const img =
-                new Image();
 
-            img.onload = function() {
+            reader.onload =
+                function(e) {
 
-                const canvas =
-                    document.createElement("canvas");
+                    const img =
+                        new Image();
 
-                const ctx =
-                    canvas.getContext("2d");
 
-                canvas.width =
-                    img.width;
+                    img.onload =
+                        function() {
 
-                canvas.height =
-                    img.height;
+                            const canvas =
+                                document.createElement(
+                                    "canvas"
+                                );
 
-                ctx.drawImage(
-                    img,
-                    0,
-                    0
-                );
+                            const ctx =
+                                canvas.getContext(
+                                    "2d"
+                                );
 
-                canvas.toBlob(
-                    function(blob) {
 
-                        if (!blob) return;
+                            canvas.width =
+                                img.width;
 
-                        const saved =
-                            Math.max(
+                            canvas.height =
+                                img.height;
+
+
+                            ctx.drawImage(
+                                img,
                                 0,
-                                Math.round(
-                                    (
-                                        1 -
-                                        blob.size /
-                                        file.size
-                                    ) * 100
-                                )
+                                0
                             );
 
-                        const url =
-                            URL.createObjectURL(blob);
 
-                        compressedImages.push({
+                            canvas.toBlob(
+                                function(blob) {
 
-                            blob: blob,
+                                    if (!blob) {
+                                        return;
+                                    }
 
-                            name:
-                                "compressed_" +
-                                file.name
 
-                        });
+                                    const originalSize =
+                                        file.size;
 
-                        const card =
-                            document.createElement("div");
+                                    const compressedSize =
+                                        blob.size;
 
-                        card.className =
-                            "card";
 
-                        card.innerHTML = `
+                                    const saved =
+                                        Math.max(
+                                            0,
+                                            Math.round(
+                                                (
+                                                    1 -
+                                                    compressedSize /
+                                                    originalSize
+                                                ) * 100
+                                            )
+                                        );
 
-                        <strong>
-                        ${escapeHTML(file.name)}
-                        </strong>
 
-                        <img src="${url}">
+                                    const url =
+                                        URL.createObjectURL(
+                                            blob
+                                        );
 
-                        <div class="info">
 
-                        Original:
-                        ${(file.size / 1024).toFixed(2)}
-                        KB
+                                    compressedImages.push({
 
-                        <br>
+                                        blob: blob,
 
-                        Compressed:
-                        ${(blob.size / 1024).toFixed(2)}
-                        KB
+                                        name:
+                                            "compressed_" +
+                                            file.name
 
-                        <br>
+                                    });
 
-                        <span class="success">
-                        Saved: ${saved}%
-                        </span>
 
-                        </div>
+                                    const card =
+                                        document.createElement(
+                                            "div"
+                                        );
 
-                        <button
-                        class="download"
-                        onclick="downloadOne(${compressedImages.length - 1})">
 
-                        Download Image
+                                    card.className =
+                                        "card";
 
-                        </button>
 
-                        `;
+                                    card.innerHTML = `
 
-                        results.appendChild(card);
+<strong>
+${escapeHTML(file.name)}
+</strong>
 
-                        if (
-                            compressedImages.length > 1
-                        ) {
+<img src="${url}">
 
-                            all.style.display =
-                                "inline-block";
+<div class="info">
 
-                            zipButton.style.display =
-                                "inline-block";
+Original:
+${(originalSize / 1024).toFixed(2)}
+KB
 
-                        }
+<br>
 
-                    },
-                    "image/jpeg",
-                    0.7
-                );
+Compressed:
+${(compressedSize / 1024).toFixed(2)}
+KB
 
-            };
+<br>
 
-            img.src =
-                e.target.result;
+<span class="success">
+Saved: ${saved}%
+</span>
 
-        };
+</div>
 
-        reader.readAsDataURL(file);
+<button
+class="download"
+onclick="downloadOne(${compressedImages.length - 1})">
 
-    });
+Download Image
+
+</button>
+
+`;
+
+
+                                    results.appendChild(
+                                        card
+                                    );
+
+
+                                    if (
+                                        compressedImages.length > 1
+                                    ) {
+
+                                        downloadAllBtn.style.display =
+                                            "inline-block";
+
+                                        downloadZipBtn.style.display =
+                                            "inline-block";
+
+                                    }
+
+                                },
+                                "image/jpeg",
+                                0.7
+                            );
+
+                        };
+
+
+                    img.src =
+                        e.target.result;
+
+                };
+
+
+            reader.readAsDataURL(
+                file
+            );
+
+        }
+    );
 
 }
 
@@ -989,20 +1742,34 @@ function downloadOne(index) {
 
     if (!item) return;
 
+
     const link =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
+
 
     link.href =
-        URL.createObjectURL(item.blob);
+        URL.createObjectURL(
+            item.blob
+        );
+
 
     link.download =
         item.name;
 
-    document.body.appendChild(link);
+
+    document.body.appendChild(
+        link
+    );
+
 
     link.click();
 
-    link.remove();
+
+    document.body.removeChild(
+        link
+    );
 
 }
 
@@ -1014,7 +1781,7 @@ DOWNLOAD ALL
 function downloadAll() {
 
     compressedImages.forEach(
-        function(item, index) {
+        function(item,index) {
 
             setTimeout(
                 function() {
@@ -1037,26 +1804,35 @@ DOWNLOAD ZIP
 
 async function downloadZIP() {
 
-    if (!compressedImages.length) {
+    if (
+        !compressedImages.length
+    ) {
 
         alert(
             "Please compress some images first."
         );
 
         return;
+
     }
 
-    if (typeof JSZip === "undefined") {
+
+    if (
+        typeof JSZip === "undefined"
+    ) {
 
         alert(
-            "ZIP library could not load."
+            "ZIP library could not load. Please check your internet connection."
         );
 
         return;
+
     }
+
 
     const zip =
         new JSZip();
+
 
     compressedImages.forEach(
         function(item) {
@@ -1069,25 +1845,40 @@ async function downloadZIP() {
         }
     );
 
-    const blob =
+
+    const zipBlob =
         await zip.generateAsync({
             type: "blob"
         });
 
+
     const link =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
+
 
     link.href =
-        URL.createObjectURL(blob);
+        URL.createObjectURL(
+            zipBlob
+        );
+
 
     link.download =
         "CompressPro-Compressed-Images.zip";
 
-    document.body.appendChild(link);
+
+    document.body.appendChild(
+        link
+    );
+
 
     link.click();
 
-    link.remove();
+
+    document.body.removeChild(
+        link
+    );
 
 }
 
@@ -1108,8 +1899,10 @@ async function convertImagesToPDF() {
             "imagePdfResult"
         );
 
+
     result.innerHTML =
         '<div class="loading">Creating PDF...</div>';
+
 
     if (
         !input.files ||
@@ -1123,7 +1916,9 @@ async function convertImagesToPDF() {
         );
 
         return;
+
     }
+
 
     if (
         !window.jspdf ||
@@ -1131,16 +1926,19 @@ async function convertImagesToPDF() {
     ) {
 
         result.innerHTML =
-            '<div class="error">PDF library could not load.</div>';
+            '<div class="error">PDF library could not load. Please check your internet connection.</div>';
 
         return;
+
     }
+
 
     try {
 
         const {
             jsPDF
         } = window.jspdf;
+
 
         const pdf =
             new jsPDF(
@@ -1149,15 +1947,21 @@ async function convertImagesToPDF() {
                 "a4"
             );
 
+
         const pageWidth = 210;
         const pageHeight = 297;
         const margin = 10;
 
+
         const maxWidth =
-            pageWidth - margin * 2;
+            pageWidth -
+            margin * 2;
+
 
         const maxHeight =
-            pageHeight - margin * 2;
+            pageHeight -
+            margin * 2;
+
 
         for (
             let i = 0;
@@ -1165,13 +1969,21 @@ async function convertImagesToPDF() {
             i++
         ) {
 
-            const data =
+            const file =
+                input.files[i];
+
+
+            const dataURL =
                 await readFileAsDataURL(
-                    input.files[i]
+                    file
                 );
 
+
             const img =
-                await loadImage(data);
+                await loadImage(
+                    dataURL
+                );
+
 
             if (i > 0) {
 
@@ -1179,11 +1991,13 @@ async function convertImagesToPDF() {
 
             }
 
+
             let width =
                 img.width;
 
             let height =
                 img.height;
+
 
             const ratio =
                 Math.min(
@@ -1191,23 +2005,35 @@ async function convertImagesToPDF() {
                     maxHeight / height
                 );
 
+
             width *= ratio;
             height *= ratio;
 
+
+            const x =
+                (pageWidth - width) / 2;
+
+
+            const y =
+                (pageHeight - height) / 2;
+
+
             pdf.addImage(
-                data,
+                dataURL,
                 "JPEG",
-                (pageWidth - width) / 2,
-                (pageHeight - height) / 2,
+                x,
+                y,
                 width,
                 height
             );
 
         }
 
+
         pdf.save(
             "CompressPro-Images.pdf"
         );
+
 
         result.innerHTML =
             '<div class="success">✅ PDF created successfully.</div>';
@@ -1219,7 +2045,7 @@ async function convertImagesToPDF() {
         console.error(error);
 
         result.innerHTML =
-            '<div class="error">❌ Could not create PDF.</div>';
+            '<div class="error">❌ Could not create PDF. Please try again.</div>';
 
     }
 
@@ -1246,10 +2072,13 @@ function handleScannerFile(event) {
     const file =
         event.target.files?.[0];
 
+
     if (!file) return;
+
 
     const reader =
         new FileReader();
+
 
     reader.onload =
         function(e) {
@@ -1257,16 +2086,20 @@ function handleScannerFile(event) {
             scannerImageDataURL =
                 e.target.result;
 
+
             const preview =
                 document.getElementById(
                     "scannerPreview"
                 );
 
+
             preview.src =
                 scannerImageDataURL;
 
+
             preview.style.display =
                 "block";
+
 
             document.getElementById(
                 "scannerStatus"
@@ -1275,7 +2108,10 @@ function handleScannerFile(event) {
 
         };
 
-    reader.readAsDataURL(file);
+
+    reader.readAsDataURL(
+        file
+    );
 
 }
 
@@ -1286,33 +2122,52 @@ START DOCUMENT SCAN
 
 async function startDocumentScan() {
 
-    if (scannerProcessing) return;
+    if (
+        scannerProcessing
+    ) {
 
-    if (!scannerImageDataURL) {
+        return;
+
+    }
+
+
+    if (
+        !scannerImageDataURL
+    ) {
 
         document
-            .getElementById("scannerInput")
+            .getElementById(
+                "scannerInput"
+            )
             .click();
 
         return;
+
     }
 
+
     scannerProcessing = true;
+
 
     const status =
         document.getElementById(
             "scannerStatus"
         );
 
+
     const button =
         document.getElementById(
             "scanDocumentBtn"
         );
 
+
     status.innerHTML =
         "🔍 Detecting document edges and straightening page...";
 
-    button.disabled = true;
+
+    button.disabled =
+        true;
+
 
     try {
 
@@ -1321,25 +2176,33 @@ async function startDocumentScan() {
                 scannerImageDataURL
             );
 
+
         scannedPages.push(
             scanned
         );
 
+
         displayScannedPages();
+
 
         status.innerHTML =
             "✅ Document scanned successfully.";
 
+
         updateScanButtons();
+
 
         document
             .getElementById(
                 "scannerPreview"
             )
-            .style.display = "none";
+            .style.display =
+                "none";
+
 
         scannerImageDataURL =
             null;
+
 
         document
             .getElementById(
@@ -1349,29 +2212,36 @@ async function startDocumentScan() {
 
     }
 
+
     catch(error) {
 
         console.error(
             error
         );
 
+
         status.innerHTML =
-            "❌ Scanner failed. Original photo was used.";
+            "⚠️ Scanner could not detect the page. Original photo was kept.";
+
 
         scannedPages.push(
             scannerImageDataURL
         );
 
+
         displayScannedPages();
+
 
         updateScanButtons();
 
     }
 
+
     finally {
 
         scannerProcessing =
             false;
+
 
         button.disabled =
             false;
@@ -1386,6 +2256,17 @@ ADD ANOTHER PAGE
 ===================================================== */
 
 function addAnotherScanPage() {
+
+    scannerImageDataURL =
+        null;
+
+
+    document
+        .getElementById(
+            "scannerInput"
+        )
+        .value = "";
+
 
     document
         .getElementById(
@@ -1407,40 +2288,45 @@ function displayScannedPages() {
             "scannerResult"
         );
 
+
     result.innerHTML = "";
 
+
     scannedPages.forEach(
-        function(page, index) {
+        function(page,index) {
 
             const box =
                 document.createElement(
                     "div"
                 );
 
+
             box.className =
                 "scan-page";
 
+
             box.innerHTML = `
 
-                <h3>
-                Scanned Page ${index + 1}
-                </h3>
+<h3>
+Scanned Page ${index + 1}
+</h3>
 
-                <img
-                src="${page}"
-                alt="Scanned page ${index + 1}">
+<img
+src="${page}"
+alt="Scanned page ${index + 1}">
 
-                <br>
+<br>
 
-                <button
-                class="danger-btn"
-                onclick="removeScanPage(${index})">
+<button
+class="danger-btn"
+onclick="removeScanPage(${index})">
 
-                ❌ Remove Page
+❌ Remove Page
 
-                </button>
+</button>
 
-            `;
+`;
+
 
             result.appendChild(
                 box
@@ -1463,6 +2349,7 @@ function removeScanPage(index) {
         1
     );
 
+
     displayScannedPages();
 
     updateScanButtons();
@@ -1481,21 +2368,27 @@ function clearScannedPages() {
     scannerImageDataURL =
         null;
 
+
     document.getElementById(
         "scannerResult"
     ).innerHTML = "";
+
 
     document.getElementById(
         "scannerStatus"
     ).innerHTML = "";
 
+
     document.getElementById(
         "scannerPreview"
-    ).style.display = "none";
+    ).style.display =
+        "none";
+
 
     document.getElementById(
         "scannerInput"
     ).value = "";
+
 
     updateScanButtons();
 
@@ -1511,25 +2404,28 @@ function updateScanButtons() {
     const hasPages =
         scannedPages.length > 0;
 
+
     document.getElementById(
         "addScanBtn"
     ).style.display =
         hasPages
-            ? "inline-block"
+            ? "block"
             : "none";
+
 
     document.getElementById(
         "createScanPDF"
     ).style.display =
         hasPages
-            ? "inline-block"
+            ? "block"
             : "none";
+
 
     document.getElementById(
         "clearScans"
     ).style.display =
         hasPages
-            ? "inline-block"
+            ? "block"
             : "none";
 
 }
@@ -1539,11 +2435,14 @@ function updateScanButtons() {
 ROBUST DOCUMENT DETECTION
 ===================================================== */
 
-async function detectAndCropDocument(dataURL) {
+async function detectAndCropDocument(
+    dataURL
+) {
 
     try {
 
         await waitForOpenCV();
+
 
         if (
             typeof cv === "undefined" ||
@@ -1554,21 +2453,26 @@ async function detectAndCropDocument(dataURL) {
 
         }
 
+
         const img =
             await loadImage(
                 dataURL
             );
 
+
         const maxDimension =
-            1800;
+            2000;
+
 
         let width =
             img.naturalWidth ||
             img.width;
 
+
         let height =
             img.naturalHeight ||
             img.height;
+
 
         const scale =
             Math.min(
@@ -1580,6 +2484,7 @@ async function detectAndCropDocument(dataURL) {
                 )
             );
 
+
         width =
             Math.max(
                 1,
@@ -1587,6 +2492,7 @@ async function detectAndCropDocument(dataURL) {
                     width * scale
                 )
             );
+
 
         height =
             Math.max(
@@ -1596,10 +2502,12 @@ async function detectAndCropDocument(dataURL) {
                 )
             );
 
+
         const canvas =
             document.createElement(
                 "canvas"
             );
+
 
         canvas.width =
             width;
@@ -1607,10 +2515,12 @@ async function detectAndCropDocument(dataURL) {
         canvas.height =
             height;
 
+
         const ctx =
             canvas.getContext(
                 "2d"
             );
+
 
         ctx.drawImage(
             img,
@@ -1620,14 +2530,20 @@ async function detectAndCropDocument(dataURL) {
             height
         );
 
+
         const src =
-            cv.imread(canvas);
+            cv.imread(
+                canvas
+            );
+
 
         const gray =
             new cv.Mat();
 
-        const blur =
+
+        const blurred =
             new cv.Mat();
+
 
         const edges =
             new cv.Mat();
@@ -1646,7 +2562,7 @@ async function detectAndCropDocument(dataURL) {
 
         cv.GaussianBlur(
             gray,
-            blur,
+            blurred,
             new cv.Size(
                 5,
                 5
@@ -1658,14 +2574,14 @@ async function detectAndCropDocument(dataURL) {
         /* EDGE DETECTION */
 
         cv.Canny(
-            blur,
+            blurred,
             edges,
-            25,
-            100
+            30,
+            120
         );
 
 
-        /* CLOSE SMALL GAPS */
+        /* CONNECT BROKEN EDGES */
 
         const kernel =
             cv.getStructuringElement(
@@ -1676,6 +2592,7 @@ async function detectAndCropDocument(dataURL) {
                 )
             );
 
+
         cv.morphologyEx(
             edges,
             edges,
@@ -1684,13 +2601,13 @@ async function detectAndCropDocument(dataURL) {
         );
 
 
-        /* FIND CONTOURS */
-
         const contours =
             new cv.MatVector();
 
+
         const hierarchy =
             new cv.Mat();
+
 
         cv.findContours(
             edges,
@@ -1701,17 +2618,22 @@ async function detectAndCropDocument(dataURL) {
         );
 
 
-        let best =
-            null;
-
-        let bestScore =
-            -Infinity;
-
         const imageArea =
             width * height;
 
 
-        /* SEARCH FOR BEST DOCUMENT */
+        let bestPoints =
+            null;
+
+
+        let bestScore =
+            0;
+
+
+        /*
+         Search from largest
+         potential document.
+        */
 
         for (
             let i = 0;
@@ -1722,6 +2644,7 @@ async function detectAndCropDocument(dataURL) {
             const contour =
                 contours.get(i);
 
+
             const area =
                 Math.abs(
                     cv.contourArea(
@@ -1729,9 +2652,10 @@ async function detectAndCropDocument(dataURL) {
                     )
                 );
 
+
             if (
                 area <
-                imageArea * 0.12
+                imageArea * 0.08
             ) {
 
                 contour.delete();
@@ -1740,19 +2664,22 @@ async function detectAndCropDocument(dataURL) {
 
             }
 
+
             const perimeter =
                 cv.arcLength(
                     contour,
                     true
                 );
 
+
             const approx =
                 new cv.Mat();
+
 
             cv.approxPolyDP(
                 contour,
                 approx,
-                0.018 * perimeter,
+                0.02 * perimeter,
                 true
             );
 
@@ -1762,6 +2689,7 @@ async function detectAndCropDocument(dataURL) {
             ) {
 
                 const points = [];
+
 
                 for (
                     let j = 0;
@@ -1791,56 +2719,131 @@ async function detectAndCropDocument(dataURL) {
                         points
                     );
 
-                const rectangularArea =
+
+                const quad =
                     quadArea(
                         ordered
                     );
 
-                const areaRatio =
-                    rectangularArea /
+
+                const rectangularity =
+                    quad /
                     Math.max(
                         1,
                         area
                     );
 
 
-                const edgeTouch =
-                    ordered.filter(
-                        function(point) {
+                const areaRatio =
+                    area /
+                    imageArea;
 
-                            return (
-                                point.x < 8 ||
-                                point.y < 8 ||
-                                point.x > width - 8 ||
-                                point.y > height - 8
-                            );
 
-                        }
-                    ).length;
+                /*
+                 Reject extremely
+                 small regions.
+                */
 
+                if (
+                    areaRatio < 0.08
+                ) {
+
+                    approx.delete();
+
+                    contour.delete();
+
+                    continue;
+
+                }
+
+
+                /*
+                 Reject tiny or
+                 extremely distorted
+                 quadrilaterals.
+                */
+
+                const topWidth =
+                    distance(
+                        ordered[0],
+                        ordered[1]
+                    );
+
+
+                const bottomWidth =
+                    distance(
+                        ordered[3],
+                        ordered[2]
+                    );
+
+
+                const leftHeight =
+                    distance(
+                        ordered[0],
+                        ordered[3]
+                    );
+
+
+                const rightHeight =
+                    distance(
+                        ordered[1],
+                        ordered[2]
+                    );
+
+
+                const averageWidth =
+                    (
+                        topWidth +
+                        bottomWidth
+                    ) / 2;
+
+
+                const averageHeight =
+                    (
+                        leftHeight +
+                        rightHeight
+                    ) / 2;
+
+
+                if (
+                    averageWidth < 100 ||
+                    averageHeight < 100
+                ) {
+
+                    approx.delete();
+
+                    contour.delete();
+
+                    continue;
+
+                }
+
+
+                /*
+                 Calculate score.
+                Larger document,
+                 better rectangle,
+                 less edge touching.
+                */
 
                 let score =
-                    area /
-                    imageArea *
-                    100;
+                    areaRatio * 100;
 
 
                 score +=
                     Math.min(
-                        20,
-                        areaRatio * 20
+                        25,
+                        rectangularity * 25
                     );
 
 
-                score -=
-                    edgeTouch * 3;
-
-
-                /* Don't select whole photo */
+                /*
+                 Penalize complete
+                 image rectangle.
+                */
 
                 if (
-                    area >
-                    imageArea * 0.82
+                    areaRatio > 0.90
                 ) {
 
                     score -= 35;
@@ -1848,15 +2851,44 @@ async function detectAndCropDocument(dataURL) {
                 }
 
 
+                /*
+                 Prefer paper-like
+                 aspect ratios.
+                */
+
+                const ratio =
+                    Math.max(
+                        averageWidth,
+                        averageHeight
+                    ) /
+                    Math.max(
+                        1,
+                        Math.min(
+                            averageWidth,
+                            averageHeight
+                        )
+                    );
+
+
                 if (
-                    score >
-                    bestScore
+                    ratio >= 1.15 &&
+                    ratio <= 2.0
+                ) {
+
+                    score += 10;
+
+                }
+
+
+                if (
+                    score > bestScore
                 ) {
 
                     bestScore =
                         score;
 
-                    best =
+
+                    bestPoints =
                         ordered;
 
                 }
@@ -1874,33 +2906,45 @@ async function detectAndCropDocument(dataURL) {
         let result;
 
 
-        if (best) {
+        /*
+         Only crop if the
+         detected rectangle is
+         reasonably reliable.
+        */
+
+        if (
+            bestPoints &&
+            bestScore >= 12
+        ) {
 
             result =
                 perspectiveEnhance(
                     src,
-                    best
+                    bestPoints
                 );
 
         }
 
         else {
 
+            /*
+             Never make a random
+             crop if detection fails.
+            */
+
             result =
-                autoDeskewFallback(
+                enhanceDocument(
                     src
                 );
 
         }
 
 
-        /* CLEANUP */
-
         src.delete();
 
         gray.delete();
 
-        blur.delete();
+        blurred.delete();
 
         edges.delete();
 
@@ -1915,12 +2959,14 @@ async function detectAndCropDocument(dataURL) {
 
     }
 
+
     catch(error) {
 
         console.error(
-            "Scanner error:",
+            "Scanner detection error:",
             error
         );
+
 
         return dataURL;
 
@@ -1945,13 +2991,13 @@ function perspectiveEnhance(
                     points[0],
                     points[1]
                 ),
-
                 distance(
                     points[3],
                     points[2]
                 )
             )
         );
+
 
     let outputHeight =
         Math.round(
@@ -1960,7 +3006,6 @@ function perspectiveEnhance(
                     points[0],
                     points[3]
                 ),
-
                 distance(
                     points[1],
                     points[2]
@@ -1970,7 +3015,8 @@ function perspectiveEnhance(
 
 
     const maxOutput =
-        1800;
+        2000;
+
 
     const scale =
         Math.min(
@@ -1990,6 +3036,7 @@ function perspectiveEnhance(
                 outputWidth * scale
             )
         );
+
 
     outputHeight =
         Math.max(
@@ -2091,30 +3138,12 @@ function perspectiveEnhance(
 
 
 /* =====================================================
-FALLBACK
-===================================================== */
-
-function autoDeskewFallback(src) {
-
-    /*
-     If a reliable four-corner document
-     cannot be found, do not make a bad crop.
-     Instead keep the complete image and
-     enhance it.
-    */
-
-    return enhanceDocument(
-        src
-    );
-
-}
-
-
-/* =====================================================
 DOCUMENT ENHANCEMENT
 ===================================================== */
 
-function enhanceDocument(mat) {
+function enhanceDocument(
+    mat
+) {
 
     const gray =
         new cv.Mat();
@@ -2126,6 +3155,10 @@ function enhanceDocument(mat) {
         cv.COLOR_RGBA2GRAY
     );
 
+
+    /*
+     Slight noise reduction.
+    */
 
     const denoise =
         new cv.Mat();
@@ -2142,18 +3175,17 @@ function enhanceDocument(mat) {
     );
 
 
+    /*
+     Improve local contrast.
+    */
+
     const enhanced =
         new cv.Mat();
 
 
-    /*
-     CLAHE improves contrast and
-     uneven mobile-camera lighting.
-    */
-
     const clahe =
         new cv.CLAHE(
-            2.0,
+            2.2,
             new cv.Size(
                 8,
                 8
@@ -2167,10 +3199,13 @@ function enhanceDocument(mat) {
     );
 
 
-    /* SHARPEN TEXT */
+    /*
+     Sharpen text.
+    */
 
     const blur2 =
         new cv.Mat();
+
 
     const sharp =
         new cv.Mat();
@@ -2183,27 +3218,33 @@ function enhanceDocument(mat) {
             0,
             0
         ),
-        1.2
+        1.1
     );
 
 
     cv.addWeighted(
         enhanced,
-        1.35,
+        1.4,
         blur2,
-        -0.35,
+        -0.4,
         0,
         sharp
     );
 
+
+    /*
+     Keep grayscale document.
+    */
 
     const outputCanvas =
         document.createElement(
             "canvas"
         );
 
+
     outputCanvas.width =
         sharp.cols;
+
 
     outputCanvas.height =
         sharp.rows;
@@ -2218,11 +3259,9 @@ function enhanceDocument(mat) {
     const data =
         outputCanvas.toDataURL(
             "image/jpeg",
-            0.93
+            0.94
         );
 
-
-    /* CLEANUP */
 
     gray.delete();
 
@@ -2246,9 +3285,12 @@ function enhanceDocument(mat) {
 QUADRILATERAL AREA
 ===================================================== */
 
-function quadArea(points) {
+function quadArea(
+    points
+) {
 
     let area = 0;
+
 
     for (
         let i = 0;
@@ -2259,16 +3301,19 @@ function quadArea(points) {
         const a =
             points[i];
 
+
         const b =
             points[
                 (i + 1) % 4
             ];
+
 
         area +=
             a.x * b.y -
             b.x * a.y;
 
     }
+
 
     return Math.abs(
         area
@@ -2281,19 +3326,25 @@ function quadArea(points) {
 ORDER CORNERS
 ===================================================== */
 
-function orderPoints(points) {
+function orderPoints(
+    points
+) {
 
     const pts =
         points.slice();
 
+
     let topLeft =
         pts[0];
+
 
     let topRight =
         pts[0];
 
+
     let bottomRight =
         pts[0];
+
 
     let bottomLeft =
         pts[0];
@@ -2302,11 +3353,14 @@ function orderPoints(points) {
     let minSum =
         Infinity;
 
+
     let maxSum =
         -Infinity;
 
+
     let minDiff =
         Infinity;
+
 
     let maxDiff =
         -Infinity;
@@ -2319,6 +3373,7 @@ function orderPoints(points) {
         const sum =
             point.x +
             point.y;
+
 
         const diff =
             point.x -
@@ -2440,6 +3495,9 @@ function waitForOpenCV() {
                 setInterval(
                     function() {
 
+                        attempts++;
+
+
                         if (
                             typeof cv !== "undefined" &&
                             cv.Mat
@@ -2451,14 +3509,13 @@ function waitForOpenCV() {
 
                             resolve();
 
+                            return;
+
                         }
 
 
-                        attempts++;
-
-
                         if (
-                            attempts >= 120
+                            attempts >= 150
                         ) {
 
                             clearInterval(
@@ -2528,15 +3585,19 @@ async function createScannedPDF() {
     const pageWidth =
         210;
 
+
     const pageHeight =
         297;
+
 
     const margin =
         8;
 
+
     const maxWidth =
         pageWidth -
         margin * 2;
+
 
     const maxHeight =
         pageHeight -
@@ -2549,7 +3610,9 @@ async function createScannedPDF() {
         i++
     ) {
 
-        if (i > 0) {
+        if (
+            i > 0
+        ) {
 
             pdf.addPage();
 
@@ -2564,6 +3627,7 @@ async function createScannedPDF() {
 
         let width =
             img.width;
+
 
         let height =
             img.height;
@@ -2611,10 +3675,12 @@ async function convertPDFtoImages() {
             "pdfFileInput"
         );
 
+
     const format =
         document.getElementById(
             "pdfFormat"
         ).value;
+
 
     const result =
         document.getElementById(
@@ -2647,7 +3713,7 @@ async function convertPDFtoImages() {
     ) {
 
         result.innerHTML =
-            '<div class="error">PDF converter library could not load.</div>';
+            '<div class="error">PDF converter library could not load. Please check your internet connection.</div>';
 
         return;
 
@@ -2662,10 +3728,12 @@ async function convertPDFtoImages() {
             "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
 
+        const file =
+            input.files[0];
+
+
         const arrayBuffer =
-            await input
-                .files[0]
-                .arrayBuffer();
+            await file.arrayBuffer();
 
 
         const pdf =
@@ -2691,9 +3759,13 @@ async function convertPDFtoImages() {
                 );
 
 
+            const scale =
+                2;
+
+
             const viewport =
                 page.getViewport({
-                    scale: 2
+                    scale: scale
                 });
 
 
@@ -2711,6 +3783,7 @@ async function convertPDFtoImages() {
 
             canvas.width =
                 viewport.width;
+
 
             canvas.height =
                 viewport.height;
@@ -2746,80 +3819,44 @@ async function convertPDFtoImages() {
                 );
 
 
-            const box =
+            const pageBox =
                 document.createElement(
                     "div"
                 );
 
-            box.className =
+
+            pageBox.className =
                 "pdf-page";
 
 
-            const title =
-                document.createElement(
-                    "strong"
-                );
+            pageBox.innerHTML = `
 
-            title.textContent =
-                "PDF Page " +
-                pageNumber;
+<strong>
+PDF Page ${pageNumber}
+</strong>
 
+<img
+src="${imageURL}"
+alt="Converted PDF page ${pageNumber}">
 
-            const image =
-                document.createElement(
-                    "img"
-                );
+<br>
 
-            image.src =
-                imageURL;
+<button
+class="download"
+onclick="downloadDataURL(
+'${imageURL}',
+'CompressPro-page-${pageNumber}.${extension}'
+)">
 
-            image.alt =
-                "Converted PDF page " +
-                pageNumber;
+Download Page
 
+</button>
 
-            const br =
-                document.createElement(
-                    "br"
-                );
-
-
-            const button =
-                document.createElement(
-                    "button"
-                );
-
-            button.className =
-                "download";
-
-            button.textContent =
-                "Download Page";
-
-
-            button.onclick =
-                function() {
-
-                    downloadDataURL(
-                        imageURL,
-                        "CompressPro-page-" +
-                        pageNumber +
-                        "." +
-                        extension
-                    );
-
-                };
-
-
-            box.append(
-                title,
-                image,
-                br,
-                button
-            );
+`;
 
 
             result.appendChild(
-                box
+                pageBox
             );
 
         }
@@ -2830,13 +3867,16 @@ async function convertPDFtoImages() {
                 "div"
             );
 
+
         message.className =
             "success";
+
 
         message.style.marginTop =
             "15px";
 
-        message.textContent =
+
+        message.innerHTML =
             "✅ PDF converted successfully.";
 
 
@@ -2846,14 +3886,16 @@ async function convertPDFtoImages() {
 
     }
 
+
     catch(error) {
 
         console.error(
             error
         );
 
+
         result.innerHTML =
-            '<div class="error">❌ Could not convert this PDF.</div>';
+            '<div class="error">❌ Could not convert this PDF. Please try another PDF file.</div>';
 
     }
 
@@ -2874,25 +3916,32 @@ function downloadDataURL(
             "a"
         );
 
+
     link.href =
         dataURL;
 
+
     link.download =
         filename;
+
 
     document.body.appendChild(
         link
     );
 
+
     link.click();
 
-    link.remove();
+
+    document.body.removeChild(
+        link
+    );
 
 }
 
 
 /* =====================================================
-READ FILE
+FILE TO DATA URL
 ===================================================== */
 
 function readFileAsDataURL(
@@ -2966,7 +4015,7 @@ function loadImage(
 
                     reject(
                         new Error(
-                            "Image could not be loaded"
+                            "Image could not be loaded."
                         )
                     );
 
@@ -2995,20 +4044,25 @@ function escapeHTML(
             "div"
         );
 
+
     div.textContent =
         text;
+
 
     return div.innerHTML;
 
 }
 
+</script>
 
-/* =====================================================
+
+<!-- =====================================================
 PWA INSTALL
-===================================================== */
+===================================================== -->
 
-let deferredPrompt =
-    null;
+<script>
+
+let deferredPrompt = null;
 
 
 const installBtn =
@@ -3019,12 +4073,13 @@ const installBtn =
 
 window.addEventListener(
     "beforeinstallprompt",
-    function(event) {
+    function(e) {
 
-        event.preventDefault();
+        e.preventDefault();
 
         deferredPrompt =
-            event;
+            e;
+
 
         installBtn.style.display =
             "inline-block";
@@ -3037,9 +4092,7 @@ installBtn.addEventListener(
     "click",
     async function() {
 
-        if (
-            !deferredPrompt
-        ) {
+        if (!deferredPrompt) {
 
             alert(
                 "To install CompressPro, open the live website in Chrome and use the browser's Install App option."
@@ -3054,13 +4107,11 @@ installBtn.addEventListener(
 
 
         const choice =
-            await deferredPrompt
-                .userChoice;
+            await deferredPrompt.userChoice;
 
 
         if (
-            choice.outcome ===
-            "accepted"
+            choice.outcome === "accepted"
         ) {
 
             installBtn.style.display =
@@ -3088,5 +4139,7 @@ window.addEventListener(
 
 </script>
 
+
 </body>
+
 </html>
