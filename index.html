@@ -5,14 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Free Image Compressor & PDF Converter Online | CompressPro</title>
-
 <meta name="description" content="Compress JPG and PNG images, convert images to PDF, convert PDF to JPG or PNG, scan documents, and download compressed images as ZIP with CompressPro.">
-
 <meta name="robots" content="index, follow">
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1769aa">
-
 <link rel="apple-touch-icon" href="/IMAGE-COMPRESSOR/compresspro-logo%20(1).png">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -21,7 +18,6 @@
 <script async src="https://docs.opencv.org/4.x/opencv.js"></script>
 
 <style>
-
 *{box-sizing:border-box}
 
 body{
@@ -94,10 +90,7 @@ margin:5px 0;
 color:#1769aa
 }
 
-.upload-box p{
-color:#666;
-margin-bottom:18px
-}
+.upload-box p{color:#666;margin-bottom:18px}
 
 input[type=file]{
 width:100%;
@@ -120,22 +113,13 @@ font-weight:bold;
 margin:5px
 }
 
-button:disabled{
-opacity:.55;
-cursor:not-allowed
-}
+button:disabled{opacity:.55;cursor:not-allowed}
 
 .compress-btn{background:#1769aa;color:#fff}
 .compress-btn:hover{background:#12598f}
 
-.download-all{
-background:#16803c;
-color:#fff;
-display:none
-}
-
+.download-all{background:#16803c;color:#fff;display:none}
 .download{background:#1677ff;color:#fff}
-
 .danger-btn{background:#d9534f;color:#fff}
 
 .card{
@@ -157,22 +141,9 @@ border-radius:10px
 }
 
 .info{line-height:1.8}
-
-.success{
-color:#16803c;
-font-weight:bold
-}
-
-.error{
-color:#d9534f;
-font-weight:bold
-}
-
-.loading{
-color:#1769aa;
-font-weight:bold;
-padding:10px
-}
+.success{color:#16803c;font-weight:bold}
+.error{color:#d9534f;font-weight:bold}
+.loading{color:#1769aa;font-weight:bold;padding:10px}
 
 .scanner-note{
 background:#eef6ff;
@@ -278,20 +249,14 @@ color:#666;
 line-height:1.5
 }
 
-.content-section{
-margin-top:40px;
-line-height:1.8
-}
+.content-section{margin-top:40px;line-height:1.8}
 
 .content-section h2{
 color:#1769aa;
 margin-top:30px
 }
 
-.content-section h3{
-color:#333;
-margin-top:20px
-}
+.content-section h3{color:#333;margin-top:20px}
 
 footer{
 text-align:center;
@@ -308,10 +273,7 @@ text-decoration:none;
 font-weight:bold
 }
 
-
-/* ================================
-   LIVE CAMERA SCANNER
-================================ */
+/* LIVE CAMERA SCANNER */
 
 #liveScannerModal{
 position:fixed;
@@ -366,13 +328,9 @@ top:13%;
 bottom:15%;
 border:3px solid rgba(255,255,255,.85);
 border-radius:8px;
-box-shadow:
-0 0 0 9999px rgba(0,0,0,.18),
-0 0 20px rgba(255,255,255,.35);
+box-shadow:0 0 0 9999px rgba(0,0,0,.18),0 0 20px rgba(255,255,255,.35);
 pointer-events:none
 }
-
-/* Corner marks */
 
 #scannerGuide:before,
 #scannerGuide:after{
@@ -444,45 +402,19 @@ padding:12px 17px;
 border-radius:50px
 }
 
-
-/* MOBILE */
-
 @media(max-width:600px){
-
 body{padding:8px}
-
-.container{
-padding:18px 14px;
-margin-top:10px
-}
-
+.container{padding:18px 14px;margin-top:10px}
 .hero h1{font-size:27px}
-
 .subtitle{font-size:15px}
-
 .logo{width:160px}
-
 .feature-grid{grid-template-columns:1fr}
-
 .feature-card{padding:15px}
-
-button{
-width:90%;
-margin:6px auto;
-display:block
-}
-
-#installApp{
-width:auto;
-display:inline-block
-}
-
+button{width:90%;margin:6px auto;display:block}
+#installApp{width:auto;display:inline-block}
 .scan-page img{max-height:620px}
-
 .scan-page h3{font-size:26px}
-
 }
-
 </style>
 </head>
 
@@ -495,257 +427,101 @@ display:inline-block
 <div class="container">
 
 <div class="hero">
-
-<img
-src="compresspro-logo (1).png"
-alt="CompressPro Logo"
-class="logo">
-
+<img src="compresspro-logo (1).png" alt="CompressPro Logo" class="logo">
 <h1>CompressPro</h1>
-
-<p class="subtitle">
-Fast, Free & Easy Image Compressor
-</p>
-
+<p class="subtitle">Fast, Free & Easy Image Compressor</p>
 </div>
-
 
 <!-- IMAGE COMPRESSOR -->
-
 <div class="upload-box">
-
 <div class="upload-icon">🖼️</div>
-
 <h2>Compress Your Images</h2>
+<p>Reduce image file size quickly while keeping your images looking great.</p>
 
-<p>
-Reduce image file size quickly while keeping your images looking great.
-</p>
-
-<input
-type="file"
-id="imageInput"
-accept="image/jpeg,image/png"
-multiple>
+<input type="file" id="imageInput" accept="image/jpeg,image/png" multiple>
 
 <br>
 
-<button
-class="compress-btn"
-onclick="compressImages()">
-Compress Images
-</button>
-
-<button
-class="download-all"
-id="downloadAll"
-onclick="downloadAll()">
-Download All
-</button>
-
-<button
-class="download-all"
-id="downloadZip"
-onclick="downloadZIP()">
-📦 Download All as ZIP
-</button>
+<button class="compress-btn" onclick="compressImages()">Compress Images</button>
+<button class="download-all" id="downloadAll" onclick="downloadAll()">Download All</button>
+<button class="download-all" id="downloadZip" onclick="downloadZIP()">📦 Download All as ZIP</button>
 
 <div id="results"></div>
-
 </div>
-
 
 <!-- IMAGE TO PDF -->
-
 <div class="upload-box">
-
 <div class="upload-icon">📄</div>
-
 <h2>Convert Images to PDF</h2>
+<p>Convert JPG and PNG images into one PDF file.</p>
 
-<p>
-Convert JPG and PNG images into one PDF file.
-</p>
-
-<input
-type="file"
-id="pdfImageInput"
-accept="image/jpeg,image/png"
-multiple>
+<input type="file" id="pdfImageInput" accept="image/jpeg,image/png" multiple>
 
 <br>
 
-<button
-class="compress-btn"
-onclick="convertImagesToPDF()">
-Convert to PDF
-</button>
-
+<button class="compress-btn" onclick="convertImagesToPDF()">Convert to PDF</button>
 <div id="imagePdfResult"></div>
-
 </div>
-
 
 <!-- SMART DOCUMENT SCANNER -->
-
 <div class="upload-box">
-
 <div class="upload-icon">📷</div>
-
 <h2>Smart Document Scanner</h2>
-
-<p>
-Scan documents using your mobile camera and create a multi-page PDF.
-</p>
+<p>Scan documents using your mobile camera and create a multi-page PDF.</p>
 
 <div class="scanner-note">
-
 <strong>How it works:</strong>
-
 <br>
-
 Tap <strong>Scan Document</strong> to open the live camera.
-
 <br>
-
 Keep the complete document inside the guide.
-
 <br>
-
 Tap the white capture button.
-
 <br>
-
-CompressPro will automatically detect the page,
-straighten it, crop it and improve text visibility.
-
+CompressPro will attempt to detect the page, straighten it, crop it and improve text visibility.
 <br><br>
-
 You can scan multiple pages and create one PDF.
-
 </div>
 
+<input type="file" id="scannerInput" accept="image/*" capture="environment" onchange="handleScannerFile(event)">
 
-<input
-type="file"
-id="scannerInput"
-accept="image/*"
-capture="environment"
-onchange="handleScannerFile(event)">
-
-
-<img
-id="scannerPreview"
-class="scanner-preview"
-style="display:none;"
-alt="Document preview">
-
+<img id="scannerPreview" class="scanner-preview" style="display:none;" alt="Document preview">
 
 <div class="scan-actions">
-
-<button
-class="compress-btn"
-id="scanDocumentBtn"
-onclick="startDocumentScan()">
-
-📷 Scan Document
-
-</button>
-
-
-<button
-class="compress-btn"
-id="addScanBtn"
-onclick="addAnotherScanPage()"
-style="display:none;">
-
-➕ Add Another Page
-
-</button>
-
-
-<button
-class="compress-btn"
-id="createScanPDF"
-onclick="createScannedPDF()"
-style="display:none;">
-
-📄 Create PDF
-
-</button>
-
-
-<button
-class="danger-btn"
-id="clearScans"
-onclick="clearScannedPages()"
-style="display:none;">
-
-Clear Scans
-
-</button>
-
+<button class="compress-btn" id="scanDocumentBtn" onclick="startDocumentScan()">📷 Scan Document</button>
+<button class="compress-btn" id="addScanBtn" onclick="addAnotherScanPage()" style="display:none;">➕ Add Another Page</button>
+<button class="compress-btn" id="createScanPDF" onclick="createScannedPDF()" style="display:none;">📄 Create PDF</button>
+<button class="danger-btn" id="clearScans" onclick="clearScannedPages()" style="display:none;">Clear Scans</button>
 </div>
-
 
 <div id="scannerStatus" class="scanner-status"></div>
-
 <div id="scannerResult"></div>
-
 </div>
-
 
 <!-- PDF TO JPG / PNG -->
-
 <div class="upload-box">
-
 <div class="upload-icon">📑</div>
-
 <h2>Convert PDF to JPG/PNG</h2>
+<p>Convert PDF pages into JPG or PNG images directly in your browser.</p>
 
-<p>
-Convert PDF pages into JPG or PNG images directly in your browser.
-</p>
+<input type="file" id="pdfFileInput" accept="application/pdf">
 
-<input
-type="file"
-id="pdfFileInput"
-accept="application/pdf">
+<label for="pdfFormat">Choose image format:</label>
 
-<label for="pdfFormat">
-Choose image format:
-</label>
-
-<select
-id="pdfFormat"
-style="width:100%;padding:12px;margin:12px 0;border:1px solid #ddd;border-radius:8px;">
-
+<select id="pdfFormat" style="width:100%;padding:12px;margin:12px 0;border:1px solid #ddd;border-radius:8px;">
 <option value="jpeg">JPG</option>
 <option value="png">PNG</option>
-
 </select>
 
-<button
-class="compress-btn"
-onclick="convertPDFtoImages()">
-
-Convert PDF
-
-</button>
-
+<button class="compress-btn" onclick="convertPDFtoImages()">Convert PDF</button>
 <div id="pdfResults"></div>
-
 </div>
 
-
 <!-- FEATURES -->
-
 <section class="features">
-
 <h2>Why Choose CompressPro?</h2>
 
 <div class="feature-grid">
-
 <div class="feature-card">
 <div class="icon">⚡</div>
 <h3>Fast Compression</h3>
@@ -763,63 +539,31 @@ Convert PDF
 <h3>Mobile Friendly</h3>
 <p>Works smoothly on phones, tablets and computers.</p>
 </div>
-
 </div>
-
 </section>
 
-
 <!-- SEO CONTENT -->
-
 <section class="content-section">
 
 <h2>Free Online Image Compressor and PDF Converter</h2>
-
-<p>
-CompressPro is a free online image compressor and PDF converter.
-You can compress JPG and PNG images, convert images to PDF,
-convert PDF pages to JPG or PNG, scan documents, and download
-multiple compressed images as a ZIP file.
-CompressPro works directly in your browser.
-</p>
+<p>CompressPro is a free online image compressor and PDF converter. You can compress JPG and PNG images, convert images to PDF, convert PDF pages to JPG or PNG, scan documents, and download multiple compressed images as a ZIP file. CompressPro works directly in your browser.</p>
 
 <h2>Free JPG and PNG Image Compressor</h2>
-
-<p>
-Reduce JPG and PNG image file sizes quickly with CompressPro.
-Select one or multiple images, compress them, compare the original
-and compressed file sizes, and download your compressed images.
-</p>
+<p>Reduce JPG and PNG image file sizes quickly with CompressPro. Select one or multiple images, compress them, compare the original and compressed file sizes, and download your compressed images.</p>
 
 <h2>JPG and PNG to PDF Converter</h2>
-
-<p>
-Convert multiple JPG and PNG images into a PDF document with CompressPro.
-</p>
+<p>Convert multiple JPG and PNG images into a PDF document with CompressPro.</p>
 
 <h2>Smart Document Scanner</h2>
-
-<p>
-Use the CompressPro document scanner to capture documents with your
-mobile camera. The scanner attempts to detect document edges,
-crop the page, correct perspective, improve contrast, reduce
-background texture, and prepare scanned pages for PDF creation.
-</p>
+<p>Use the CompressPro document scanner to capture documents with your mobile camera. The scanner attempts to detect document edges, crop the page, correct perspective, improve contrast, reduce background texture, and prepare scanned pages for PDF creation.</p>
 
 <h2>PDF to JPG and PNG Converter</h2>
-
-<p>
-Convert PDF pages into JPG or PNG images directly in your browser.
-</p>
+<p>Convert PDF pages into JPG or PNG images directly in your browser.</p>
 
 <h2>Download Compressed Images as ZIP</h2>
-
-<p>
-Compress multiple images and download them together in one ZIP file.
-</p>
+<p>Compress multiple images and download them together in one ZIP file.</p>
 
 <h2>How to Scan a Document</h2>
-
 <ol>
 <li>Open the Smart Document Scanner.</li>
 <li>Tap Scan Document.</li>
@@ -834,2273 +578,1277 @@ Compress multiple images and download them together in one ZIP file.
 <h2>Frequently Asked Questions</h2>
 
 <h3>Is CompressPro free?</h3>
-
-<p>
-Yes. CompressPro provides free image compression,
-document scanning and PDF conversion tools.
-</p>
+<p>Yes. CompressPro provides free image compression, document scanning and PDF conversion tools.</p>
 
 <h3>Can I compress multiple images?</h3>
-
-<p>
-Yes. You can select multiple JPG and PNG images.
-</p>
+<p>Yes. You can select multiple JPG and PNG images.</p>
 
 <h3>Can I convert images to PDF?</h3>
-
-<p>
-Yes. CompressPro can convert multiple images into a PDF.
-</p>
+<p>Yes. CompressPro can convert multiple images into a PDF.</p>
 
 <h3>Can I scan documents with CompressPro?</h3>
-
-<p>
-Yes. CompressPro includes a live camera document scanner.
-</p>
+<p>Yes. CompressPro includes a live camera document scanner.</p>
 
 <h3>Can I create a PDF from multiple scanned pages?</h3>
-
-<p>
-Yes. You can scan multiple pages and combine them into one PDF.
-</p>
+<p>Yes. You can scan multiple pages and combine them into one PDF.</p>
 
 <h3>Does CompressPro work on mobile phones?</h3>
-
-<p>
-Yes. CompressPro is designed for phones, tablets and computers.
-</p>
+<p>Yes. CompressPro is designed for phones, tablets and computers.</p>
 
 </section>
-
 </div>
-
 
 <footer>
-
 <a href="privacy.html">Privacy Policy</a>
 <br>
-
 <a href="about.html">About Us</a>
 <br>
-
 <a href="contact.html">Contact Us</a>
-
 <p>© 2026 CompressPro. All rights reserved.</p>
-
 </footer>
 
-
-<!-- =====================================================
-     LIVE CAMERA MODAL
-===================================================== -->
-
-<div
-id="liveScannerModal"
-aria-hidden="true">
+<!-- LIVE CAMERA MODAL -->
+<div id="liveScannerModal" aria-hidden="true">
 
 <div class="scannerTop">
-
 <span>📄 Smart Scanner</span>
-
-<button
-id="liveScannerClose"
-type="button"
-onclick="closeLiveScanner()">
-
-✕ Close
-
-</button>
-
+<button id="liveScannerClose" type="button" onclick="closeLiveScanner()">✕ Close</button>
 </div>
-
 
 <div id="liveScannerVideoWrap">
-
-<video
-id="liveScannerVideo"
-autoplay
-playsinline
-muted>
-</video>
-
+<video id="liveScannerVideo" autoplay playsinline muted></video>
 <div id="scannerGuide"></div>
-
-<div id="liveScannerStatus">
-Point the camera at a document
+<div id="liveScannerStatus">Point the camera at a document</div>
 </div>
-
-</div>
-
 
 <div id="liveScannerControls">
-
-<button
-id="liveScannerFlash"
-type="button"
-onclick="toggleScannerTorch()">
-
-🔦 Flash
-
-</button>
-
-
-<button
-id="liveScannerCapture"
-type="button"
-onclick="captureLiveScan()"
-aria-label="Capture">
-
-Capture
-
-</button>
-
-
-<button
-id="liveScannerGallery"
-type="button"
-onclick="openScannerGallery()">
-
-🖼️ Gallery
-
-</button>
-
+<button id="liveScannerFlash" type="button" onclick="toggleScannerTorch()">🔦 Flash</button>
+<button id="liveScannerCapture" type="button" onclick="captureLiveScan()" aria-label="Capture">Capture</button>
+<button id="liveScannerGallery" type="button" onclick="openScannerGallery()">🖼️ Gallery</button>
 </div>
-
 </div>
 
 
 <script>
+"use strict";
 
 /* =====================================================
-SERVICE WORKER
+   COMPRESSPRO - PART 2/2
+   IMAGE COMPRESSION + SCANNER + OPENCV + PDF + PWA
 ===================================================== */
 
-if("serviceWorker" in navigator){
+/* SERVICE WORKER */
 
-window.addEventListener("load",function(){
-
-navigator.serviceWorker.register("service-worker.js")
-.then(function(){
-
-console.log("CompressPro service worker ready");
-
-})
-.catch(function(error){
-
-console.log("Service worker error:",error);
-
-});
-
-});
-
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+        navigator.serviceWorker.register("service-worker.js")
+            .catch(function (error) {
+                console.warn("Service worker error:", error);
+            });
+    });
 }
 
+/* COMMON HELPERS */
+
+function readFileAsDataURL(file) {
+    return new Promise(function (resolve, reject) {
+        const reader = new FileReader();
+        reader.onload = function () { resolve(reader.result); };
+        reader.onerror = function () { reject(reader.error); };
+        reader.readAsDataURL(file);
+    });
+}
+
+function loadImage(src) {
+    return new Promise(function (resolve, reject) {
+        const img = new Image();
+        img.onload = function () { resolve(img); };
+        img.onerror = function () {
+            reject(new Error("Image could not be loaded."));
+        };
+        img.src = src;
+    });
+}
+
+function escapeHTML(value) {
+    const div = document.createElement("div");
+    div.textContent = value;
+    return div.innerHTML;
+}
+
+function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(function () {
+        URL.revokeObjectURL(url);
+    }, 1500);
+}
+
+function downloadDataURL(dataURL, filename) {
+    const link = document.createElement("a");
+    link.href = dataURL;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
 
 /* =====================================================
-IMAGE COMPRESSION
+   IMAGE COMPRESSION
 ===================================================== */
 
-let compressedImages=[];
+let compressedImages = [];
 
-function compressImages(){
+async function compressImages() {
+    const input = document.getElementById("imageInput");
+    const results = document.getElementById("results");
+    const allBtn = document.getElementById("downloadAll");
+    const zipBtn = document.getElementById("downloadZip");
 
-const input=document.getElementById("imageInput");
-const results=document.getElementById("results");
-const downloadAllBtn=document.getElementById("downloadAll");
-const downloadZipBtn=document.getElementById("downloadZip");
+    results.innerHTML = "";
+    compressedImages = [];
+    allBtn.style.display = "none";
+    zipBtn.style.display = "none";
 
-results.innerHTML="";
-compressedImages=[];
+    if (!input.files || !input.files.length) {
+        alert("Please select at least one image.");
+        return;
+    }
 
-downloadAllBtn.style.display="none";
-downloadZipBtn.style.display="none";
+    results.innerHTML = '<div class="loading">Compressing images...</div>';
 
-if(!input.files||!input.files.length){
+    try {
+        const files = Array.from(input.files);
+        results.innerHTML = "";
 
-alert("Please select at least one image.");
-return;
+        for (const file of files) {
+            if (!/^image\/(jpeg|png)$/.test(file.type)) continue;
 
+            const dataURL = await readFileAsDataURL(file);
+            const img = await loadImage(dataURL);
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            ctx.drawImage(img, 0, 0);
+
+            const blob = await new Promise(function (resolve) {
+                canvas.toBlob(resolve, "image/jpeg", 0.78);
+            });
+
+            if (!blob) continue;
+
+            const index = compressedImages.length;
+            const outputName =
+                file.name.replace(/\.[^.]+$/, "") + "-compressed.jpg";
+
+            compressedImages.push({
+                blob: blob,
+                name: outputName
+            });
+
+            const saved = Math.round(
+                (1 - blob.size / file.size) * 100
+            );
+
+            const card = document.createElement("div");
+            card.className = "card";
+
+            card.innerHTML = `
+                <strong>${escapeHTML(file.name)}</strong>
+                <img src="${URL.createObjectURL(blob)}" alt="Compressed image">
+                <div class="info">
+                    Original: ${(file.size / 1024).toFixed(2)} KB<br>
+                    Compressed: ${(blob.size / 1024).toFixed(2)} KB<br>
+                    <span class="${saved >= 0 ? "success" : "error"}">
+                        ${saved >= 0 ? "Saved: " + saved + "%" :
+                            "File size increased by " + Math.abs(saved) + "%"}
+                    </span>
+                </div>
+                <button class="download" data-index="${index}">
+                    Download Image
+                </button>
+            `;
+
+            card.querySelector("button").addEventListener("click", function () {
+                downloadOne(Number(this.dataset.index));
+            });
+
+            results.appendChild(card);
+        }
+
+        if (!compressedImages.length) {
+            results.innerHTML =
+                '<div class="error">No supported JPG or PNG images found.</div>';
+            return;
+        }
+
+        allBtn.style.display = "inline-block";
+        zipBtn.style.display = "inline-block";
+
+    } catch (error) {
+        console.error(error);
+        results.innerHTML =
+            '<div class="error">Could not compress the selected images.</div>';
+    }
 }
 
-Array.from(input.files).forEach(function(file){
-
-const reader=new FileReader();
-
-reader.onload=function(e){
-
-const img=new Image();
-
-img.onload=function(){
-
-const canvas=document.createElement("canvas");
-const ctx=canvas.getContext("2d");
-
-canvas.width=img.width;
-canvas.height=img.height;
-
-ctx.drawImage(img,0,0);
-
-canvas.toBlob(function(blob){
-
-if(!blob)return;
-
-const originalSize=file.size;
-const compressedSize=blob.size;
-
-const saved=Math.max(
-0,
-Math.round((1-compressedSize/originalSize)*100)
-);
-
-const url=URL.createObjectURL(blob);
-
-compressedImages.push({
-blob:blob,
-name:"compressed_"+file.name
-});
-
-const card=document.createElement("div");
-
-card.className="card";
-
-card.innerHTML=`
-
-<strong>${escapeHTML(file.name)}</strong>
-
-<img src="${url}">
-
-<div class="info">
-
-Original:
-${(originalSize/1024).toFixed(2)} KB
-
-<br>
-
-Compressed:
-${(compressedSize/1024).toFixed(2)} KB
-
-<br>
-
-<span class="success">
-Saved: ${saved}%
-</span>
-
-</div>
-
-<button
-class="download"
-onclick="downloadOne(${compressedImages.length-1})">
-
-Download Image
-
-</button>
-
-`;
-
-results.appendChild(card);
-
-if(compressedImages.length>1){
-
-downloadAllBtn.style.display="inline-block";
-downloadZipBtn.style.display="inline-block";
-
+function downloadOne(index) {
+    const item = compressedImages[index];
+    if (item) downloadBlob(item.blob, item.name);
 }
 
-},"image/jpeg",0.7);
-
-};
-
-img.src=e.target.result;
-
-};
-
-reader.readAsDataURL(file);
-
-});
-
+function downloadAll() {
+    compressedImages.forEach(function (item, index) {
+        setTimeout(function () {
+            downloadOne(index);
+        }, index * 500);
+    });
 }
 
+async function downloadZIP() {
+    if (!compressedImages.length) {
+        alert("Please compress some images first.");
+        return;
+    }
 
-function downloadOne(index){
+    if (typeof JSZip === "undefined") {
+        alert("ZIP library could not load. Please try again.");
+        return;
+    }
 
-const item=compressedImages[index];
+    try {
+        const zip = new JSZip();
 
-if(!item)return;
+        compressedImages.forEach(function (item) {
+            zip.file(item.name, item.blob);
+        });
 
-const link=document.createElement("a");
+        const blob = await zip.generateAsync({ type: "blob" });
+        downloadBlob(blob, "CompressPro-Compressed-Images.zip");
 
-link.href=URL.createObjectURL(item.blob);
-link.download=item.name;
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
+    } catch (error) {
+        console.error(error);
+        alert("Could not create the ZIP file.");
+    }
 }
-
-
-function downloadAll(){
-
-compressedImages.forEach(function(item,index){
-
-setTimeout(function(){
-
-downloadOne(index);
-
-},index*500);
-
-});
-
-}
-
-
-async function downloadZIP(){
-
-if(!compressedImages.length){
-
-alert("Please compress some images first.");
-return;
-
-}
-
-if(typeof JSZip==="undefined"){
-
-alert("ZIP library could not load.");
-return;
-
-}
-
-const zip=new JSZip();
-
-compressedImages.forEach(function(item){
-
-zip.file(item.name,item.blob);
-
-});
-
-const zipBlob=await zip.generateAsync({
-type:"blob"
-});
-
-const link=document.createElement("a");
-
-link.href=URL.createObjectURL(zipBlob);
-link.download="CompressPro-Compressed-Images.zip";
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-}
-
 
 /* =====================================================
-IMAGE TO PDF
+   IMAGES TO PDF
 ===================================================== */
 
-async function convertImagesToPDF(){
+async function convertImagesToPDF() {
+    const input = document.getElementById("pdfImageInput");
+    const result = document.getElementById("imagePdfResult");
 
-const input=document.getElementById("pdfImageInput");
-const result=document.getElementById("imagePdfResult");
+    if (!input.files || !input.files.length) {
+        alert("Please select at least one JPG or PNG image.");
+        return;
+    }
 
-result.innerHTML='<div class="loading">Creating PDF...</div>';
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        result.innerHTML =
+            '<div class="error">PDF library could not load.</div>';
+        return;
+    }
 
-if(!input.files||!input.files.length){
+    result.innerHTML = '<div class="loading">Creating PDF...</div>';
 
-result.innerHTML="";
-alert("Please select at least one JPG or PNG image.");
-return;
+    try {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 10;
+        let added = 0;
 
+        for (const file of Array.from(input.files)) {
+            if (!/^image\/(jpeg|png)$/.test(file.type)) continue;
+
+            const dataURL = await readFileAsDataURL(file);
+            const img = await loadImage(dataURL);
+
+            if (added > 0) pdf.addPage();
+
+            const ratio = Math.min(
+                (pageWidth - margin * 2) / img.width,
+                (pageHeight - margin * 2) / img.height
+            );
+
+            const width = img.width * ratio;
+            const height = img.height * ratio;
+            const format = file.type === "image/png" ? "PNG" : "JPEG";
+
+            pdf.addImage(
+                dataURL,
+                format,
+                (pageWidth - width) / 2,
+                (pageHeight - height) / 2,
+                width,
+                height
+            );
+
+            added++;
+        }
+
+        if (!added) throw new Error("No supported images selected.");
+
+        pdf.save("CompressPro-Images.pdf");
+        result.innerHTML =
+            '<div class="success">✅ PDF created successfully.</div>';
+
+    } catch (error) {
+        console.error(error);
+        result.innerHTML =
+            '<div class="error">Could not create PDF. Please try again.</div>';
+    }
 }
-
-if(!window.jspdf||!window.jspdf.jsPDF){
-
-result.innerHTML=
-'<div class="error">PDF library could not load.</div>';
-
-return;
-
-}
-
-try{
-
-const{jsPDF}=window.jspdf;
-
-const pdf=new jsPDF("p","mm","a4");
-
-const pageWidth=210;
-const pageHeight=297;
-const margin=10;
-
-const maxWidth=pageWidth-margin*2;
-const maxHeight=pageHeight-margin*2;
-
-for(let i=0;i<input.files.length;i++){
-
-const dataURL=await readFileAsDataURL(input.files[i]);
-const img=await loadImage(dataURL);
-
-if(i>0)pdf.addPage();
-
-let width=img.width;
-let height=img.height;
-
-const ratio=Math.min(
-maxWidth/width,
-maxHeight/height
-);
-
-width*=ratio;
-height*=ratio;
-
-pdf.addImage(
-dataURL,
-"JPEG",
-(pageWidth-width)/2,
-(pageHeight-height)/2,
-width,
-height
-);
-
-}
-
-pdf.save("CompressPro-Images.pdf");
-
-result.innerHTML=
-'<div class="success">✅ PDF created successfully.</div>';
-
-}catch(error){
-
-console.error(error);
-
-result.innerHTML=
-'<div class="error">❌ Could not create PDF.</div>';
-
-}
-
-}
-
 
 /* =====================================================
-SMART DOCUMENT SCANNER
+   SMART DOCUMENT SCANNER
 ===================================================== */
 
-let scannedPages=[];
-let scannerImageDataURL=null;
-let scannerProcessing=false;
+let scannedPages = [];
+let scannerImageDataURL = null;
+let scannerProcessing = false;
 
+let liveScannerStream = null;
+let scannerTrack = null;
+let scannerTorchOn = false;
 
-/* =====================================================
-LIVE CAMERA VARIABLES
-===================================================== */
+/* WAIT FOR OPENCV */
 
-let liveScannerStream=null;
-let scannerTrack=null;
+function waitForOpenCV(timeout = 20000) {
+    return new Promise(function (resolve) {
+        if (typeof cv !== "undefined" && cv.Mat) {
+            resolve(true);
+            return;
+        }
 
+        let elapsed = 0;
 
-/* =====================================================
-START SCANNER
-===================================================== */
+        const timer = setInterval(function () {
+            elapsed += 200;
 
-async function startDocumentScan(){
-
-if(scannerProcessing)return;
-
-await openLiveScanner();
-
+            if (typeof cv !== "undefined" && cv.Mat) {
+                clearInterval(timer);
+                resolve(true);
+            } else if (elapsed >= timeout) {
+                clearInterval(timer);
+                resolve(false);
+            }
+        }, 200);
+    });
 }
 
+/* START CAMERA */
 
-/* =====================================================
-OPEN LIVE CAMERA
-===================================================== */
-
-async function openLiveScanner(){
-
-const modal=document.getElementById("liveScannerModal");
-const video=document.getElementById("liveScannerVideo");
-const status=document.getElementById("liveScannerStatus");
-
-if(
-!navigator.mediaDevices||
-!navigator.mediaDevices.getUserMedia
-){
-
-document.getElementById("scannerStatus").innerHTML=
-"⚠️ Live camera is not supported here. Opening camera...";
-
-document.getElementById("scannerInput").click();
-
-return;
-
+async function startDocumentScan() {
+    if (scannerProcessing) return;
+    await openLiveScanner();
 }
 
-try{
+async function openLiveScanner() {
+    const modal = document.getElementById("liveScannerModal");
+    const video = document.getElementById("liveScannerVideo");
+    const status = document.getElementById("liveScannerStatus");
 
-status.textContent="⏳ Starting camera...";
+    if (!navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia) {
+        document.getElementById("scannerStatus").textContent =
+            "Camera unavailable. Please choose a photo instead.";
+        document.getElementById("scannerInput").click();
+        return;
+    }
 
-liveScannerStream=
-await navigator.mediaDevices.getUserMedia({
+    try {
+        status.textContent = "Starting camera...";
 
-video:{
-facingMode:{ideal:"environment"},
-width:{ideal:1920},
-height:{ideal:1080}
-},
+        liveScannerStream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: {
+                facingMode: { ideal: "environment" },
+                width: { ideal: 1920 },
+                height: { ideal: 1080 }
+            }
+        });
 
-audio:false
+        video.srcObject = liveScannerStream;
+        scannerTrack = liveScannerStream.getVideoTracks()[0] || null;
 
+        modal.style.display = "flex";
+        modal.setAttribute("aria-hidden", "false");
+
+        await video.play();
+
+        status.textContent =
+            "Keep the whole document inside the guide.";
+
+    } catch (error) {
+        console.error("Camera error:", error);
+        closeLiveScanner();
+
+        document.getElementById("scannerStatus").textContent =
+            "Camera permission denied or unavailable. Choose a photo instead.";
+
+        document.getElementById("scannerInput").click();
+    }
+}
+
+/* CLOSE CAMERA */
+
+function closeLiveScanner() {
+    const modal = document.getElementById("liveScannerModal");
+    const video = document.getElementById("liveScannerVideo");
+
+    if (liveScannerStream) {
+        liveScannerStream.getTracks().forEach(function (track) {
+            track.stop();
+        });
+    }
+
+    liveScannerStream = null;
+    scannerTrack = null;
+    scannerTorchOn = false;
+
+    if (video) video.srcObject = null;
+
+    if (modal) {
+        modal.style.display = "none";
+        modal.setAttribute("aria-hidden", "true");
+    }
+}
+
+/* CAMERA FLASH */
+
+async function toggleScannerTorch() {
+    const status = document.getElementById("liveScannerStatus");
+
+    try {
+        if (!scannerTrack || !scannerTrack.getCapabilities) {
+            status.textContent = "Flash is not available on this camera.";
+            return;
+        }
+
+        const capabilities = scannerTrack.getCapabilities();
+
+        if (!capabilities.torch) {
+            status.textContent = "This camera does not support flash control.";
+            return;
+        }
+
+        scannerTorchOn = !scannerTorchOn;
+
+        await scannerTrack.applyConstraints({
+            advanced: [{ torch: scannerTorchOn }]
+        });
+
+        status.textContent = scannerTorchOn ? "Flash on" : "Flash off";
+
+    } catch (error) {
+        console.warn("Torch unavailable:", error);
+        status.textContent = "Could not change flash setting.";
+    }
+}
+
+/* CAPTURE CAMERA IMAGE */
+
+async function captureLiveScan() {
+    if (scannerProcessing) return;
+
+    const video = document.getElementById("liveScannerVideo");
+    const status = document.getElementById("liveScannerStatus");
+
+    if (!video || !video.videoWidth) {
+        status.textContent = "Camera is starting. Please wait.";
+        return;
+    }
+
+    scannerProcessing = true;
+    status.textContent = "Detecting page and improving image...";
+
+    try {
+        const canvas = document.createElement("canvas");
+        const maxDimension = 2200;
+        const scale = Math.min(
+            1,
+            maxDimension / Math.max(video.videoWidth, video.videoHeight)
+        );
+
+        canvas.width = Math.round(video.videoWidth * scale);
+        canvas.height = Math.round(video.videoHeight * scale);
+
+        canvas.getContext("2d").drawImage(
+            video, 0, 0, canvas.width, canvas.height
+        );
+
+        const photo = canvas.toDataURL("image/jpeg", 0.94);
+
+        closeLiveScanner();
+
+        const processed = await detectAndCropDocument(photo);
+        scannedPages.push(processed);
+
+        scannerImageDataURL = null;
+        document.getElementById("scannerPreview").style.display = "none";
+
+        displayScannedPages();
+        updateScanButtons();
+
+        document.getElementById("scannerStatus").textContent =
+            "✅ Page added successfully.";
+
+    } catch (error) {
+        console.error("Capture error:", error);
+        document.getElementById("scannerStatus").textContent =
+            "Could not process this capture. Please try again.";
+    } finally {
+        scannerProcessing = false;
+    }
+}
+
+/* OPEN GALLERY */
+
+function openScannerGallery() {
+    closeLiveScanner();
+
+    const input = document.getElementById("scannerInput");
+    input.value = "";
+    input.click();
+}
+
+/* PROCESS SELECTED PHOTO */
+
+async function handleScannerFile(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+        document.getElementById("scannerStatus").textContent =
+            "Please choose a valid image.";
+        return;
+    }
+
+    const status = document.getElementById("scannerStatus");
+    const preview = document.getElementById("scannerPreview");
+    const scanButton = document.getElementById("scanDocumentBtn");
+
+    scanButton.disabled = true;
+    status.textContent = "Processing selected document...";
+
+    try {
+        const original = await readFileAsDataURL(file);
+        const processed = await detectAndCropDocument(original);
+
+        scannerImageDataURL = processed;
+        preview.src = processed;
+        preview.style.display = "block";
+
+        status.textContent =
+            "✅ Photo processed. Tap Add Another Page to save this page and scan another.";
+
+        updateScanButtons();
+
+    } catch (error) {
+        console.error("Photo processing error:", error);
+
+        try {
+            scannerImageDataURL = await readFileAsDataURL(file);
+            preview.src = scannerImageDataURL;
+            preview.style.display = "block";
+
+            status.textContent =
+                "Original photo loaded. You can still add this page.";
+            updateScanButtons();
+
+        } catch (readError) {
+            status.textContent = "Could not open this image.";
+        }
+
+    } finally {
+        scanButton.disabled = false;
+    }
+}
+
+/* SAVE CURRENT PHOTO AS A PAGE */
+
+async function addCurrentProcessedScan() {
+    if (!scannerImageDataURL) return false;
+
+    scannedPages.push(scannerImageDataURL);
+    scannerImageDataURL = null;
+
+    document.getElementById("scannerPreview").style.display = "none";
+    document.getElementById("scannerInput").value = "";
+
+    displayScannedPages();
+    updateScanButtons();
+
+    return true;
+}
+
+/* ADD ANOTHER PAGE */
+
+async function addAnotherScanPage() {
+    if (scannerProcessing) return;
+
+    if (scannerImageDataURL) {
+        await addCurrentProcessedScan();
+    }
+
+    await openLiveScanner();
+}
+
+/* DISPLAY ALL SAVED PAGES */
+
+function displayScannedPages() {
+    const result = document.getElementById("scannerResult");
+    result.innerHTML = "";
+
+    scannedPages.forEach(function (page, index) {
+        const box = document.createElement("div");
+        box.className = "scan-page";
+
+        const heading = document.createElement("h3");
+        heading.textContent = "Scanned Page " + (index + 1);
+
+        const image = document.createElement("img");
+        image.src = page;
+        image.alt = "Scanned document page " + (index + 1);
+
+        const removeButton = document.createElement("button");
+        removeButton.className = "danger-btn";
+        removeButton.textContent = "❌ Remove Page";
+
+        removeButton.addEventListener("click", function () {
+            removeScanPage(index);
+        });
+
+        box.appendChild(heading);
+        box.appendChild(image);
+        box.appendChild(removeButton);
+        result.appendChild(box);
+    });
+}
+
+/* REMOVE A PAGE */
+
+function removeScanPage(index) {
+    scannedPages.splice(index, 1);
+    displayScannedPages();
+    updateScanButtons();
+
+    document.getElementById("scannerStatus").textContent =
+        "Page removed.";
+}
+
+/* CLEAR ALL SCANS */
+
+function clearScannedPages() {
+    closeLiveScanner();
+
+    scannedPages = [];
+    scannerImageDataURL = null;
+
+    document.getElementById("scannerResult").innerHTML = "";
+    document.getElementById("scannerStatus").textContent = "";
+    document.getElementById("scannerPreview").style.display = "none";
+    document.getElementById("scannerInput").value = "";
+
+    updateScanButtons();
+}
+
+/* BUTTON VISIBILITY */
+
+function updateScanButtons() {
+    const hasPages = scannedPages.length > 0;
+    const hasPreview = Boolean(scannerImageDataURL);
+
+    document.getElementById("addScanBtn").style.display =
+        hasPages || hasPreview ? "inline-block" : "none";
+
+    document.getElementById("createScanPDF").style.display =
+        hasPages || hasPreview ? "inline-block" : "none";
+
+    document.getElementById("clearScans").style.display =
+        hasPages || hasPreview ? "inline-block" : "none";
+}
+
+/* =====================================================
+   DOCUMENT DETECTION HELPERS
+===================================================== */
+
+function distance(a, b) {
+    return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
+function quadArea(points) {
+    let area = 0;
+
+    for (let i = 0; i < 4; i++) {
+        const a = points[i];
+        const b = points[(i + 1) % 4];
+        area += a.x * b.y - b.x * a.y;
+    }
+
+    return Math.abs(area) / 2;
+}
+
+function orderPoints(points) {
+    const sortedBySum = [...points].sort(
+        (a, b) => (a.x + a.y) - (b.x + b.y)
+    );
+
+    const topLeft = sortedBySum[0];
+    const bottomRight = sortedBySum[3];
+
+    const remaining = points.filter(
+        p => p !== topLeft && p !== bottomRight
+    );
+
+    const topRight = remaining[0].x > remaining[1].x
+        ? remaining[0] : remaining[1];
+
+    const bottomLeft = remaining[0].x > remaining[1].x
+        ? remaining[1] : remaining[0];
+
+    return [topLeft, topRight, bottomRight, bottomLeft];
+}
+
+/* =====================================================
+   DETECT DOCUMENT AND CROP
+===================================================== */
+
+async function detectAndCropDocument(dataURL) {
+    const opencvReady = await waitForOpenCV();
+
+    if (!opencvReady) {
+        console.warn("OpenCV unavailable; applying basic enhancement.");
+        return basicEnhance(dataURL);
+    }
+
+    let src = null;
+    let gray = null;
+    let blurred = null;
+    let edges = null;
+    let kernel = null;
+    let contours = null;
+    let hierarchy = null;
+
+    try {
+        const img = await loadImage(dataURL);
+        const maxDimension = 2000;
+
+        const scale = Math.min(
+            1,
+            maxDimension / Math.max(img.width, img.height)
+        );
+
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(img.width * scale));
+        canvas.height = Math.max(1, Math.round(img.height * scale));
+
+        canvas.getContext("2d", { willReadFrequently: true })
+            .drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        src = cv.imread(canvas);
+        gray = new cv.Mat();
+        blurred = new cv.Mat();
+        edges = new cv.Mat();
+
+        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+        cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
+        cv.Canny(blurred, edges, 45, 130);
+
+        kernel = cv.getStructuringElement(
+            cv.MORPH_RECT, new cv.Size(5, 5)
+        );
+
+        cv.morphologyEx(edges, edges, cv.MORPH_CLOSE, kernel);
+
+        contours = new cv.MatVector();
+        hierarchy = new cv.Mat();
+
+        cv.findContours(
+            edges, contours, hierarchy,
+            cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE
+        );
+
+        const imageArea = canvas.width * canvas.height;
+        let bestPoints = null;
+        let bestScore = 0;
+
+        for (let i = 0; i < contours.size(); i++) {
+            const contour = contours.get(i);
+            let approx = null;
+
+            try {
+                const area = Math.abs(cv.contourArea(contour));
+
+                if (area < imageArea * 0.12 ||
+                    area > imageArea * 0.97) {
+                    continue;
+                }
+
+                const perimeter = cv.arcLength(contour, true);
+                approx = new cv.Mat();
+
+                cv.approxPolyDP(
+                    contour, approx, 0.02 * perimeter, true
+                );
+
+                if (approx.rows !== 4) continue;
+
+                const points = [];
+
+                for (let j = 0; j < 4; j++) {
+                    points.push({
+                        x: approx.data32S[j * 2],
+                        y: approx.data32S[j * 2 + 1]
+                    });
+                }
+
+                const ordered = orderPoints(points);
+                const quad = quadArea(ordered);
+                const ratio = quad / imageArea;
+
+                if (ratio < 0.12 || ratio > 0.97) continue;
+
+                const topWidth = distance(ordered[0], ordered[1]);
+                const bottomWidth = distance(ordered[3], ordered[2]);
+                const leftHeight = distance(ordered[0], ordered[3]);
+                const rightHeight = distance(ordered[1], ordered[2]);
+
+                const width = (topWidth + bottomWidth) / 2;
+                const height = (leftHeight + rightHeight) / 2;
+
+                if (width < 100 || height < 100) continue;
+
+                const aspect = Math.max(width, height) /
+                    Math.max(1, Math.min(width, height));
+
+                let score = ratio * 100;
+
+                if (aspect >= 1.15 && aspect <= 2.0) {
+                    score += 8;
+                }
+
+                if (ratio > 0.90) score -= 10;
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestPoints = ordered;
+                }
+
+            } catch (error) {
+                console.warn("Contour skipped:", error);
+            } finally {
+                if (approx) approx.delete();
+                contour.delete();
+            }
+        }
+
+        if (bestPoints && bestScore > 15) {
+            return perspectiveEnhance(src, bestPoints);
+        }
+
+        return enhanceDocument(src);
+
+    } catch (error) {
+        console.error("Document detection error:", error);
+        return basicEnhance(dataURL);
+
+    } finally {
+        if (src) src.delete();
+        if (gray) gray.delete();
+        if (blurred) blurred.delete();
+        if (edges) edges.delete();
+        if (kernel) kernel.delete();
+        if (contours) contours.delete();
+        if (hierarchy) hierarchy.delete();
+    }
+}
+
+/* =====================================================
+   PERSPECTIVE CORRECTION
+===================================================== */
+
+function perspectiveEnhance(src, points) {
+    let sourcePoints = null;
+    let destinationPoints = null;
+    let transform = null;
+    let warped = null;
+
+    try {
+        let outputWidth = Math.round(Math.max(
+            distance(points[0], points[1]),
+            distance(points[3], points[2])
+        ));
+
+        let outputHeight = Math.round(Math.max(
+            distance(points[0], points[3]),
+            distance(points[1], points[2])
+        ));
+
+        const scale = Math.min(
+            1,
+            2200 / Math.max(outputWidth, outputHeight)
+        );
+
+        outputWidth = Math.max(1, Math.round(outputWidth * scale));
+        outputHeight = Math.max(1, Math.round(outputHeight * scale));
+
+        sourcePoints = cv.matFromArray(
+            4, 1, cv.CV_32FC2,
+            points.flatMap(p => [p.x, p.y])
+        );
+
+        destinationPoints = cv.matFromArray(
+            4, 1, cv.CV_32FC2,
+            [
+                0, 0,
+                outputWidth - 1, 0,
+                outputWidth - 1, outputHeight - 1,
+                0, outputHeight - 1
+            ]
+        );
+
+        transform = cv.getPerspectiveTransform(
+            sourcePoints, destinationPoints
+        );
+
+        warped = new cv.Mat();
+
+        cv.warpPerspective(
+            src, warped, transform,
+            new cv.Size(outputWidth, outputHeight),
+            cv.INTER_CUBIC,
+            cv.BORDER_REPLICATE
+        );
+
+        return enhanceDocument(warped);
+
+    } finally {
+        if (sourcePoints) sourcePoints.delete();
+        if (destinationPoints) destinationPoints.delete();
+        if (transform) transform.delete();
+        if (warped) warped.delete();
+    }
+}
+
+/* =====================================================
+   CLEAN DOCUMENT IMAGE
+   Gentle grayscale enhancement to avoid excessive noise
+===================================================== */
+
+function enhanceDocument(mat) {
+    let gray = null;
+    let denoised = null;
+    let contrast = null;
+    let output = null;
+    let clahe = null;
+
+    try {
+        gray = new cv.Mat();
+
+        if (mat.channels() === 4) {
+            cv.cvtColor(mat, gray, cv.COLOR_RGBA2GRAY);
+        } else if (mat.channels() === 3) {
+            cv.cvtColor(mat, gray, cv.COLOR_RGB2GRAY);
+        } else {
+            mat.copyTo(gray);
+        }
+
+        denoised = new cv.Mat();
+
+        cv.GaussianBlur(
+            gray, denoised, new cv.Size(3, 3), 0
+        );
+
+        clahe = new cv.CLAHE(1.5, new cv.Size(8, 8));
+        contrast = new cv.Mat();
+
+        clahe.apply(denoised, contrast);
+
+        output = new cv.Mat();
+
+        cv.addWeighted(
+            gray, 0.35,
+            contrast, 0.65,
+            0, output
+        );
+
+        const canvas = document.createElement("canvas");
+        canvas.width = output.cols;
+        canvas.height = output.rows;
+
+        cv.imshow(canvas, output);
+
+        return canvas.toDataURL("image/jpeg", 0.94);
+
+    } catch (error) {
+        console.error("Enhancement error:", error);
+        return basicEnhanceFromMat(mat);
+
+    } finally {
+        if (gray) gray.delete();
+        if (denoised) denoised.delete();
+        if (contrast) contrast.delete();
+        if (output) output.delete();
+        if (clahe) clahe.delete();
+    }
+}
+
+/* BASIC ENHANCEMENT FALLBACK */
+
+async function basicEnhance(dataURL) {
+    const img = await loadImage(dataURL);
+    const canvas = document.createElement("canvas");
+    const scale = Math.min(
+        1,
+        2200 / Math.max(img.width, img.height)
+    );
+
+    canvas.width = Math.max(1, Math.round(img.width * scale));
+    canvas.height = Math.max(1, Math.round(img.height * scale));
+
+    const ctx = canvas.getContext("2d");
+    ctx.filter = "grayscale(100%) contrast(1.08) brightness(1.03)";
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    return canvas.toDataURL("image/jpeg", 0.94);
+}
+
+function basicEnhanceFromMat(mat) {
+    const canvas = document.createElement("canvas");
+    canvas.width = mat.cols;
+    canvas.height = mat.rows;
+
+    cv.imshow(canvas, mat);
+
+    return canvas.toDataURL("image/jpeg", 0.94);
+}
+
+/* =====================================================
+   CREATE MULTI-PAGE SCANNED PDF
+===================================================== */
+
+async function createScannedPDF() {
+    if (scannerProcessing) return;
+
+    if (scannerImageDataURL) {
+        await addCurrentProcessedScan();
+    }
+
+    if (!scannedPages.length) {
+        alert("Please scan at least one page.");
+        return;
+    }
+
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        alert("PDF library could not load.");
+        return;
+    }
+
+    const button = document.getElementById("createScanPDF");
+    button.disabled = true;
+    button.textContent = "Creating PDF...";
+
+    try {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 8;
+
+        for (let i = 0; i < scannedPages.length; i++) {
+            if (i > 0) pdf.addPage();
+
+            const img = await loadImage(scannedPages[i]);
+
+            const ratio = Math.min(
+                (pageWidth - margin * 2) / img.width,
+                (pageHeight - margin * 2) / img.height
+            );
+
+            const width = img.width * ratio;
+            const height = img.height * ratio;
+
+            pdf.addImage(
+                scannedPages[i],
+                "JPEG",
+                (pageWidth - width) / 2,
+                (pageHeight - height) / 2,
+                width,
+                height
+            );
+        }
+
+        pdf.save("CompressPro-Scanned-Document.pdf");
+
+        document.getElementById("scannerStatus").textContent =
+            "✅ Scanned PDF downloaded successfully.";
+
+    } catch (error) {
+        console.error("Scanned PDF error:", error);
+        document.getElementById("scannerStatus").textContent =
+            "Could not create PDF. Please try again.";
+
+    } finally {
+        button.disabled = false;
+        button.textContent = "📄 Create PDF";
+    }
+}
+
+/* =====================================================
+   PDF TO JPG / PNG
+===================================================== */
+
+async function convertPDFtoImages() {
+    const input = document.getElementById("pdfFileInput");
+    const format = document.getElementById("pdfFormat").value;
+    const result = document.getElementById("pdfResults");
+
+    if (!input.files || !input.files.length) {
+        alert("Please select a PDF file.");
+        return;
+    }
+
+    if (typeof pdfjsLib === "undefined") {
+        result.innerHTML =
+            '<div class="error">PDF converter library could not load.</div>';
+        return;
+    }
+
+    result.innerHTML =
+        '<div class="loading">Converting PDF pages...</div>';
+
+    try {
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+        const file = input.files[0];
+        const pdfData = await file.arrayBuffer();
+
+        const pdf = await pdfjsLib.getDocument({
+            data: pdfData
+        }).promise;
+
+        result.innerHTML = "";
+
+        for (let pageNumber = 1;
+             pageNumber <= pdf.numPages;
+             pageNumber++) {
+
+            const page = await pdf.getPage(pageNumber);
+            const viewport = page.getViewport({ scale: 2 });
+
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            await page.render({
+                canvasContext: context,
+                viewport: viewport
+            }).promise;
+
+            const mime = format === "png" ? "image/png" : "image/jpeg";
+            const extension = format === "png" ? "png" : "jpg";
+            const imageURL = canvas.toDataURL(mime, 0.92);
+
+            const box = document.createElement("div");
+            box.className = "pdf-page";
+
+            const heading = document.createElement("strong");
+            heading.textContent = "PDF Page " + pageNumber;
+
+            const image = document.createElement("img");
+            image.src = imageURL;
+            image.alt = "Converted PDF page " + pageNumber;
+
+            const button = document.createElement("button");
+            button.className = "download";
+            button.textContent = "Download Page";
+
+            button.addEventListener("click", function () {
+                downloadDataURL(
+                    imageURL,
+                    "CompressPro-page-" + pageNumber + "." + extension
+                );
+            });
+
+            box.appendChild(heading);
+            box.appendChild(image);
+            box.appendChild(button);
+            result.appendChild(box);
+        }
+
+        const message = document.createElement("div");
+        message.className = "success";
+        message.style.marginTop = "15px";
+        message.textContent = "✅ PDF converted successfully.";
+        result.prepend(message);
+
+    } catch (error) {
+        console.error("PDF conversion error:", error);
+        result.innerHTML =
+            '<div class="error">Could not convert this PDF.</div>';
+    }
+}
+
+/* =====================================================
+   PWA INSTALL
+===================================================== */
+
+let deferredPrompt = null;
+
+const installBtn = document.getElementById("installApp");
+
+window.addEventListener("beforeinstallprompt", function (event) {
+    event.preventDefault();
+    deferredPrompt = event;
+    installBtn.style.display = "inline-block";
 });
 
-video.srcObject=liveScannerStream;
+installBtn.addEventListener("click", async function () {
+    if (!deferredPrompt) {
+        alert(
+            "Open CompressPro in Chrome and use the browser menu's Install App or Add to Home screen option."
+        );
+        return;
+    }
 
-scannerTrack=
-liveScannerStream.getVideoTracks()[0]||null;
+    deferredPrompt.prompt();
 
-modal.style.display="flex";
-modal.setAttribute("aria-hidden","false");
+    try {
+        const choice = await deferredPrompt.userChoice;
 
-await video.play().catch(()=>{});
+        if (choice.outcome === "accepted") {
+            installBtn.style.display = "none";
+        }
+    } catch (error) {
+        console.warn("Install prompt result unavailable:", error);
+    }
 
-status.textContent=
-"📐 Keep all 4 document edges inside the guide";
-
-}catch(error){
-
-console.error("Camera error:",error);
-
-document.getElementById("scannerStatus").innerHTML=
-"⚠️ Camera permission denied/unavailable. Opening camera/photo picker...";
-
-document.getElementById("scannerInput").click();
-
-}
-
-}
-
-
-/* =====================================================
-CLOSE LIVE CAMERA
-===================================================== */
-
-function closeLiveScanner(){
-
-const modal=
-document.getElementById("liveScannerModal");
-
-if(liveScannerStream){
-
-liveScannerStream.getTracks().forEach(function(track){
-
-track.stop();
-
+    deferredPrompt = null;
 });
 
-liveScannerStream=null;
-
-}
-
-scannerTrack=null;
-
-const video=
-document.getElementById("liveScannerVideo");
-
-if(video){
-
-video.srcObject=null;
-
-}
-
-if(modal){
-
-modal.style.display="none";
-modal.setAttribute("aria-hidden","true");
-
-}
-
-}
-
-
-/* =====================================================
-TORCH
-===================================================== */
-
-async function toggleScannerTorch(){
-
-try{
-
-if(
-!scannerTrack||
-!scannerTrack.getCapabilities
-){
-
-return;
-
-}
-
-const capabilities=
-scannerTrack.getCapabilities();
-
-if(!capabilities.torch){
-
-document.getElementById("liveScannerStatus").textContent=
-"🔦 Flash is not available on this camera";
-
-return;
-
-}
-
-const settings=
-scannerTrack.getSettings();
-
-await scannerTrack.applyConstraints({
-
-advanced:[
-{
-torch:!settings.torch
-}
-]
-
+window.addEventListener("appinstalled", function () {
+    installBtn.style.display = "none";
 });
 
-}catch(error){
-
-console.warn("Torch unavailable",error);
-
-}
-
-}
-
-
-/* =====================================================
-CAPTURE LIVE DOCUMENT
-===================================================== */
-
-async function captureLiveScan(){
-
-if(scannerProcessing)return;
-
-const video=
-document.getElementById("liveScannerVideo");
-
-const status=
-document.getElementById("liveScannerStatus");
-
-if(!video||!video.videoWidth){
-
-status.textContent=
-"⏳ Camera is starting...";
-
-return;
-
-}
-
-scannerProcessing=true;
-
-status.textContent=
-"🔍 Detecting page, straightening and cleaning...";
-
-try{
-
-const canvas=
-document.createElement("canvas");
-
-const maxDim=2400;
-
-const scale=
-Math.min(
-1,
-maxDim/
-Math.max(
-video.videoWidth,
-video.videoHeight
-)
-);
-
-canvas.width=
-Math.round(
-video.videoWidth*scale
-);
-
-canvas.height=
-Math.round(
-video.videoHeight*scale
-);
-
-const ctx=
-canvas.getContext("2d");
-
-ctx.drawImage(
-video,
-0,
-0,
-canvas.width,
-canvas.height
-);
-
-const photo=
-canvas.toDataURL(
-"image/jpeg",
-0.94
-);
-
-closeLiveScanner();
-
-const scanned=
-await detectAndCropDocument(photo);
-
-scannedPages.push(scanned);
-
-displayScannedPages();
+/* INITIAL STATE */
 
 updateScanButtons();
-
-document.getElementById("scannerStatus").innerHTML=
-"✅ Document scanned successfully.";
-
-}catch(error){
-
-console.error(
-"Live scanner error:",
-error
-);
-
-document.getElementById("scannerStatus").innerHTML=
-"⚠️ Scan processing failed. Try again with better lighting.";
-
-}finally{
-
-scannerProcessing=false;
-
-}
-
-}
-
-
-/* =====================================================
-GALLERY / CAMERA FALLBACK
-===================================================== */
-
-function openScannerGallery(){
-
-closeLiveScanner();
-
-const input=
-document.getElementById("scannerInput");
-
-input.value="";
-input.click();
-
-}
-
-
-/* =====================================================
-HANDLE FILE CAMERA
-===================================================== */
-
-async function handleScannerFile(event){
-
-const file=
-event.target.files?.[0];
-
-if(!file)return;
-
-const status=
-document.getElementById("scannerStatus");
-
-const preview=
-document.getElementById("scannerPreview");
-
-const scanButton=
-document.getElementById("scanDocumentBtn");
-
-scanButton.disabled=true;
-
-status.innerHTML=
-"🔍 Detecting document edges, straightening and cleaning...";
-
-try{
-
-const original=
-await readFileAsDataURL(file);
-
-const processed=
-await detectAndCropDocument(original);
-
-scannerImageDataURL=processed;
-
-preview.src=processed;
-preview.style.display="block";
-
-status.innerHTML=
-"✅ Document detected and cleaned.";
-
-}catch(error){
-
-console.error(error);
-
-scannerImageDataURL=
-await readFileAsDataURL(file);
-
-preview.src=scannerImageDataURL;
-preview.style.display="block";
-
-status.innerHTML=
-"⚠️ Automatic detection failed. Original photo is ready.";
-
-}finally{
-
-scanButton.disabled=false;
-
-}
-
-}
-
-
-/* =====================================================
-ADD CURRENT FILE SCAN
-===================================================== */
-
-async function addCurrentProcessedScan(){
-
-if(scannerProcessing)return;
-
-if(!scannerImageDataURL){
-
-document.getElementById("scannerInput").click();
-return;
-
-}
-
-scannerProcessing=true;
-
-try{
-
-scannedPages.push(scannerImageDataURL);
-
-displayScannedPages();
-
-updateScanButtons();
-
-document.getElementById("scannerPreview").style.display="none";
-
-document.getElementById("scannerInput").value="";
-
-scannerImageDataURL=null;
-
-document.getElementById("scannerStatus").innerHTML=
-"✅ Document scanned successfully.";
-
-}catch(error){
-
-console.error(error);
-
-}finally{
-
-scannerProcessing=false;
-
-}
-
-}
-
-
-/* =====================================================
-ADD ANOTHER PAGE
-===================================================== */
-
-function addAnotherScanPage(){
-
-scannerImageDataURL=null;
-
-document.getElementById("scannerPreview").style.display="none";
-
-openLiveScanner();
-
-}
-
-
-/* =====================================================
-DISPLAY SCANNED PAGES
-===================================================== */
-
-function displayScannedPages(){
-
-const result=
-document.getElementById("scannerResult");
-
-result.innerHTML="";
-
-scannedPages.forEach(function(page,index){
-
-const box=
-document.createElement("div");
-
-box.className="scan-page";
-
-box.innerHTML=`
-
-<h3>
-Scanned Page ${index+1}
-</h3>
-
-<img
-src="${page}"
-alt="Scanned page ${index+1}">
-
-<button
-class="danger-btn"
-onclick="removeScanPage(${index})">
-
-❌ Remove Page
-
-</button>
-
-`;
-
-result.appendChild(box);
-
-});
-
-}
-
-
-/* =====================================================
-REMOVE PAGE
-===================================================== */
-
-function removeScanPage(index){
-
-scannedPages.splice(index,1);
-
-displayScannedPages();
-
-updateScanButtons();
-
-if(!scannedPages.length){
-
-document.getElementById("scannerStatus").innerHTML="";
-
-}
-
-}
-
-
-/* =====================================================
-CLEAR ALL
-===================================================== */
-
-function clearScannedPages(){
-
-closeLiveScanner();
-
-scannedPages=[];
-
-scannerImageDataURL=null;
-
-document.getElementById("scannerResult").innerHTML="";
-
-document.getElementById("scannerStatus").innerHTML="";
-
-document.getElementById("scannerPreview").style.display="none";
-
-document.getElementById("scannerInput").value="";
-
-updateScanButtons();
-
-}
-
-
-/* =====================================================
-BUTTON VISIBILITY
-===================================================== */
-
-function updateScanButtons(){
-
-const hasPages=
-scannedPages.length>0;
-
-document.getElementById("addScanBtn").style.display=
-hasPages?"block":"none";
-
-document.getElementById("createScanPDF").style.display=
-hasPages?"block":"none";
-
-document.getElementById("clearScans").style.display=
-hasPages?"block":"none";
-
-}
-
-
-/* =====================================================
-WAIT FOR OPENCV
-===================================================== */
-
-function waitForOpenCV(){
-
-return new Promise(function(resolve){
-
-if(
-typeof cv!=="undefined"&&
-cv.Mat
-){
-
-resolve();
-return;
-
-}
-
-let attempts=0;
-
-const timer=
-setInterval(function(){
-
-attempts++;
-
-if(
-typeof cv!=="undefined"&&
-cv.Mat
-){
-
-clearInterval(timer);
-resolve();
-
-}else if(attempts>=200){
-
-clearInterval(timer);
-resolve();
-
-}
-
-},100);
-
-});
-
-}
-
-
-/* =====================================================
-DOCUMENT DETECTION
-===================================================== */
-
-async function detectAndCropDocument(dataURL){
-
-try{
-
-await waitForOpenCV();
-
-if(
-typeof cv==="undefined"||
-!cv.Mat
-){
-
-return dataURL;
-
-}
-
-const img=
-await loadImage(dataURL);
-
-const maxDimension=2400;
-
-let width=
-img.naturalWidth||
-img.width;
-
-let height=
-img.naturalHeight||
-img.height;
-
-const scale=
-Math.min(
-1,
-maxDimension/
-Math.max(width,height)
-);
-
-width=
-Math.max(
-1,
-Math.round(width*scale)
-);
-
-height=
-Math.max(
-1,
-Math.round(height*scale)
-);
-
-const canvas=
-document.createElement("canvas");
-
-canvas.width=width;
-canvas.height=height;
-
-const ctx=
-canvas.getContext(
-"2d",
-{willReadFrequently:true}
-);
-
-ctx.drawImage(
-img,
-0,
-0,
-width,
-height
-);
-
-const src=cv.imread(canvas);
-
-const gray=new cv.Mat();
-const blurred=new cv.Mat();
-const edges=new cv.Mat();
-
-cv.cvtColor(
-src,
-gray,
-cv.COLOR_RGBA2GRAY
-);
-
-cv.GaussianBlur(
-gray,
-blurred,
-new cv.Size(5,5),
-0
-);
-
-cv.Canny(
-blurred,
-edges,
-25,
-100
-);
-
-const kernel=
-cv.getStructuringElement(
-cv.MORPH_RECT,
-new cv.Size(7,7)
-);
-
-cv.morphologyEx(
-edges,
-edges,
-cv.MORPH_CLOSE,
-kernel
-);
-
-const contours=
-new cv.MatVector();
-
-const hierarchy=
-new cv.Mat();
-
-cv.findContours(
-edges,
-contours,
-hierarchy,
-cv.RETR_LIST,
-cv.CHAIN_APPROX_SIMPLE
-);
-
-const imageArea=
-width*height;
-
-let bestPoints=null;
-let bestScore=-Infinity;
-
-
-for(
-let i=0;
-i<contours.size();
-i++
-){
-
-const contour=
-contours.get(i);
-
-let approx=null;
-
-try{
-
-const area=
-Math.abs(
-cv.contourArea(contour)
-);
-
-if(
-area<
-imageArea*0.10
-){
-
-continue;
-
-}
-
-const perimeter=
-cv.arcLength(
-contour,
-true
-);
-
-approx=new cv.Mat();
-
-cv.approxPolyDP(
-contour,
-approx,
-0.02*perimeter,
-true
-);
-
-if(approx.rows!==4){
-
-continue;
-
-}
-
-const points=[];
-
-for(
-let j=0;
-j<4;
-j++
-){
-
-points.push({
-
-x:approx.data32S[j*2],
-
-y:approx.data32S[j*2+1]
-
-});
-
-}
-
-const ordered=
-orderPoints(points);
-
-const quad=
-quadArea(ordered);
-
-const areaRatio=
-quad/imageArea;
-
-const rectangularity=
-quad/Math.max(1,area);
-
-const topWidth=
-distance(
-ordered[0],
-ordered[1]
-);
-
-const bottomWidth=
-distance(
-ordered[3],
-ordered[2]
-);
-
-const leftHeight=
-distance(
-ordered[0],
-ordered[3]
-);
-
-const rightHeight=
-distance(
-ordered[1],
-ordered[2]
-);
-
-const averageWidth=
-(topWidth+bottomWidth)/2;
-
-const averageHeight=
-(leftHeight+rightHeight)/2;
-
-if(
-averageWidth<120||
-averageHeight<120
-){
-
-continue;
-
-}
-
-const aspect=
-Math.max(
-averageWidth,
-averageHeight
-)/
-Math.max(
-1,
-Math.min(
-averageWidth,
-averageHeight
-)
-);
-
-let score=
-areaRatio*100;
-
-score+=
-Math.min(
-25,
-rectangularity*25
-);
-
-if(areaRatio>0.94){
-
-score-=40;
-
-}
-
-if(
-aspect>=1.15&&
-aspect<=2.1
-){
-
-score+=12;
-
-}
-
-const marginX=
-Math.min(
-ordered[0].x,
-ordered[1].x,
-width-ordered[2].x,
-width-ordered[3].x
-);
-
-const marginY=
-Math.min(
-ordered[0].y,
-ordered[3].y,
-height-ordered[1].y,
-height-ordered[2].y
-);
-
-if(
-marginX>width*0.01&&
-marginY>height*0.01
-){
-
-score+=4;
-
-}
-
-if(score>bestScore){
-
-bestScore=score;
-bestPoints=ordered;
-
-}
-
-}catch(error){
-
-console.warn(
-"Contour skipped:",
-error
-);
-
-}finally{
-
-if(approx){
-
-approx.delete();
-
-}
-
-contour.delete();
-
-}
-
-}
-
-
-let result;
-
-if(
-bestPoints&&
-bestScore>=15
-){
-
-result=
-perspectiveEnhance(
-src,
-bestPoints
-);
-
-}else{
-
-result=
-enhanceDocument(src);
-
-}
-
-src.delete();
-gray.delete();
-blurred.delete();
-edges.delete();
-kernel.delete();
-contours.delete();
-hierarchy.delete();
-
-return result;
-
-}catch(error){
-
-console.error(
-"Scanner detection error:",
-error
-);
-
-return dataURL;
-
-}
-
-}
-
-
-/* =====================================================
-PERSPECTIVE CORRECTION
-===================================================== */
-
-function perspectiveEnhance(src,points){
-
-let outputWidth=
-Math.round(
-Math.max(
-distance(points[0],points[1]),
-distance(points[3],points[2])
-)
-);
-
-let outputHeight=
-Math.round(
-Math.max(
-distance(points[0],points[3]),
-distance(points[1],points[2])
-)
-);
-
-const maxOutput=2200;
-
-const scale=
-Math.min(
-1,
-maxOutput/
-Math.max(
-outputWidth,
-outputHeight
-)
-);
-
-outputWidth=
-Math.max(
-1,
-Math.round(outputWidth*scale)
-);
-
-outputHeight=
-Math.max(
-1,
-Math.round(outputHeight*scale)
-);
-
-const sourcePoints=
-cv.matFromArray(
-4,
-1,
-cv.CV_32FC2,
-[
-points[0].x,
-points[0].y,
-points[1].x,
-points[1].y,
-points[2].x,
-points[2].y,
-points[3].x,
-points[3].y
-]
-);
-
-const destinationPoints=
-cv.matFromArray(
-4,
-1,
-cv.CV_32FC2,
-[
-0,0,
-outputWidth-1,0,
-outputWidth-1,outputHeight-1,
-0,outputHeight-1
-]
-);
-
-const transform=
-cv.getPerspectiveTransform(
-sourcePoints,
-destinationPoints
-);
-
-const warped=
-new cv.Mat();
-
-cv.warpPerspective(
-src,
-warped,
-transform,
-new cv.Size(
-outputWidth,
-outputHeight
-),
-cv.INTER_CUBIC,
-cv.BORDER_REPLICATE
-);
-
-const result=
-enhanceDocument(warped);
-
-sourcePoints.delete();
-destinationPoints.delete();
-transform.delete();
-warped.delete();
-
-return result;
-
-}
-
-
-/* =====================================================
-DOCUMENT ENHANCEMENT
-===================================================== */
-
-function enhanceDocument(mat){
-
-try{
-
-const gray=new cv.Mat();
-
-if(mat.channels()===4){
-
-cv.cvtColor(
-mat,
-gray,
-cv.COLOR_RGBA2GRAY
-);
-
-}else if(mat.channels()===3){
-
-cv.cvtColor(
-mat,
-gray,
-cv.COLOR_RGB2GRAY
-);
-
-}else{
-
-mat.copyTo(gray);
-
-}
-
-const denoise=
-new cv.Mat();
-
-cv.GaussianBlur(
-gray,
-denoise,
-new cv.Size(3,3),
-0
-);
-
-const clahe=
-new cv.CLAHE(
-1.5,
-new cv.Size(8,8)
-);
-
-const contrast=
-new cv.Mat();
-
-clahe.apply(
-denoise,
-contrast
-);
-
-const background=
-new cv.Mat();
-
-cv.GaussianBlur(
-contrast,
-background,
-new cv.Size(0,0),
-25,
-25
-);
-
-const normalized=
-new cv.Mat();
-
-cv.divide(
-contrast,
-background,
-normalized,
-255.0,
-cv.CV_8U
-);
-
-const balanced=
-new cv.Mat();
-
-cv.addWeighted(
-contrast,
-0.30,
-normalized,
-0.70,
-0,
-balanced
-);
-
-const sharpenKernel=
-cv.matFromArray(
-3,
-3,
-cv.CV_32F,
-[
-0,-0.35,0,
--0.35,2.40,-0.35,
-0,-0.35,0
-]
-);
-
-const sharpened=
-new cv.Mat();
-
-cv.filter2D(
-balanced,
-sharpened,
-cv.CV_8U,
-sharpenKernel
-);
-
-const finalMat=
-new cv.Mat();
-
-cv.normalize(
-sharpened,
-finalMat,
-0,
-255,
-cv.NORM_MINMAX,
-cv.CV_8U
-);
-
-const outputCanvas=
-document.createElement("canvas");
-
-outputCanvas.width=
-finalMat.cols;
-
-outputCanvas.height=
-finalMat.rows;
-
-cv.imshow(
-outputCanvas,
-finalMat
-);
-
-const data=
-outputCanvas.toDataURL(
-"image/jpeg",
-0.95
-);
-
-gray.delete();
-denoise.delete();
-clahe.delete();
-contrast.delete();
-background.delete();
-normalized.delete();
-balanced.delete();
-sharpenKernel.delete();
-sharpened.delete();
-finalMat.delete();
-
-return data;
-
-}catch(error){
-
-console.error(
-"Document enhancement error:",
-error
-);
-
-const canvas=
-document.createElement("canvas");
-
-canvas.width=mat.cols;
-canvas.height=mat.rows;
-
-cv.imshow(canvas,mat);
-
-return canvas.toDataURL(
-"image/jpeg",
-0.94
-);
-
-}
-
-}
-
-
-/* =====================================================
-QUAD AREA
-===================================================== */
-
-function quadArea(points){
-
-let area=0;
-
-for(let i=0;i<4;i++){
-
-const a=points[i];
-const b=points[(i+1)%4];
-
-area+=
-a.x*b.y-
-b.x*a.y;
-
-}
-
-return Math.abs(area)/2;
-
-}
-
-
-/* =====================================================
-ORDER CORNERS
-===================================================== */
-
-function orderPoints(points){
-
-let topLeft=points[0];
-let topRight=points[0];
-let bottomRight=points[0];
-let bottomLeft=points[0];
-
-let minSum=Infinity;
-let maxSum=-Infinity;
-let minDiff=Infinity;
-let maxDiff=-Infinity;
-
-for(const point of points){
-
-const sum=
-point.x+point.y;
-
-const diff=
-point.x-point.y;
-
-if(sum<minSum){
-
-minSum=sum;
-topLeft=point;
-
-}
-
-if(sum>maxSum){
-
-maxSum=sum;
-bottomRight=point;
-
-}
-
-if(diff>maxDiff){
-
-maxDiff=diff;
-topRight=point;
-
-}
-
-if(diff<minDiff){
-
-minDiff=diff;
-bottomLeft=point;
-
-}
-
-}
-
-return[
-topLeft,
-topRight,
-bottomRight,
-bottomLeft
-];
-
-}
-
-
-/* =====================================================
-DISTANCE
-===================================================== */
-
-function distance(a,b){
-
-return Math.hypot(
-a.x-b.x,
-a.y-b.y
-);
-
-}
-
-
-/* =====================================================
-CREATE SCANNED PDF
-===================================================== */
-
-async function createScannedPDF(){
-
-if(!scannedPages.length){
-
-alert(
-"Please scan at least one page."
-);
-
-return;
-
-}
-
-if(
-!window.jspdf||
-!window.jspdf.jsPDF
-){
-
-alert(
-"PDF library could not load."
-);
-
-return;
-
-}
-
-const{jsPDF}=
-window.jspdf;
-
-const pdf=
-new jsPDF(
-"p",
-"mm",
-"a4"
-);
-
-const pageWidth=210;
-const pageHeight=297;
-const margin=8;
-
-const maxWidth=
-pageWidth-margin*2;
-
-const maxHeight=
-pageHeight-margin*2;
-
-for(
-let i=0;
-i<scannedPages.length;
-i++
-){
-
-if(i>0){
-
-pdf.addPage();
-
-}
-
-const img=
-await loadImage(
-scannedPages[i]
-);
-
-let width=img.width;
-let height=img.height;
-
-const ratio=
-Math.min(
-maxWidth/width,
-maxHeight/height
-);
-
-width*=ratio;
-height*=ratio;
-
-pdf.addImage(
-scannedPages[i],
-"JPEG",
-(pageWidth-width)/2,
-(pageHeight-height)/2,
-width,
-height
-);
-
-}
-
-pdf.save(
-"CompressPro-Scanned-Document.pdf"
-);
-
-}
-
-
-/* =====================================================
-PDF TO JPG / PNG
-===================================================== */
-
-async function convertPDFtoImages(){
-
-const input=
-document.getElementById(
-"pdfFileInput"
-);
-
-const format=
-document.getElementById(
-"pdfFormat"
-).value;
-
-const result=
-document.getElementById(
-"pdfResults"
-);
-
-result.innerHTML=
-'<div class="loading">📑 Converting PDF pages...</div>';
-
-if(
-!input.files||
-!input.files.length
-){
-
-result.innerHTML="";
-
-alert(
-"Please select a PDF file."
-);
-
-return;
-
-}
-
-if(
-typeof pdfjsLib==="undefined"
-){
-
-result.innerHTML=
-'<div class="error">PDF converter library could not load.</div>';
-
-return;
-
-}
-
-try{
-
-pdfjsLib.GlobalWorkerOptions.workerSrc=
-"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-
-const file=input.files[0];
-
-const arrayBuffer=
-await file.arrayBuffer();
-
-const pdf=
-await pdfjsLib
-.getDocument({
-data:arrayBuffer
-})
-.promise;
-
-result.innerHTML="";
-
-for(
-let pageNumber=1;
-pageNumber<=pdf.numPages;
-pageNumber++
-){
-
-const page=
-await pdf.getPage(
-pageNumber
-);
-
-const scale=2;
-
-const viewport=
-page.getViewport({
-scale
-});
-
-const canvas=
-document.createElement("canvas");
-
-const context=
-canvas.getContext("2d");
-
-canvas.width=
-viewport.width;
-
-canvas.height=
-viewport.height;
-
-await page.render({
-
-canvasContext:context,
-viewport:viewport
-
-}).promise;
-
-const mimeType=
-format==="png"
-?
-"image/png"
-:
-"image/jpeg";
-
-const extension=
-format==="png"
-?
-"png"
-:
-"jpg";
-
-const imageURL=
-canvas.toDataURL(
-mimeType,
-.92
-);
-
-const pageBox=
-document.createElement("div");
-
-pageBox.className="pdf-page";
-
-pageBox.innerHTML=`
-
-<strong>
-PDF Page ${pageNumber}
-</strong>
-
-<img
-src="${imageURL}"
-alt="Converted PDF page ${pageNumber}">
-
-<button
-class="download"
-onclick="downloadDataURL('${imageURL}','CompressPro-page-${pageNumber}.${extension}')">
-
-Download Page
-
-</button>
-
-`;
-
-result.appendChild(pageBox);
-
-}
-
-const message=
-document.createElement("div");
-
-message.className="success";
-message.style.marginTop="15px";
-message.innerHTML=
-"✅ PDF converted successfully.";
-
-result.prepend(message);
-
-}catch(error){
-
-console.error(error);
-
-result.innerHTML=
-'<div class="error">❌ Could not convert this PDF.</div>';
-
-}
-
-}
-
-
-/* =====================================================
-DOWNLOAD DATA URL
-===================================================== */
-
-function downloadDataURL(dataURL,filename){
-
-const link=
-document.createElement("a");
-
-link.href=dataURL;
-link.download=filename;
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-}
-
-
-/* =====================================================
-READ FILE
-===================================================== */
-
-function readFileAsDataURL(file){
-
-return new Promise(
-function(resolve,reject){
-
-const reader=
-new FileReader();
-
-reader.onload=
-function(){
-
-resolve(
-reader.result
-);
-
-};
-
-reader.onerror=
-function(){
-
-reject(
-reader.error
-);
-
-};
-
-reader.readAsDataURL(file);
-
-});
-
-}
-
-
-/* =====================================================
-LOAD IMAGE
-===================================================== */
-
-function loadImage(src){
-
-return new Promise(
-function(resolve,reject){
-
-const img=
-new Image();
-
-img.onload=
-function(){
-
-resolve(img);
-
-};
-
-img.onerror=
-function(){
-
-reject(
-new Error(
-"Image could not be loaded."
-)
-);
-
-};
-
-img.src=src;
-
-});
-
-}
-
-
-/* =====================================================
-ESCAPE HTML
-===================================================== */
-
-function escapeHTML(text){
-
-const div=
-document.createElement("div");
-
-div.textContent=text;
-
-return div.innerHTML;
-
-}
-
-
-/* =====================================================
-PWA INSTALL
-===================================================== */
-
-let deferredPrompt=null;
-
-const installBtn=
-document.getElementById(
-"installApp"
-);
-
-window.addEventListener(
-"beforeinstallprompt",
-function(e){
-
-e.preventDefault();
-
-deferredPrompt=e;
-
-installBtn.style.display=
-"inline-block";
-
-});
-
-installBtn.addEventListener(
-"click",
-async function(){
-
-if(!deferredPrompt){
-
-alert(
-"To install CompressPro, open the live website in Chrome and use the browser's Install App option."
-);
-
-return;
-
-}
-
-deferredPrompt.prompt();
-
-const choice=
-await deferredPrompt.userChoice;
-
-if(
-choice.outcome==="accepted"
-){
-
-installBtn.style.display=
-"none";
-
-}
-
-deferredPrompt=null;
-
-});
-
-window.addEventListener(
-"appinstalled",
-function(){
-
-installBtn.style.display=
-"none";
-
-});
 
 </script>
 
