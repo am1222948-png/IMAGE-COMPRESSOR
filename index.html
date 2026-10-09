@@ -1375,10 +1375,11 @@ async function detectAndCropDocument(dataURL) {
         contours = new cv.MatVector();
         hierarchy = new cv.Mat();
 
-        cv.findContours(
-            edges, contours, hierarchy,
-            cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE
-        );
+        
+cv.findContours(
+    edges, contours, hierarchy,
+    cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE
+);
 
         const imageArea = canvas.width * canvas.height;
         let bestPoints = null;
