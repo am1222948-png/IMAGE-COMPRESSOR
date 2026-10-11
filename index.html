@@ -1577,7 +1577,12 @@ function enhanceDocument(mat) {
         blurred = new cv.Mat();
 
         
-gray.copyTo(blurred);
+cv.GaussianBlur(
+    gray,
+    blurred,
+    new cv.Size(3, 3),
+    0
+);
 
 
 
