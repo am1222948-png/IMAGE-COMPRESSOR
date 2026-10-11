@@ -1590,15 +1590,17 @@ cv.GaussianBlur(
 
         cleaned = new cv.Mat();
 
-        cv.adaptiveThreshold(
-            blurred,
-            cleaned,
-            255,
-            cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-            cv.THRESH_BINARY,
-            31,
-            8
-        );
+        
+cv.adaptiveThreshold(
+    gray,
+    cleaned,
+    255,
+    cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+    cv.THRESH_BINARY,
+    41,
+    11
+);
+
 
         /* Create final scan image */
 
