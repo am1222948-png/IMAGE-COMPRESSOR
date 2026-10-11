@@ -1576,12 +1576,10 @@ function enhanceDocument(mat) {
 
         blurred = new cv.Mat();
 
-        cv.GaussianBlur(
-            gray,
-            blurred,
-            new cv.Size(3, 3),
-            0
-        );
+        
+gray.copyTo(blurred);
+
+
 
         /* Photocopy style: black text, white paper */
 
