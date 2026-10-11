@@ -1550,10 +1550,8 @@ function perspectiveEnhance(src, points) {
 
 function enhanceDocument(mat) {
     let gray = null;
-    let denoised = null;
-    let contrast = null;
-    let output = null;
-    let clahe = null;
+    let blurred = null;
+    let cleaned = null;
 
     try {
         gray = new cv.Mat();
@@ -1566,43 +1564,45 @@ function enhanceDocument(mat) {
             mat.copyTo(gray);
         }
 
-        denoised = new cv.Mat();
+        blurred = new cv.Mat();
 
         cv.GaussianBlur(
-            gray, denoised, new cv.Size(3, 3), 0
+            gray,
+            blurred,
+            new cv.Size(3, 3),
+            0
         );
 
-        clahe = new cv.CLAHE(1.5, new cv.Size(8, 8));
-        contrast = new cv.Mat();
+        cleaned = new cv.Mat();
 
-        clahe.apply(denoised, contrast);
-
-        output = new cv.Mat();
-
-        cv.addWeighted(
-            gray, 0.35,
-            contrast, 0.65,
-            0, output
+        cv.adaptiveThreshold(
+            blurred,
+            cleaned,
+            255,
+            cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv.THRESH_BINARY,
+            35,
+            10
         );
 
         const canvas = document.createElement("canvas");
-        canvas.width = output.cols;
-        canvas.height = output.rows;
 
-        cv.imshow(canvas, output);
+        canvas.width = cleaned.cols;
+        canvas.height = cleaned.rows;
 
-        return canvas.toDataURL("image/jpeg", 0.94);
+        cv.imshow(canvas, cleaned);
+
+        return canvas.toDataURL("image/jpeg", 0.95);
 
     } catch (error) {
-        console.error("Enhancement error:", error);
+        console.error("Document cleaning error:", error);
+
         return basicEnhanceFromMat(mat);
 
     } finally {
         if (gray) gray.delete();
-        if (denoised) denoised.delete();
-        if (contrast) contrast.delete();
-        if (output) output.delete();
-        if (clahe) clahe.delete();
+        if (blurred) blurred.delete();
+        if (cleaned) cleaned.delete();
     }
 }
 
