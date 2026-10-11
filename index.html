@@ -1543,9 +1543,9 @@ function perspectiveEnhance(src, points) {
     }
 }
 
+
 /* =====================================================
-   CLEAN DOCUMENT IMAGE
-   Gentle grayscale enhancement to avoid excessive noise
+   BLACK & WHITE PHOTOCOPY ENHANCEMENT
 ===================================================== */
 
 function enhanceDocument(mat) {
@@ -1557,12 +1557,22 @@ function enhanceDocument(mat) {
         gray = new cv.Mat();
 
         if (mat.channels() === 4) {
-            cv.cvtColor(mat, gray, cv.COLOR_RGBA2GRAY);
+            cv.cvtColor(
+                mat,
+                gray,
+                cv.COLOR_RGBA2GRAY
+            );
         } else if (mat.channels() === 3) {
-            cv.cvtColor(mat, gray, cv.COLOR_RGB2GRAY);
+            cv.cvtColor(
+                mat,
+                gray,
+                cv.COLOR_RGB2GRAY
+            );
         } else {
             mat.copyTo(gray);
         }
+
+        /* Reduce camera noise */
 
         blurred = new cv.Mat();
 
@@ -1573,6 +1583,8 @@ function enhanceDocument(mat) {
             0
         );
 
+        /* Photocopy style: black text, white paper */
+
         cleaned = new cv.Mat();
 
         cv.adaptiveThreshold(
@@ -1581,21 +1593,30 @@ function enhanceDocument(mat) {
             255,
             cv.ADAPTIVE_THRESH_GAUSSIAN_C,
             cv.THRESH_BINARY,
-            35,
-            10
+            31,
+            8
         );
 
-        const canvas = document.createElement("canvas");
+        /* Create final scan image */
+
+        const canvas =
+            document.createElement("canvas");
 
         canvas.width = cleaned.cols;
         canvas.height = cleaned.rows;
 
         cv.imshow(canvas, cleaned);
 
-        return canvas.toDataURL("image/jpeg", 0.95);
+        return canvas.toDataURL(
+            "image/jpeg",
+            0.98
+        );
 
     } catch (error) {
-        console.error("Document cleaning error:", error);
+        console.error(
+            "Photocopy enhancement error:",
+            error
+        );
 
         return basicEnhanceFromMat(mat);
 
@@ -1605,7 +1626,7 @@ function enhanceDocument(mat) {
         if (cleaned) cleaned.delete();
     }
 }
-
+   
 /* BASIC ENHANCEMENT FALLBACK */
 
 async function basicEnhance(dataURL) {
