@@ -483,7 +483,13 @@ CompressPro will attempt to detect the page, straighten it, crop it and improve 
 You can scan multiple pages and create one PDF.
 </div>
 
-<input type="file" id="scannerInput" accept="image/*" capture="environment" onchange="handleScannerFile(event)">
+<input
+    type="file"
+    id="scannerInput"
+    accept="image/*"
+    onchange="handleScannerFile(event)"
+>
+   
 
 <img id="scannerPreview" class="scanner-preview" style="display:none;" alt="Document preview">
 
