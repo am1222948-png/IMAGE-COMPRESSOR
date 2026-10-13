@@ -1610,96 +1610,96 @@ function perspectiveEnhance(src, points) {
     }
 }
 
-
 /* =====================================================
-   BLACK & WHITE PHOTOCOPY ENHANCEMENT
+   SHARP BLACK & WHITE DOCUMENT ENHANCEMENT
 ===================================================== */
 
 function enhanceDocument(mat) {
     let gray = null;
-    let blurred = null;
+    let sharpened = null;
     let cleaned = null;
+    let blurred = null;
+    let clahe = null;
+    let enhanced = null;
 
     try {
         gray = new cv.Mat();
 
         if (mat.channels() === 4) {
-            cv.cvtColor(
-                mat,
-                gray,
-                cv.COLOR_RGBA2GRAY
-            );
+            cv.cvtColor(mat, gray, cv.COLOR_RGBA2GRAY);
         } else if (mat.channels() === 3) {
-            cv.cvtColor(
-                mat,
-                gray,
-                cv.COLOR_RGB2GRAY
-            );
+            cv.cvtColor(mat, gray, cv.COLOR_RGB2GRAY);
         } else {
             mat.copyTo(gray);
         }
 
-        /* Reduce camera noise */
+        /* Improve local contrast */
+
+        enhanced = new cv.Mat();
+        clahe = new cv.CLAHE(
+            2.0,
+            new cv.Size(8, 8)
+        );
+
+        clahe.apply(gray, enhanced);
+
+        /* Sharpen writing edges */
 
         blurred = new cv.Mat();
+        sharpened = new cv.Mat();
 
-        
-cv.GaussianBlur(
-    gray,
-    blurred,
-    new cv.Size(3, 3),
-    0
-);
+        cv.GaussianBlur(
+            enhanced,
+            blurred,
+            new cv.Size(3, 3),
+            0
+        );
 
+        cv.addWeighted(
+            enhanced,
+            1.6,
+            blurred,
+            -0.6,
+            0,
+            sharpened
+        );
 
-
-        /* Photocopy style: black text, white paper */
+        /* Convert to clean photocopy style */
 
         cleaned = new cv.Mat();
 
-        
+        cv.adaptiveThreshold(
+            sharpened,
+            cleaned,
+            255,
+            cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv.THRESH_BINARY,
+            41,
+            12
+        );
 
-
-cv.adaptiveThreshold(
-    blurred,
-    cleaned,
-    255,
-    cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-    cv.THRESH_BINARY,
-    41,
-    12
-);
-
-
-        /* Create final scan image */
-
-        const canvas =
-            document.createElement("canvas");
-
+        const canvas = document.createElement("canvas");
         canvas.width = cleaned.cols;
         canvas.height = cleaned.rows;
 
         cv.imshow(canvas, cleaned);
 
-        return canvas.toDataURL(
-            "image/jpeg",
-            0.98
-        );
+        return canvas.toDataURL("image/png");
 
     } catch (error) {
-        console.error(
-            "Photocopy enhancement error:",
-            error
-        );
-
+        console.error("Document enhancement error:", error);
         return basicEnhanceFromMat(mat);
 
     } finally {
         if (gray) gray.delete();
-        if (blurred) blurred.delete();
+        if (sharpened) sharpened.delete();
         if (cleaned) cleaned.delete();
+        if (blurred) blurred.delete();
+        if (enhanced) enhanced.delete();
+        if (clahe) clahe.delete();
     }
 }
+
    
 /* BASIC ENHANCEMENT FALLBACK */
 
