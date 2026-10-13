@@ -1606,7 +1606,13 @@ function perspectiveEnhance(src, points) {
             cv.BORDER_REPLICATE
         );
 
-        return enhanceDocument(warped);
+        const testCanvas = document.createElement("canvas");
+testCanvas.width = warped.cols;
+testCanvas.height = warped.rows;
+
+cv.imshow(testCanvas, warped);
+
+return testCanvas.toDataURL("image/png");
 
     } finally {
         if (sourcePoints) sourcePoints.delete();
