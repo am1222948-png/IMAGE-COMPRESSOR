@@ -483,6 +483,14 @@ CompressPro will attempt to detect the page, straighten it, crop it and improve 
 You can scan multiple pages and create one PDF.
 </div>
 
+<label for="scanMode"><strong>Choose Scan Mode:</strong></label>
+
+<select id="scanMode" style="width:100%;padding:12px;margin:12px 0;border:1px solid #ddd;border-radius:8px;">
+    <option value="bw">Black &amp; White Photocopy</option>
+    <option value="color">Color Scan</option>
+    <option value="gray">Grayscale Scan</option>
+    <option value="natural">Original / Natural</option>
+</select>
 <input
     type="file"
     id="scannerInput"
@@ -924,6 +932,67 @@ let scannedPages = [];
 let scannerImageDataURL = null;
 let scannerProcessing = false;
 
+function getSelectedScanMode() {
+    const selector = document.getElementById("scanMode");
+    return selector ? selector.value : "bw";
+}
+
+async function applyScanMode(dataURL) {
+    const mode = getSelectedScanMode();
+
+    // Original / Natural: preserve the image as it is.
+    if (mode === "natural") {
+        return dataURL;
+    }
+
+    const img = await loadImage(dataURL);
+    const canvas = document.createElement("canvas");
+
+    const maxDimension = 2200;
+    const scale = Math.min(
+        1,
+        maxDimension / Math.max(img.width, img.height)
+    );
+
+    canvas.width = Math.max(1, Math.round(img.width * scale));
+    canvas.height = Math.max(1, Math.round(img.height * scale));
+
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+        return dataURL;
+    }
+
+    if (mode === "bw") {
+        const ready = await waitForOpenCV(3000);
+
+        if (ready) {
+            let mat = null;
+
+            try {
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                mat = cv.imread(canvas);
+                return enhanceDocument(mat);
+            } catch (error) {
+                console.warn("Photocopy enhancement fallback:", error);
+            } finally {
+                if (mat) mat.delete();
+            }
+        }
+
+        return basicEnhance(dataURL);
+    }
+
+    if (mode === "gray") {
+        ctx.filter = "grayscale(100%) contrast(1.08)";
+    } else if (mode === "color") {
+        ctx.filter = "contrast(1.04) saturate(1.04)";
+    }
+
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    return canvas.toDataURL("image/jpeg", 0.94);
+}
 let liveScannerStream = null;
 let scannerTrack = null;
 let scannerTorchOn = false;
@@ -1402,9 +1471,8 @@ async function detectAndCropDocument(dataURL) {
     const opencvReady = await waitForOpenCV();
 
     if (!opencvReady) {
-        console.warn("OpenCV unavailable; applying basic enhancement.");
-        return basicEnhance(dataURL);
-    }
+    return applyScanMode(dataURL);
+}
 
     let src = null;
     let gray = null;
@@ -1528,15 +1596,23 @@ cv.findContours(
             }
         }
 
-        if (bestPoints && bestScore > 15) {
-            return perspectiveEnhance(src, bestPoints);
-        }
+        let correctedImage;
 
-        return enhanceDocument(src);
+if (bestPoints && bestScore > 15) {
+    correctedImage = perspectiveEnhance(src, bestPoints);
+} else {
+    const canvas = document.createElement("canvas");
+    canvas.width = src.cols;
+    canvas.height = src.rows;
 
+    cv.imshow(canvas, src);
+    correctedImage = canvas.toDataURL("image/png");
+}
+
+return await applyScanMode(correctedImage);
     } catch (error) {
         console.error("Document detection error:", error);
-        return basicEnhance(dataURL);
+        return await applyScanMode(dataURL);
 
     } finally {
         if (src) src.delete();
