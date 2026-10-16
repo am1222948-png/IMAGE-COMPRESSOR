@@ -1684,11 +1684,11 @@ function enhanceDocument(mat) {
             sharpened,
             cleaned,
             255,
-            cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-            cv.THRESH_BINARY,
-            41,
-            12
-        );
+            
+cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+cv.THRESH_BINARY,
+41,
+9
 
         const canvas = document.createElement("canvas");
         canvas.width = cleaned.cols;
