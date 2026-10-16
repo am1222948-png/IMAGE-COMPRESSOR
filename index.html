@@ -1752,19 +1752,19 @@ function enhanceDocument(mat) {
     sharpened
 );
 
-        /* Convert to clean photocopy style */
-
-        cleaned = new cv.Mat();
-
         
+/* Convert to clean photocopy style */
+
+cleaned = new cv.Mat();
+
 cv.adaptiveThreshold(
     sharpened,
     cleaned,
     255,
     cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-cv.THRESH_BINARY,
-41,
-7
+    cv.THRESH_BINARY,
+    41,
+    9
 );
 
         const canvas = document.createElement("canvas");
