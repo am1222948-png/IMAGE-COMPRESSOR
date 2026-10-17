@@ -559,7 +559,14 @@ You can scan multiple pages and create one PDF.
 
     <p>Choose an image, then tap it to add text. For covering, select Cover / Erase Area and drag over the area.</p>
 
+ 
+<button type="button" id="editorTogglePreview">
+    ➖ Minimize Preview
+</button>
+
+<div id="editorPreviewWrap">
     <canvas id="editorCanvas" style="width:100%;max-width:100%;height:auto;border:1px solid #ccc;touch-action:pan-y;"></canvas>
+</div>
 
     <button type="button" id="editorUndo">↩️ Undo</button>
     <button type="button" id="editorDownload">⬇️ Download Image</button>
@@ -2079,6 +2086,20 @@ updateScanButtons();
 (function () {
     const imageInput = document.getElementById("editorImageInput");
     const canvas = document.getElementById("editorCanvas");
+    
+const previewWrap = document.getElementById("editorPreviewWrap");
+const togglePreview = document.getElementById("editorTogglePreview");
+
+if (previewWrap && togglePreview) {
+    togglePreview.addEventListener("click", function () {
+        const isHidden = previewWrap.style.display === "none";
+
+        previewWrap.style.display = isHidden ? "block" : "none";
+        togglePreview.textContent = isHidden
+            ? "➖ Minimize Preview"
+            : "➕ Show Preview";
+    });
+}
     const mode = document.getElementById("editorMode");
     const textInput = document.getElementById("editorText");
     const textColor = document.getElementById("editorTextColor");
