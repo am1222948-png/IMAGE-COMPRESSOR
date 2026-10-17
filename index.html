@@ -2305,5 +2305,184 @@ if (previewWrap && togglePreview) {
     });
 })();
 </script>
+    
+<!-- COMPRESSPRO DIGITAL SIGNATURE MAKER -->
+<section id="digitalSignatureTool" class="tool-section">
+    <h2>✍️ Digital Signature Maker</h2>
+    <p>Draw your signature and download it as a transparent PNG.</p>
+
+    <label for="signatureColor">Pen Color</label>
+    <input type="color" id="signatureColor" value="#111111">
+
+    <label for="signatureThickness">Pen Thickness</label>
+    <input
+        type="range"
+        id="signatureThickness"
+        min="1"
+        max="10"
+        value="3"
+    >
+
+    <div style="width:100%;overflow:hidden;margin:12px 0;">
+        <canvas
+            id="signatureCanvas"
+            style="display:block;width:100%;height:220px;border:2px dashed #888;border-radius:10px;background:white;touch-action:none;"
+        ></canvas>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button type="button" id="signatureUndo">↩️ Undo</button>
+        <button type="button" id="signatureClear">🗑️ Clear</button>
+        <button type="button" id="signatureDownload">⬇️ Download PNG</button>
+    </div>
+
+    <p id="signatureStatus" role="status">
+        Draw your signature in the box above.
+    </p>
+</section>
+<!-- END DIGITAL SIGNATURE MAKER -->
+    
+<script>
+/* COMPRESSPRO DIGITAL SIGNATURE MAKER */
+(function () {
+    const canvas = document.getElementById("signatureCanvas");
+    const colorInput = document.getElementById("signatureColor");
+    const thicknessInput = document.getElementById("signatureThickness");
+    const undoButton = document.getElementById("signatureUndo");
+    const clearButton = document.getElementById("signatureClear");
+    const downloadButton = document.getElementById("signatureDownload");
+    const status = document.getElementById("signatureStatus");
+
+    if (!canvas || canvas.dataset.ready === "yes") return;
+    canvas.dataset.ready = "yes";
+
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+    let hasSignature = false;
+    let lastX = 0;
+    let lastY = 0;
+    let history = [];
+
+    function setupCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        const ratio = Math.max(1, window.devicePixelRatio || 1);
+
+        if (hasSignature) return;
+
+        canvas.width = Math.round(rect.width * ratio);
+        canvas.height = Math.round(220 * ratio);
+
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.clearRect(0, 0, rect.width, 220);
+    }
+
+    setupCanvas();
+
+    function position(event) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top
+        };
+    }
+
+    function saveState() {
+        history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        if (history.length > 30) history.shift();
+    }
+
+    canvas.addEventListener("pointerdown", function (event) {
+        event.preventDefault();
+
+        const point = position(event);
+        saveState();
+
+        drawing = true;
+        hasSignature = true;
+        lastX = point.x;
+        lastY = point.y;
+
+        canvas.setPointerCapture(event.pointerId);
+
+        ctx.beginPath();
+        ctx.fillStyle = colorInput.value;
+        ctx.arc(lastX, lastY, Number(thicknessInput.value) / 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        status.textContent = "Drawing signature…";
+    });
+
+    canvas.addEventListener("pointermove", function (event) {
+        if (!drawing) return;
+        event.preventDefault();
+
+        const point = position(event);
+
+        ctx.beginPath();
+        ctx.strokeStyle = colorInput.value;
+        ctx.lineWidth = Number(thicknessInput.value);
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(point.x, point.y);
+        ctx.stroke();
+
+        lastX = point.x;
+        lastY = point.y;
+    });
+
+    function stopDrawing() {
+        if (!drawing) return;
+        drawing = false;
+        status.textContent = "Signature ready. You can undo, clear or download it.";
+    }
+
+    canvas.addEventListener("pointerup", stopDrawing);
+    canvas.addEventListener("pointercancel", stopDrawing);
+
+    undoButton.addEventListener("click", function () {
+        if (!history.length) {
+            status.textContent = "Nothing to undo.";
+            return;
+        }
+
+        const previous = history.pop();
+        ctx.putImageData(previous, 0, 0);
+
+        const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        hasSignature = false;
+
+        for (let i = 3; i < pixels.length; i += 4) {
+            if (pixels[i] > 0) {
+                hasSignature = true;
+                break;
+            }
+        }
+
+        status.textContent = "Last drawing step undone.";
+    });
+
+    clearButton.addEventListener("click", function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        history = [];
+        hasSignature = false;
+        status.textContent = "Canvas cleared. Draw a new signature.";
+    });
+
+    downloadButton.addEventListener("click", function () {
+        if (!hasSignature) {
+            status.textContent = "Please draw your signature first.";
+            return;
+        }
+
+        const link = document.createElement("a");
+        link.download = "CompressPro-Signature.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+
+        status.textContent = "Signature PNG download requested.";
+    });
+})();
+</script>
 </body>
 </html>
