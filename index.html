@@ -566,6 +566,67 @@ You can scan multiple pages and create one PDF.
     </p>
 </section>
 <!-- END DIGITAL SIGNATURE MAKER -->
+    
+<!-- COMPRESSPRO PDF SIGNING TOOL -->
+<section id="pdfSigningTool" class="tool-section">
+    <h2>✍️ Sign PDF</h2>
+    <p>Upload a PDF, place your signature, and download the signed document.</p>
+
+    <label for="signPdfInput">Choose PDF File</label>
+    <input type="file" id="signPdfInput" accept="application/pdf">
+
+    <div style="margin:12px 0;">
+        <label for="signPdfPage">PDF Page Number</label>
+        <input
+            type="number"
+            id="signPdfPage"
+            min="1"
+            value="1"
+            style="width:100%;padding:10px;"
+        >
+        <button type="button" id="signPdfShowPage">Show Page</button>
+    </div>
+
+    <label for="signPdfSize">Signature Size</label>
+    <input
+        type="range"
+        id="signPdfSize"
+        min="10"
+        max="50"
+        value="25"
+        style="width:100%;"
+    >
+
+    <p id="signPdfStatus" role="status">
+        First create your signature in Digital Signature Maker, then choose a PDF.
+    </p>
+
+    <div
+        id="signPdfPreviewWrap"
+        style="position:relative;width:100%;overflow:auto;display:none;margin:12px 0;"
+    >
+        <canvas
+            id="signPdfCanvas"
+            style="display:block;width:100%;height:auto;"
+        ></canvas>
+
+        <img
+            id="signPdfSignature"
+            alt="Signature preview"
+            draggable="false"
+            style="position:absolute;left:35%;top:70%;width:25%;height:auto;display:none;cursor:move;touch-action:none;user-select:none;"
+        >
+    </div>
+
+    <button type="button" id="signPdfPlaceButton">
+        ✍️ Place Signature
+    </button>
+
+    <button type="button" id="signPdfDownloadButton">
+        ⬇️ Download Signed PDF
+    </button>
+</section>
+<!-- END COMPRESSPRO PDF SIGNING TOOL -->
 <!-- COMPRESSPRO PHOTO & DOCUMENT EDITOR -->
 <section id="photoDocumentEditor" class="tool-section">
     <h2>🖼️ Photo & Document Editor</h2>
@@ -2482,6 +2543,336 @@ if (previewWrap && togglePreview) {
         link.click();
 
         status.textContent = "Signature PNG download requested.";
+    });
+})();
+</script>
+    
+<script>
+/* COMPRESSPRO PDF SIGNING - SEPARATE TOOL */
+(function () {
+    const pdfInput = document.getElementById("signPdfInput");
+    const pageInput = document.getElementById("signPdfPage");
+    const sizeInput = document.getElementById("signPdfSize");
+    const showButton = document.getElementById("signPdfShowPage");
+    const placeButton = document.getElementById("signPdfPlaceButton");
+    const downloadButton = document.getElementById("signPdfDownloadButton");
+    const previewWrap = document.getElementById("signPdfPreviewWrap");
+    const pdfCanvas = document.getElementById("signPdfCanvas");
+    const signatureImage = document.getElementById("signPdfSignature");
+    const status = document.getElementById("signPdfStatus");
+
+    if (!pdfInput || pdfInput.dataset.ready === "yes") return;
+    pdfInput.dataset.ready = "yes";
+
+    let pdfBytes = null;
+    let pdfDocument = null;
+    let currentPage = null;
+    let signatureData = null;
+    let signatureLeft = 35;
+    let signatureTop = 65;
+    let dragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let initialLeft = 0;
+    let initialTop = 0;
+
+    function loadScript(src) {
+        return new Promise(function (resolve, reject) {
+            const script = document.createElement("script");
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = function () {
+                reject(new Error("Could not load a required library."));
+            };
+            document.head.appendChild(script);
+        });
+    }
+
+    async function ensurePDFLibraries() {
+        if (!window.pdfjsLib) {
+            await loadScript(
+                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"
+            );
+        }
+
+        if (!window.PDFLib) {
+            await loadScript(
+                "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"
+            );
+        }
+
+        if (!window.pdfjsLib || !window.PDFLib) {
+            throw new Error("PDF libraries are unavailable.");
+        }
+
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    }
+
+    pdfInput.addEventListener("change", async function () {
+        const file = pdfInput.files && pdfInput.files[0];
+        if (!file) return;
+
+        if (file.type !== "application/pdf") {
+            status.textContent = "Please choose a PDF file.";
+            return;
+        }
+
+        status.textContent = "Loading PDF. Please wait...";
+        previewWrap.style.display = "none";
+        signatureImage.style.display = "none";
+        pdfDocument = null;
+        currentPage = null;
+        signatureData = null;
+
+        try {
+            await ensurePDFLibraries();
+
+            pdfBytes = new Uint8Array(await file.arrayBuffer());
+
+            pdfDocument = await window.pdfjsLib.getDocument({
+                data: pdfBytes.slice()
+            }).promise;
+
+            pageInput.min = "1";
+            pageInput.max = String(pdfDocument.numPages);
+            pageInput.value = "1";
+
+            await renderPage(1);
+
+            status.textContent =
+                "PDF loaded (" + pdfDocument.numPages +
+                " pages). Create a signature in the Signature Maker, then tap Place Signature.";
+        } catch (error) {
+            console.error(error);
+            status.textContent =
+                "PDF could not be opened. Check your internet connection and try again.";
+        }
+    });
+
+    async function renderPage(pageNumber) {
+        if (!pdfDocument) {
+            status.textContent = "Please choose a PDF first.";
+            return;
+        }
+
+        pageNumber = Number(pageNumber);
+
+        if (
+            !Number.isInteger(pageNumber) ||
+            pageNumber < 1 ||
+            pageNumber > pdfDocument.numPages
+        ) {
+            status.textContent = "Enter a valid PDF page number.";
+            return;
+        }
+
+        status.textContent = "Rendering PDF page...";
+        signatureImage.style.display = "none";
+
+        try {
+            const page = await pdfDocument.getPage(pageNumber);
+            const viewport = page.getViewport({ scale: 1.5 });
+            const context = pdfCanvas.getContext("2d");
+
+            pdfCanvas.width = Math.ceil(viewport.width);
+            pdfCanvas.height = Math.ceil(viewport.height);
+            pdfCanvas.style.width = "100%";
+            pdfCanvas.style.height = "auto";
+
+            await page.render({
+                canvasContext: context,
+                viewport: viewport
+            }).promise;
+
+            currentPage = pageNumber;
+            signatureLeft = 35;
+            signatureTop = 65;
+
+            signatureImage.style.left = signatureLeft + "%";
+            signatureImage.style.top = signatureTop + "%";
+            signatureImage.style.width = sizeInput.value + "%";
+
+            previewWrap.style.display = "block";
+
+            status.textContent =
+                "Page " + pageNumber + " is ready. Place your signature, then drag it to position.";
+        } catch (error) {
+            console.error(error);
+            status.textContent = "Could not display this PDF page.";
+        }
+    }
+
+    showButton.addEventListener("click", function () {
+        renderPage(pageInput.value);
+    });
+
+    placeButton.addEventListener("click", function () {
+        const signatureCanvas =
+            document.getElementById("signatureCanvas");
+
+        if (!signatureCanvas) {
+            status.textContent = "Signature Maker was not found.";
+            return;
+        }
+
+        const pixels = signatureCanvas.getContext("2d").getImageData(
+            0, 0, signatureCanvas.width, signatureCanvas.height
+        ).data;
+
+        let hasInk = false;
+        for (let i = 3; i < pixels.length; i += 4) {
+            if (pixels[i] > 0) {
+                hasInk = true;
+                break;
+            }
+        }
+
+        if (!hasInk) {
+            status.textContent =
+                "First draw your signature in Digital Signature Maker.";
+            return;
+        }
+
+        if (!pdfDocument || !currentPage) {
+            status.textContent = "Please upload a PDF first.";
+            return;
+        }
+
+        signatureData = signatureCanvas.toDataURL("image/png");
+        signatureImage.src = signatureData;
+        signatureImage.style.left = signatureLeft + "%";
+        signatureImage.style.top = signatureTop + "%";
+        signatureImage.style.width = sizeInput.value + "%";
+        signatureImage.style.display = "block";
+
+        status.textContent =
+            "Signature placed. Drag it to move, or change Signature Size.";
+    });
+
+    sizeInput.addEventListener("input", function () {
+        signatureImage.style.width = sizeInput.value + "%";
+    });
+
+    signatureImage.addEventListener("pointerdown", function (event) {
+        if (signatureImage.style.display === "none") return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        dragging = true;
+        dragStartX = event.clientX;
+        dragStartY = event.clientY;
+        initialLeft = signatureLeft;
+        initialTop = signatureTop;
+
+        signatureImage.setPointerCapture(event.pointerId);
+    });
+
+    signatureImage.addEventListener("pointermove", function (event) {
+        if (!dragging) return;
+
+        event.preventDefault();
+
+        const rect = pdfCanvas.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+
+        signatureLeft = Math.max(
+            0,
+            Math.min(95,
+                initialLeft +
+                ((event.clientX - dragStartX) / rect.width) * 100
+            )
+        );
+
+        signatureTop = Math.max(
+            0,
+            Math.min(95,
+                initialTop +
+                ((event.clientY - dragStartY) / rect.height) * 100
+            )
+        );
+
+        signatureImage.style.left = signatureLeft + "%";
+        signatureImage.style.top = signatureTop + "%";
+    });
+
+    function stopDragging() {
+        dragging = false;
+    }
+
+    signatureImage.addEventListener("pointerup", stopDragging);
+    signatureImage.addEventListener("pointercancel", stopDragging);
+
+    downloadButton.addEventListener("click", async function () {
+        if (!pdfBytes || !pdfDocument || !currentPage) {
+            status.textContent = "Please upload a PDF first.";
+            return;
+        }
+
+        if (!signatureData || signatureImage.style.display === "none") {
+            status.textContent = "Place your signature on the PDF first.";
+            return;
+        }
+
+        status.textContent = "Creating signed PDF...";
+
+        try {
+            await ensurePDFLibraries();
+
+            const signedPdf = await window.PDFLib.PDFDocument.load(
+                pdfBytes.slice()
+            );
+
+            const pngImage = await signedPdf.embedPng(signatureData);
+            const pages = signedPdf.getPages();
+            const page = pages[currentPage - 1];
+
+            const pageWidth = page.getWidth();
+            const pageHeight = page.getHeight();
+
+            const signatureWidth =
+                pageWidth * (Number(sizeInput.value) / 100);
+
+            const signatureHeight =
+                signatureWidth *
+                (pngImage.height / pngImage.width);
+
+            const x = pageWidth * (signatureLeft / 100);
+            const y = pageHeight *
+                (1 - signatureTop / 100) -
+                signatureHeight;
+
+            page.drawImage(pngImage, {
+                x: Math.max(0, Math.min(pageWidth - signatureWidth, x)),
+                y: Math.max(0, Math.min(pageHeight - signatureHeight, y)),
+                width: signatureWidth,
+                height: signatureHeight
+            });
+
+            const output = await signedPdf.save();
+            const blob = new Blob([output], {
+                type: "application/pdf"
+            });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = "CompressPro-Signed.pdf";
+            link.click();
+
+            setTimeout(function () {
+                URL.revokeObjectURL(url);
+            }, 2000);
+
+            status.textContent =
+                "Signed PDF download requested. Check your Downloads folder.";
+        } catch (error) {
+            console.error(error);
+            status.textContent =
+                "Could not create the signed PDF. Please try another PDF.";
+        }
     });
 })();
 </script>
