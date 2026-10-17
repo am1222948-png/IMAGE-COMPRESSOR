@@ -531,6 +531,41 @@ You can scan multiple pages and create one PDF.
 <div id="pdfResults"></div>
 </div>
 
+<!-- COMPRESSPRO DIGITAL SIGNATURE MAKER -->
+<section id="digitalSignatureTool" class="tool-section">
+    <h2>✍️ Digital Signature Maker</h2>
+    <p>Draw your signature and download it as a transparent PNG.</p>
+
+    <label for="signatureColor">Pen Color</label>
+    <input type="color" id="signatureColor" value="#111111">
+
+    <label for="signatureThickness">Pen Thickness</label>
+    <input
+        type="range"
+        id="signatureThickness"
+        min="1"
+        max="10"
+        value="3"
+    >
+
+    <div style="width:100%;overflow:hidden;margin:12px 0;">
+        <canvas
+            id="signatureCanvas"
+            style="display:block;width:100%;height:220px;border:2px dashed #888;border-radius:10px;background:white;touch-action:none;"
+        ></canvas>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button type="button" id="signatureUndo">↩️ Undo</button>
+        <button type="button" id="signatureClear">🗑️ Clear</button>
+        <button type="button" id="signatureDownload">⬇️ Download PNG</button>
+    </div>
+
+    <p id="signatureStatus" role="status">
+        Draw your signature in the box above.
+    </p>
+</section>
+<!-- END DIGITAL SIGNATURE MAKER -->
 <!-- COMPRESSPRO PHOTO & DOCUMENT EDITOR -->
 <section id="photoDocumentEditor" class="tool-section">
     <h2>🖼️ Photo & Document Editor</h2>
@@ -2306,41 +2341,7 @@ if (previewWrap && togglePreview) {
 })();
 </script>
     
-<!-- COMPRESSPRO DIGITAL SIGNATURE MAKER -->
-<section id="digitalSignatureTool" class="tool-section">
-    <h2>✍️ Digital Signature Maker</h2>
-    <p>Draw your signature and download it as a transparent PNG.</p>
 
-    <label for="signatureColor">Pen Color</label>
-    <input type="color" id="signatureColor" value="#111111">
-
-    <label for="signatureThickness">Pen Thickness</label>
-    <input
-        type="range"
-        id="signatureThickness"
-        min="1"
-        max="10"
-        value="3"
-    >
-
-    <div style="width:100%;overflow:hidden;margin:12px 0;">
-        <canvas
-            id="signatureCanvas"
-            style="display:block;width:100%;height:220px;border:2px dashed #888;border-radius:10px;background:white;touch-action:none;"
-        ></canvas>
-    </div>
-
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button type="button" id="signatureUndo">↩️ Undo</button>
-        <button type="button" id="signatureClear">🗑️ Clear</button>
-        <button type="button" id="signatureDownload">⬇️ Download PNG</button>
-    </div>
-
-    <p id="signatureStatus" role="status">
-        Draw your signature in the box above.
-    </p>
-</section>
-<!-- END DIGITAL SIGNATURE MAKER -->
     
 <script>
 /* COMPRESSPRO DIGITAL SIGNATURE MAKER */
