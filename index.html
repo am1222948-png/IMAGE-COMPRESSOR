@@ -531,6 +531,42 @@ You can scan multiple pages and create one PDF.
 <div id="pdfResults"></div>
 </div>
 
+<!-- COMPRESSPRO PHOTO & DOCUMENT EDITOR -->
+<section id="photoDocumentEditor" class="tool-section">
+    <h2>🖼️ Photo & Document Editor</h2>
+    <p>Add text or cover unwanted text on a picture or document.</p>
+
+    <label for="editorImageInput">Choose Picture or Document</label>
+    <input type="file" id="editorImageInput" accept="image/*">
+
+    <label for="editorMode">Editing Tool</label>
+    <select id="editorMode">
+        <option value="text">Add Text</option>
+        <option value="cover">Cover / Erase Area</option>
+    </select>
+
+    <label for="editorText">Text to Add</label>
+    <input type="text" id="editorText" placeholder="Type your text">
+
+    <label for="editorTextColor">Text Color</label>
+    <input type="color" id="editorTextColor" value="#000000">
+
+    <label for="editorTextSize">Text Size</label>
+    <input type="range" id="editorTextSize" min="12" max="80" value="28">
+
+    <label for="editorCoverColor">Cover Color</label>
+    <input type="color" id="editorCoverColor" value="#ffffff">
+
+    <p>Choose an image, then tap it to add text. For covering, select Cover / Erase Area and drag over the area.</p>
+
+    <canvas id="editorCanvas" style="width:100%;max-width:100%;height:auto;border:1px solid #ccc;touch-action:pan-y;"></canvas>
+
+    <button type="button" id="editorUndo">↩️ Undo</button>
+    <button type="button" id="editorDownload">⬇️ Download Image</button>
+
+    <p id="editorStatus">Choose an image to start editing.</p>
+</section>
+<!-- END PHOTO & DOCUMENT EDITOR -->
 <!-- FEATURES -->
 <section class="features">
 <h2>Why Choose CompressPro?</h2>
@@ -2037,5 +2073,216 @@ updateScanButtons();
 
 </script>
 
+<script>
+/* COMPRESSPRO PHOTO & DOCUMENT EDITOR */
+
+(function () {
+    const imageInput = document.getElementById("editorImageInput");
+    const canvas = document.getElementById("editorCanvas");
+    const mode = document.getElementById("editorMode");
+    const textInput = document.getElementById("editorText");
+    const textColor = document.getElementById("editorTextColor");
+    const textSize = document.getElementById("editorTextSize");
+    const coverColor = document.getElementById("editorCoverColor");
+    const undoButton = document.getElementById("editorUndo");
+    const downloadButton = document.getElementById("editorDownload");
+    const status = document.getElementById("editorStatus");
+
+    if (!imageInput || !canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    const history = [];
+    let imageLoaded = false;
+    let startPoint = null;
+    let coverStart = null;
+    let coverSnapshot = null;
+    let isDragging = false;
+
+    canvas.style.touchAction = "none";
+    canvas.style.display = "block";
+
+    function getSnapshot() {
+        return ctx.getImageData(0, 0, canvas.width, canvas.height);
+    }
+
+    function saveHistory(snapshot) {
+        history.push(snapshot);
+        if (history.length > 20) history.shift();
+    }
+
+    function getPosition(event) {
+        const rect = canvas.getBoundingClientRect();
+
+        return {
+            x: (event.clientX - rect.left) * canvas.width / rect.width,
+            y: (event.clientY - rect.top) * canvas.height / rect.height
+        };
+    }
+
+    imageInput.addEventListener("change", function () {
+        const file = imageInput.files && imageInput.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            status.textContent = "Please choose an image file.";
+            return;
+        }
+
+        const image = new Image();
+
+        image.onload = function () {
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+            ctx.drawImage(image, 0, 0);
+
+            history.length = 0;
+            imageLoaded = true;
+            status.textContent = "Image loaded. Select a tool and tap or drag on the image.";
+            URL.revokeObjectURL(image.src);
+        };
+
+        image.onerror = function () {
+            status.textContent = "This image could not be opened. Please try another image.";
+            URL.revokeObjectURL(image.src);
+        };
+
+        image.src = URL.createObjectURL(file);
+    });
+
+    canvas.addEventListener("pointerdown", function (event) {
+        if (!imageLoaded) {
+            status.textContent = "Please choose an image first.";
+            return;
+        }
+
+        event.preventDefault();
+        startPoint = getPosition(event);
+
+        if (mode.value === "cover") {
+            coverStart = startPoint;
+            coverSnapshot = getSnapshot();
+            isDragging = true;
+            canvas.setPointerCapture(event.pointerId);
+        }
+    });
+
+    canvas.addEventListener("pointermove", function (event) {
+        if (!isDragging || !coverSnapshot) return;
+
+        event.preventDefault();
+
+        const point = getPosition(event);
+        ctx.putImageData(coverSnapshot, 0, 0);
+        ctx.fillStyle = coverColor.value;
+        ctx.fillRect(
+            coverStart.x,
+            coverStart.y,
+            point.x - coverStart.x,
+            point.y - coverStart.y
+        );
+    });
+
+    function finishPointer(event) {
+        if (!startPoint || !imageLoaded) return;
+
+        const point = getPosition(event);
+
+        if (mode.value === "cover" && isDragging && coverSnapshot) {
+            const moved =
+                Math.abs(point.x - coverStart.x) > 2 ||
+                Math.abs(point.y - coverStart.y) > 2;
+
+            ctx.putImageData(coverSnapshot, 0, 0);
+
+            if (moved) {
+                ctx.fillStyle = coverColor.value;
+                ctx.fillRect(
+                    coverStart.x,
+                    coverStart.y,
+                    point.x - coverStart.x,
+                    point.y - coverStart.y
+                );
+
+                saveHistory(coverSnapshot);
+                status.textContent = "Area covered. You can undo or download.";
+            } else {
+                status.textContent = "Drag across the area you want to cover.";
+            }
+
+            coverSnapshot = null;
+            coverStart = null;
+            isDragging = false;
+            startPoint = null;
+            return;
+        }
+
+        if (mode.value === "text") {
+            const text = textInput.value.trim();
+
+            if (!text) {
+                status.textContent = "Please type your text first.";
+                startPoint = null;
+                return;
+            }
+
+            const snapshot = getSnapshot();
+            saveHistory(snapshot);
+
+            ctx.fillStyle = textColor.value;
+            ctx.font = "bold " + textSize.value + "px Arial";
+            ctx.textBaseline = "top";
+            ctx.fillText(text, point.x, point.y);
+
+            status.textContent = "Text added. Tap again to add more text.";
+        }
+
+        startPoint = null;
+    }
+
+    canvas.addEventListener("pointerup", finishPointer);
+
+    canvas.addEventListener("pointercancel", function () {
+        if (coverSnapshot) {
+            ctx.putImageData(coverSnapshot, 0, 0);
+        }
+
+        coverSnapshot = null;
+        coverStart = null;
+        startPoint = null;
+        isDragging = false;
+    });
+
+    undoButton.addEventListener("click", function () {
+        if (!imageLoaded) {
+            status.textContent = "Choose an image first.";
+            return;
+        }
+
+        const previous = history.pop();
+
+        if (!previous) {
+            status.textContent = "Nothing to undo.";
+            return;
+        }
+
+        ctx.putImageData(previous, 0, 0);
+        status.textContent = "Last edit undone.";
+    });
+
+    downloadButton.addEventListener("click", function () {
+        if (!imageLoaded) {
+            status.textContent = "Choose an image first.";
+            return;
+        }
+
+        const link = document.createElement("a");
+        link.download = "CompressPro-Edited-Image.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+
+        status.textContent = "Edited image download requested.";
+    });
+})();
+</script>
 </body>
 </html>
