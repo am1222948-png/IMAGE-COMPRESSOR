@@ -20,8 +20,49 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script async src="https://docs.opencv.org/4.x/opencv.js"></script>
+<script>
+let openCVLoadingPromise = null;
 
+function loadOpenCV() {
+    if (typeof cv !== "undefined" && cv.Mat) {
+        return Promise.resolve(true);
+    }
+
+    if (openCVLoadingPromise) {
+        return openCVLoadingPromise;
+    }
+
+    openCVLoadingPromise = new Promise(function (resolve) {
+        let script = document.createElement("script");
+        script.src = "https://docs.opencv.org/4.x/opencv.js";
+        script.async = true;
+
+        script.onload = function () {
+            let elapsed = 0;
+            let timer = setInterval(function () {
+                if (typeof cv !== "undefined" && cv.Mat) {
+                    clearInterval(timer);
+                    resolve(true);
+                } else if (elapsed >= 20000) {
+                    clearInterval(timer);
+                    openCVLoadingPromise = null;
+                    resolve(false);
+                }
+                elapsed += 200;
+            }, 200);
+        };
+
+        script.onerror = function () {
+            openCVLoadingPromise = null;
+            resolve(false);
+        };
+
+        document.head.appendChild(script);
+    });
+
+    return openCVLoadingPromise;
+}
+            </script>
 <style>
 *{box-sizing:border-box}
 
@@ -1186,11 +1227,8 @@ let scannerTorchOn = false;
 /* WAIT FOR OPENCV */
 
 function waitForOpenCV(timeout = 20000) {
-    return new Promise(function (resolve) {
-        if (typeof cv !== "undefined" && cv.Mat) {
-            resolve(true);
-            return;
-        }
+    return loadOpenCV();
+}
 
         let elapsed = 0;
 
